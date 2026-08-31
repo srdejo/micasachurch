@@ -40,9 +40,9 @@ public class AdminServiceScheduleController {
     @PatchMapping("/{id}")
     @Transactional
     public PublicController.ServiceScheduleResponse update(@PathVariable UUID id, @Valid @RequestBody ServiceScheduleRequest request) {
-        return PublicController.toResponse(serviceScheduleService.update(id, request.time(), request.note()));
+        return PublicController.toResponse(serviceScheduleService.update(id, request.time(), request.note(), request.streamed()));
     }
 
-    public record ServiceScheduleRequest(String time, String note) {
+    public record ServiceScheduleRequest(String time, String note, boolean streamed) {
     }
 }

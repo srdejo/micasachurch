@@ -1,0 +1,38 @@
+@if (loading()) {
+  <div class="flex flex-col gap-4 animate-pulse">
+    <div class="h-3 w-28 bg-cream/10 rounded"></div>
+    <div class="h-10 w-2/3 bg-cream/10 rounded"></div>
+    <div class="h-3 w-full bg-cream/10 rounded"></div>
+    <div class="h-3 w-11/12 bg-cream/10 rounded"></div>
+    <div class="h-3 w-4/5 bg-cream/10 rounded"></div>
+  </div>
+} @else if (error()) {
+  <div class="rounded-card border border-cream/20 p-6 flex flex-col gap-3 items-start">
+    <p class="text-cream/80">No pudimos cargar el devocional en este momento.</p>
+    <button (click)="retry.emit()" class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream text-sm font-semibold px-5 py-2.5">
+      Reintentar
+    </button>
+  </div>
+} @else if (entry()) {
+  <article [style.fontSize.em]="fontScale()" class="flex flex-col gap-5">
+    <p class="text-xs uppercase tracking-widest text-gold font-semibold">Lectura: {{ entry()!.passage_reference }}</p>
+    <h3 class="font-serif text-cream leading-tight" style="font-size: 1.9em;">{{ entry()!.title }}</h3>
+    <blockquote class="border-l-2 border-terracotta bg-cream/[0.06] rounded-r-lg px-6 py-4">
+      <p class="font-serif italic text-cream/95" style="font-size: 1.3em;">{{ entry()!.verse }}</p>
+    </blockquote>
+    <div class="prose prose-invert max-w-none text-cream/85 leading-relaxed [&_p]:mb-4" [innerHTML]="entry()!.content"></div>
+
+    @if (entry()!.audio_url) {
+      <audio class="w-full" controls [src]="entry()!.audio_url"></audio>
+    }
+
+    @if (entry()!.bible_in_a_year_references) {
+      <div class="rounded-card border border-cream/15 p-4 text-sm">
+        <p class="text-xs uppercase tracking-wide text-cream/50 font-semibold mb-1">La Biblia en un año</p>
+        <p class="font-serif text-cream" style="font-size: 1.15em;">{{ entry()!.bible_in_a_year_references }}</p>
+      </div>
+    }
+  </article>
+} @else {
+  <p class="text-cream/60">No hay devocional disponible para esta fecha.</p>
+}

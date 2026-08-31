@@ -8,17 +8,20 @@ public class ServiceSchedule {
     private final String day;
     private String time;
     private String note;
+    private boolean streamed;
 
-    public ServiceSchedule(UUID id, String day, String time, String note) {
+    public ServiceSchedule(UUID id, String day, String time, String note, boolean streamed) {
         this.id = id;
         this.day = day;
         this.time = time;
         this.note = note;
+        this.streamed = streamed;
     }
 
-    public void update(String time, String note) {
+    public void update(String time, String note, boolean streamed) {
         this.time = time;
         this.note = note;
+        this.streamed = streamed;
     }
 
     public UUID getId() {
@@ -35,5 +38,9 @@ public class ServiceSchedule {
 
     public String getNote() {
         return note;
+    }
+
+    public boolean isStreamed() {
+        return streamed;
     }
 }

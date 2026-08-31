@@ -20,7 +20,7 @@ public class ServiceScheduleRepositoryAdapter implements ServiceScheduleReposito
     @Override
     public ServiceSchedule save(ServiceSchedule serviceSchedule) {
         ServiceScheduleJpaEntity entity = new ServiceScheduleJpaEntity(serviceSchedule.getId(), serviceSchedule.getDay(),
-                serviceSchedule.getTime(), serviceSchedule.getNote());
+                serviceSchedule.getTime(), serviceSchedule.getNote(), serviceSchedule.isStreamed());
         return toDomain(springDataRepository.save(entity));
     }
 
@@ -35,6 +35,6 @@ public class ServiceScheduleRepositoryAdapter implements ServiceScheduleReposito
     }
 
     private ServiceSchedule toDomain(ServiceScheduleJpaEntity entity) {
-        return new ServiceSchedule(entity.getId(), entity.getDay(), entity.getTime(), entity.getNote());
+        return new ServiceSchedule(entity.getId(), entity.getDay(), entity.getTime(), entity.getNote(), entity.isStreamed());
     }
 }

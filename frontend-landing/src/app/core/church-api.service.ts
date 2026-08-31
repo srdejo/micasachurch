@@ -18,6 +18,7 @@ export interface ServiceScheduleItem {
   day: string;
   time: string;
   note: string;
+  streamed: boolean;
 }
 
 export interface NetworkItem {

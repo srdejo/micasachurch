@@ -21,7 +21,14 @@ export class Schedules implements OnInit {
   }
 
   save(schedule: ServiceScheduleItem): void {
-    this.api.updateService(schedule.id, { time: schedule.time, note: schedule.note }).subscribe();
+    this.api
+      .updateService(schedule.id, { time: schedule.time, note: schedule.note, streamed: schedule.streamed })
+      .subscribe();
+  }
+
+  toggleStreamed(schedule: ServiceScheduleItem): void {
+    schedule.streamed = !schedule.streamed;
+    this.save(schedule);
   }
 
   toggleBanner(): void {

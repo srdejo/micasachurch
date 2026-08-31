@@ -23,6 +23,10 @@
       <input [(ngModel)]="s.time" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
       <label class="block text-xs text-ink-muted mb-1">Nota</label>
       <input [(ngModel)]="s.note" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
+      <label class="flex items-center gap-2 text-sm mb-3 cursor-pointer">
+        <input type="checkbox" [checked]="s.streamed" (change)="toggleStreamed(s)" class="rounded border-ink/30" />
+        Este servicio se transmite en vivo
+      </label>
       <button (click)="save(s)" class="rounded-pill bg-ink text-cream text-sm px-4 py-2">Guardar</button>
     </div>
   }

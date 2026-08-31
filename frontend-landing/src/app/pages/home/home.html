@@ -57,7 +57,13 @@
 @if (siteSettings().liveBannerVisible) {
   <section class="bg-terracotta text-cream">
     <div class="mx-auto max-w-6xl px-6 py-4 flex flex-wrap items-center justify-between gap-3">
-      <p class="text-sm font-medium">📡 Transmisión todos los días a las 7:00 a.m. por Facebook</p>
+      <p class="text-sm font-medium flex items-center gap-2">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cream opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cream"></span>
+        </span>
+        En vivo · Transmisión todos los días a las 7:00 a.m. por Facebook
+      </p>
       <a [href]="linkValue('facebook') || 'https://facebook.com'" target="_blank" rel="noopener"
          class="rounded-pill bg-cream text-terracotta text-sm font-semibold px-4 py-2 hover:bg-white transition-colors">
         Ver en Facebook
@@ -68,14 +74,17 @@
 
 <!-- Devocional -->
 <section id="devocional" class="bg-ink text-cream py-20">
-  <div class="mx-auto max-w-3xl px-6 text-center">
-    <h2 class="text-4xl mb-4">Nuestro Pan Diario</h2>
-    <p class="text-cream/70 mb-8">Un momento cada día para encontrarte con la Palabra.</p>
-    <a routerLink="/devocional"
-       class="inline-block rounded-pill bg-gold text-ink font-semibold px-6 py-3 hover:opacity-90 transition-opacity">
-      Leer el devocional de hoy
-    </a>
-    <p class="mt-6 text-sm">
+  <div class="mx-auto max-w-3xl px-6">
+    <div class="text-center mb-10">
+      <p class="uppercase tracking-widest text-xs text-gold font-semibold mb-3">Devocional diario</p>
+      <h2 class="text-4xl mb-3">Nuestro Pan Diario</h2>
+      <p class="text-cream/70">Una lectura corta para empezar el día con la Palabra. Se actualiza cada mañana.</p>
+    </div>
+
+    <app-devotional-article [entry]="devotional()" [loading]="devotionalLoading()" [error]="devotionalError()"
+      (retry)="retryDevotional()" />
+
+    <p class="mt-10 text-center text-sm">
       <a routerLink="/devocional" class="underline text-cream/70 hover:text-cream">Ver todos los días →</a>
     </p>
   </div>
@@ -86,7 +95,16 @@
   <h2 class="text-3xl mb-10 text-center">Horarios de servicio</h2>
   <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
     @for (s of services(); track s.id) {
-      <div class="rounded-card bg-section-light border border-ink/10 p-6 text-center">
+      <div class="rounded-card bg-section-light border border-ink/10 p-6 text-center relative">
+        @if (s.streamed) {
+          <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-terracotta">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-terracotta opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-terracotta"></span>
+            </span>
+            En vivo
+          </span>
+        }
         <p class="font-semibold">{{ s.day }}</p>
         <p class="text-terracotta text-lg">{{ s.time }}</p>
         <p class="text-ink-muted text-sm mt-1">{{ s.note }}</p>
@@ -265,6 +283,6 @@
   <div class="mx-auto max-w-6xl px-6 flex flex-wrap items-center justify-between gap-3">
     <p>Mi Casa Church · Ocaña, Colombia</p>
     <p>Devocional cortesía de Nuestro Pan Diario (Our Daily Bread Ministries)</p>
-    <a href="/admin" class="hover:text-cream">Admin</a>
+    <a href="https://admin.micasachurch.co" class="hover:text-cream">Administrar sitio</a>
   </div>
 </footer>

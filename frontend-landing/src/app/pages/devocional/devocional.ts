@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DevotionalApiService } from '../../core/devotional-api.service';
+import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
+import { DevotionalArticle } from '../../shared/devotional-article/devotional-article';
 
 @Component({
   selector: 'app-devocional',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DevotionalArticle],
   templateUrl: './devocional.html',
 })
 export class Devocional implements OnInit {
@@ -16,9 +17,10 @@ export class Devocional implements OnInit {
 
   readonly loading = signal(true);
   readonly error = signal(false);
-  readonly entry = signal<any | null>(null);
+  readonly entry = signal<DevotionalEntry | null>(null);
   readonly currentDate = signal(new Date());
   readonly fontScale = signal(1);
+  readonly shared = signal(false);
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
@@ -32,10 +34,10 @@ export class Devocional implements OnInit {
     this.loading.set(true);
     this.error.set(false);
     this.api.getByDate(this.currentDate()).subscribe({
-      next: (res) => {
-        this.entry.set(res?.entry?.[0] ?? null);
+      next: (entry) => {
+        this.entry.set(entry);
         this.loading.set(false);
-        if (!res?.entry?.[0]) {
+        if (!entry) {
           this.error.set(true);
         }
       },
@@ -93,5 +95,7 @@ export class Devocional implements OnInit {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       await navigator.clipboard.writeText(url);
     }
+    this.shared.set(true);
+    setTimeout(() => this.shared.set(false), 2200);
   }
 }

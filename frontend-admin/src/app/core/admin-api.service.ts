@@ -34,6 +34,7 @@ export interface ServiceScheduleItem {
   day: string;
   time: string;
   note: string;
+  streamed: boolean;
 }
 
 export interface LinkEntryItem {
@@ -93,7 +94,7 @@ export class AdminApiService {
     return this.http.get<ServiceScheduleItem[]>(`${this.baseUrl}/services`);
   }
 
-  updateService(id: string, payload: { time: string; note: string }) {
+  updateService(id: string, payload: { time: string; note: string; streamed: boolean }) {
     return this.http.patch<ServiceScheduleItem>(`${this.baseUrl}/services/${id}`, payload);
   }
 

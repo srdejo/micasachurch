@@ -1,53 +1,56 @@
-<header class="border-b border-ink/10">
-  <div class="mx-auto max-w-3xl px-6 py-4 flex items-center justify-between">
-    <a routerLink="/" class="flex items-center gap-3">
-      <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
-      <span class="font-semibold">Mi Casa Church</span>
-    </a>
-    <a routerLink="/" class="text-sm text-ink-muted hover:text-terracotta">← Volver al inicio</a>
-  </div>
-</header>
-
-<main class="mx-auto max-w-3xl px-6 py-12">
-  <h1 class="text-4xl mb-2 text-center">Nuestro Pan Diario</h1>
-  <p class="text-center text-ink-muted mb-8 capitalize">{{ formattedDate() }}</p>
-
-  <div class="flex items-center justify-center gap-3 mb-10">
-    <button (click)="goToDate(-1)" class="rounded-pill border border-ink/15 px-4 py-2 text-sm hover:border-terracotta">← Día anterior</button>
-    <input type="date" [value]="isoDate()" (change)="onDatePicked($any($event.target).value)"
-      class="rounded-pill border border-ink/15 px-4 py-2 text-sm" />
-    <button (click)="goToDate(1)" class="rounded-pill border border-ink/15 px-4 py-2 text-sm hover:border-terracotta">Día siguiente →</button>
-  </div>
-
-  @if (loading()) {
-    <p class="text-center text-ink-muted py-16">Cargando devocional...</p>
-  } @else if (error()) {
-    <div class="text-center py-16">
-      <p class="text-terracotta mb-4">No pudimos cargar el devocional de este día.</p>
-      <button (click)="retry()" class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream px-5 py-2.5">Reintentar</button>
+<div class="bg-ink text-cream min-h-screen">
+  <header class="sticky top-0 z-40 bg-ink/92 backdrop-blur border-b border-cream/15">
+    <div class="mx-auto max-w-5xl px-6 py-3.5 flex items-center justify-between">
+      <a routerLink="/" class="flex items-center gap-3">
+        <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
+        <span class="font-serif text-lg">Mi Casa Church</span>
+      </a>
+      <a routerLink="/" [fragment]="'visitar'"
+        class="rounded-pill border border-cream/30 hover:border-cream text-sm px-4 py-2 transition-colors">
+        Planea tu visita
+      </a>
     </div>
-  } @else if (entry()) {
-    <article [style.fontSize.rem]="fontScale()">
-      <div class="flex items-center justify-end gap-2 mb-4 text-sm">
-        <button (click)="decreaseFont()" class="rounded-full border border-ink/15 w-8 h-8 hover:border-terracotta">A-</button>
-        <button (click)="increaseFont()" class="rounded-full border border-ink/15 w-8 h-8 hover:border-terracotta">A+</button>
-        <button (click)="share()" class="rounded-pill border border-ink/15 px-4 py-1.5 hover:border-terracotta">Compartir</button>
+  </header>
+
+  <div class="mx-auto max-w-5xl px-6 py-14 grid md:grid-cols-[280px_1fr] gap-14">
+    <aside class="flex flex-col gap-6 md:sticky md:top-24 self-start">
+      <div>
+        <p class="uppercase tracking-widest text-xs text-gold font-semibold mb-2">Devocional diario</p>
+        <h1 class="font-serif text-3xl leading-tight">Nuestro Pan Diario</h1>
       </div>
-      <h2 class="text-2xl font-serif mb-2">{{ entry().title }}</h2>
-      <p class="text-terracotta font-medium mb-1">{{ entry().passage_reference }}</p>
-      <blockquote class="italic text-ink-soft border-l-2 border-gold pl-4 mb-6">{{ entry().verse }}</blockquote>
-      <div class="prose text-ink-soft leading-relaxed" [innerHTML]="entry().content"></div>
 
-      @if (entry().audio_url) {
-        <audio class="w-full mt-6" controls [src]="entry().audio_url"></audio>
-      }
+      <div class="flex items-center gap-2">
+        <button (click)="goToDate(-1)" title="Día anterior"
+          class="h-10 w-10 rounded-full border border-cream/20 hover:bg-cream/10 text-lg">‹</button>
+        <input type="date" [value]="isoDate()" (change)="onDatePicked($any($event.target).value)"
+          class="flex-1 min-w-0 rounded-lg border border-cream/20 bg-cream/[0.06] px-3 py-2 text-sm" style="color-scheme: dark;" />
+        <button (click)="goToDate(1)" title="Día siguiente"
+          class="h-10 w-10 rounded-full border border-cream/20 hover:bg-cream/10 text-lg">›</button>
+      </div>
 
-      @if (entry().bible_in_a_year_references?.length) {
-        <div class="mt-8 rounded-card bg-section-light border border-ink/10 p-4 text-sm">
-          <p class="font-semibold mb-1">Biblia en un año</p>
-          <p class="text-ink-muted">{{ entry().bible_in_a_year_references.join(', ') }}</p>
-        </div>
-      }
-    </article>
-  }
-</main>
+      <div class="flex items-center gap-2 text-sm">
+        <span class="uppercase tracking-wide text-xs text-cream/55 flex-1">Tamaño de texto</span>
+        <button (click)="decreaseFont()" class="h-9 w-9 rounded-lg border border-cream/20 hover:bg-cream/10 font-bold text-xs">A−</button>
+        <button (click)="increaseFont()" class="h-9 w-9 rounded-lg border border-cream/20 hover:bg-cream/10 font-bold">A+</button>
+      </div>
+
+      <button (click)="share()"
+        class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream font-semibold text-sm py-3 transition-colors">
+        {{ shared() ? 'Enlace copiado' : 'Compartir devocional' }}
+      </button>
+    </aside>
+
+    <main class="min-h-[60vh] capitalize-first">
+      <p class="text-xs uppercase tracking-widest text-cream/55 mb-6 capitalize">{{ formattedDate() }}</p>
+      <app-devotional-article [entry]="entry()" [loading]="loading()" [error]="error()" [fontScale]="fontScale()"
+        (retry)="retry()" />
+    </main>
+  </div>
+
+  <footer class="border-t border-cream/15 py-8">
+    <div class="mx-auto max-w-5xl px-6 flex flex-wrap items-center justify-between gap-3 text-sm text-cream/55">
+      <span>Mi Casa Church · Ocaña, Colombia</span>
+      <span>Devocional cortesía de Nuestro Pan Diario (Our Daily Bread Ministries)</span>
+    </div>
+  </footer>
+</div>

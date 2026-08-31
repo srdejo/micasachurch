@@ -22,14 +22,18 @@ public class ServiceScheduleJpaEntity {
 
     private String note;
 
+    @Column(nullable = false)
+    private boolean streamed;
+
     protected ServiceScheduleJpaEntity() {
     }
 
-    public ServiceScheduleJpaEntity(UUID id, String day, String time, String note) {
+    public ServiceScheduleJpaEntity(UUID id, String day, String time, String note, boolean streamed) {
         this.id = id;
         this.day = day;
         this.time = time;
         this.note = note;
+        this.streamed = streamed;
     }
 
     public UUID getId() {
@@ -46,5 +50,9 @@ public class ServiceScheduleJpaEntity {
 
     public String getNote() {
         return note;
+    }
+
+    public boolean isStreamed() {
+        return streamed;
     }
 }

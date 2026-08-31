@@ -86,7 +86,7 @@ public class PublicController {
 
     static ServiceScheduleResponse toResponse(ServiceSchedule serviceSchedule) {
         return new ServiceScheduleResponse(serviceSchedule.getId(), serviceSchedule.getDay(), serviceSchedule.getTime(),
-                serviceSchedule.getNote());
+                serviceSchedule.getNote(), serviceSchedule.isStreamed());
     }
 
     static NetworkResponse toResponse(Network network) {
@@ -112,7 +112,7 @@ public class PublicController {
                                  boolean published, int displayOrder) {
     }
 
-    public record ServiceScheduleResponse(java.util.UUID id, String day, String time, String note) {
+    public record ServiceScheduleResponse(java.util.UUID id, String day, String time, String note, boolean streamed) {
     }
 
     public record NetworkResponse(java.util.UUID id, String key, String name, String description, String leadContact) {

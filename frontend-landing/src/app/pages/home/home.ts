@@ -10,21 +10,28 @@ import {
   ServiceScheduleItem,
   SiteSettings,
 } from '../../core/church-api.service';
+import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
+import { DevotionalArticle } from '../../shared/devotional-article/devotional-article';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, DevotionalArticle],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
   private readonly api = inject(ChurchApiService);
+  private readonly devotionalApi = inject(DevotionalApiService);
 
   readonly events = signal<EventItem[]>([]);
   readonly services = signal<ServiceScheduleItem[]>([]);
   readonly networks = signal<NetworkItem[]>([]);
   readonly links = signal<LinkEntryItem[]>([]);
   readonly siteSettings = signal<SiteSettings>({ liveBannerVisible: true });
+
+  readonly devotional = signal<DevotionalEntry | null>(null);
+  readonly devotionalLoading = signal(true);
+  readonly devotionalError = signal(false);
 
   readonly ministries = [
     { name: 'Niños', description: 'Un espacio seguro y divertido para que los más pequeños conozcan a Jesús.' },
@@ -47,6 +54,29 @@ export class Home implements OnInit {
       next: (data) => this.siteSettings.set(data),
       error: () => this.siteSettings.set({ liveBannerVisible: true }),
     });
+    this.loadDevotional();
+  }
+
+  private loadDevotional(): void {
+    this.devotionalLoading.set(true);
+    this.devotionalError.set(false);
+    this.devotionalApi.getByDate(new Date()).subscribe({
+      next: (entry) => {
+        this.devotional.set(entry);
+        this.devotionalLoading.set(false);
+        if (!entry) {
+          this.devotionalError.set(true);
+        }
+      },
+      error: () => {
+        this.devotionalError.set(true);
+        this.devotionalLoading.set(false);
+      },
+    });
+  }
+
+  retryDevotional(): void {
+    this.loadDevotional();
   }
 
   linkValue(key: string): string {

@@ -19,10 +19,10 @@ public class ServiceScheduleService {
         return serviceScheduleRepository.findAll();
     }
 
-    public ServiceSchedule update(UUID id, String time, String note) {
+    public ServiceSchedule update(UUID id, String time, String note, boolean streamed) {
         ServiceSchedule serviceSchedule = serviceScheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("service_schedule.not_found"));
-        serviceSchedule.update(time, note);
+        serviceSchedule.update(time, note, streamed);
         return serviceScheduleRepository.save(serviceSchedule);
     }
 }
