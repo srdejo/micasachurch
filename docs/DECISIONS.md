@@ -30,6 +30,14 @@ Se infirió inicialmente `admin.micasachurch.co` sin confirmación del usuario. 
 
 Existe una tarea pendiente para migrar `nolost` de su ruta actual (`micasachurch.co/api`, compartiendo dominio con el proyecto de contacto/landing legado) a subdominios propios (`nolost.micasachurch.co` para el frontend, `nolost-api.micasachurch.co` para el backend). El usuario ya creó los registros DNS de los 4 subdominios (`admin`, `api`, `nolost`, `nolost-api`) el 2026-08-31, pero el aprovisionamiento del lado del servidor (nginx/SSL/systemd en `nolost-vps`, y el cambio de dominio raíz de `nolost` a `micasachurch`) **todavía no se ejecutó** — sigue pendiente de una sesión con acceso SSH autorizado al VPS. Ver `docs/PROGRESS.md` para el plan de pasos.
 
+## Bug: faltaba `fileReplacements` de producción en ambos `angular.json` (corregido 2026-08-31)
+
+Ninguno de los dos frontends tenía configurado `fileReplacements` en la configuración `production` de `angular.json`, así que `ng build --configuration production` seguía usando `environment.ts` (apuntando a `http://localhost:8088/api`) en vez de `environment.prod.ts` (`https://api.micasachurch.co/api`). Síntoma: el login del admin fallaba en el navegador con "Usuario o clave inválidos" — un mensaje genérico que el `Login` component muestra para cualquier error HTTP, lo que ocultó la causa real hasta comparar el `apiUrl` embebido en el bundle desplegado. El backend nunca tuvo el problema (confirmado con `curl` directo antes de encontrar el bug). Corregido agregando el `fileReplacements` estándar de Angular CLI a ambos `angular.json`.
+
+## Deploy de `frontend-admin`: subida manual, no automatizada en `deploy.ps1`
+
+Como ya estaba documentado en la decisión de abajo, `infra/deploy.ps1` (`Deploy-Frontend`) solo maneja un `FrontendPath` por proyecto — para el primer deploy real (2026-08-31) se corrió `infra/deploy.ps1 -Projects micasachurch` para backend + `frontend-landing`, y `frontend-admin` se compiló y subió a mano (`ng build` + `scp` directo a `~/apps/micasachurch/frontend-admin`). Automatizar esto en `deploy.ps1` queda fuera de alcance de este MVP (ver `docs/ROADMAP.md`).
+
 ## Infra: `deploy.ps1` extendido con dos rutas de frontend
 
 `micasachurch` es el primer proyecto del workspace con dos frontends. El flujo genérico `Deploy-Frontend` de `infra/deploy.ps1` solo maneja un `FrontendPath` por proyecto, así que se dejó `FrontendPath` apuntando a `frontend-landing` (el sitio público, prioridad de despliegue) y se agregaron `LandingFrontendPath`/`AdminFrontendPath` como campos informativos para cuando ese flujo se extienda a manejar ambos frontends. No se modificó la lógica genérica de despliegue de otros proyectos.
