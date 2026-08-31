@@ -50,7 +50,16 @@ Pendiente dentro de esta etapa:
 - [ ] **Fase A** (`docs/DEPLOYMENT.md`): migrar `nolost` de `micasachurch.co/api` a `nolost.micasachurch.co` / `nolost-api.micasachurch.co`.
 - [ ] **Fase B**: liberar el vhost de `micasachurch.co` de `nolost` una vez la Fase A esté verificada.
 - [ ] Apuntar el vhost de `micasachurch.co` al `frontend-landing` de este proyecto (hoy sigue sirviendo `nolost` — ver tabla de estado en `docs/PROGRESS.md`).
-- [ ] Cambiar la contraseña del `AdminUser` sembrado (`admin`/`password`, placeholder de desarrollo, ya expuesto en un backend público).
+- [x] Cambiar la contraseña del `AdminUser` sembrado — hecho 2026-08-31 (contraseña real generada y aplicada directo en la base). Además se agregó soporte para cambiarla desde el propio panel (ver Etapa 4.1).
+
+## Etapa 4.1 — Cuenta: cambio de clave propio y gestión de otros admins ✅ (2026-08-31)
+
+No estaba en el alcance original, se agregó a pedido del usuario tras detectar que la única forma de cambiar la contraseña sembrada era por SQL directo:
+
+- Backend: `ChangePasswordUseCase` (self-service, requiere clave actual), `AdminUserService` (listar/crear/eliminar otros admins, con guard que impide eliminar el último administrador restante). Endpoints `PATCH /api/admin/auth/change-password` y `GET/POST/DELETE /api/admin/admin-users`, protegidos por JWT como el resto de `/api/admin/**`.
+- Corrigió de paso un bug real: `LoginUseCase` lanzaba una excepción propia (`InvalidCredentialsException`) sin handler registrado en `GlobalExceptionHandler`, así que una clave incorrecta devolvía `500` en vez de `401` — cambiado a `BadCredentialsException` (ya manejada).
+- `frontend-admin`: nueva vista "Cuenta" en el sidebar, con las dos funciones.
+- **Verificado en producción**: `curl` end-to-end contra `api.micasachurch.co` — clave incorrecta da 401, cambio de clave propia funciona, crear/listar/eliminar otros admins funciona, y el guard de "último admin" rechaza correctamente el intento de dejar el sitio sin ningún administrador.
 
 ## Etapa 8 — Fidelidad visual con el diseño (pendiente, no iniciada)
 
@@ -64,9 +73,9 @@ Cerrar las brechas listadas en la Etapa 3 y 4 frente al mockup real:
 
 Criterio de cierre de esta etapa: comparación lado a lado del sitio desplegado contra los `.dc.html` del proyecto de diseño, sección por sección, confirmando que no quedan desviaciones de copy/estructura no documentadas como decisión explícita.
 
-## Etapa 9 — Seguridad antes de producción real (pendiente)
+## Etapa 9 — Seguridad antes de producción real
 
-- [ ] Cambiar la contraseña del `AdminUser` sembrado (ver Etapa 7).
+- [x] Cambiar la contraseña del `AdminUser` sembrado — hecho 2026-08-31.
 - [ ] Confirmar que `JWT_SECRET` en el `.env` del VPS es un valor generado (`openssl rand -base64 32`), no el placeholder de `application.yml`.
 - [ ] Revisar `CORS_ALLOWED_ORIGIN` en el `.env` del VPS una vez `micasachurch.co` esté sirviendo el `frontend-landing` real (Etapa 7, Fase B) — hoy solo incluye los subdominios, falta agregar el dominio raíz si el footer/CORS lo necesita.
 
