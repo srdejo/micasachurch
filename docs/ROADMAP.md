@@ -62,17 +62,24 @@ No estaba en el alcance original, se agregó a pedido del usuario tras detectar 
 - `frontend-admin`: nueva vista "Cuenta" en el sidebar, con las dos funciones.
 - **Verificado en producción**: `curl` end-to-end contra `api.micasachurch.co` — clave incorrecta da 401, cambio de clave propia funciona, crear/listar/eliminar otros admins funciona, y el guard de "último admin" rechaza correctamente el intento de dejar el sitio sin ningún administrador.
 
-## Etapa 8 — Fidelidad visual con el diseño (pendiente, no iniciada)
+## Etapa 8 — Fidelidad visual con el diseño ✅ (2026-08-31, salvo fotos reales — ver Etapa 11)
 
-Cerrar las brechas listadas en la Etapa 3 y 4 frente al mockup real:
+Brechas cerradas frente al mockup real:
 
-1. Embeber el devocional completo del día en la sección `#devocional` del home (no solo el teaser), reutilizando la lógica ya construida en la página `/devocional` (`DevotionalApiService`) — extraerla a un componente compartido en vez de duplicar la llamada a la API de Our Daily Bread.
-2. Reemplazar el indicador "En vivo" (emoji) por un punto/dot animado en CSS, como en el diseño.
-3. Confirmar/ajustar `<title>` y metadatos (Open Graph, `description`) en ambos frontends — landing para SEO real, admin para claridad de pestaña.
-4. Corregir el enlace del footer de `frontend-landing` (`/admin` → `https://admin.micasachurch.co`).
-5. Cuando el cliente entregue fotos reales de la congregación/pastores: reemplazar los gradientes placeholder del hero y "Quiénes somos" — subir las imágenes como asset estático versionado (no hay admin de imágenes, ver `docs/DECISIONS.md`), sin necesidad de rehacer el layout.
+1. [x] Devocional completo del día embebido inline en `#devocional` del home (título, cita, versículo, contenido, audio, Biblia en un año), vía componente compartido `DevotionalArticle` reutilizado también en `/devocional`. De paso se corrigió un bug real: la API de Our Daily Bread devuelve un array plano, no `{entry:[...]}` — el mapeo anterior estaba roto en ambos lugares.
+2. [x] Indicador "En vivo" reemplazado por un punto animado en CSS (banner del home y badge por horario transmitido, ver Etapa 4.2).
+3. [x] `<title>` y metadatos (Open Graph, Twitter Card, `description`) ajustados en ambos frontends; favicon e `apple-touch-icon` reales aplicados (ver Etapa 11).
+4. [x] Footer de `frontend-landing` corregido: enlaza a `https://admin.micasachurch.co` en vez de `/admin`.
+5. [ ] Fotos reales de congregación/pastores — sigue pendiente, ver Etapa 11 (encontradas en el proyecto de diseño pero truncadas por el límite del MCP).
 
-Criterio de cierre de esta etapa: comparación lado a lado del sitio desplegado contra los `.dc.html` del proyecto de diseño, sección por sección, confirmando que no quedan desviaciones de copy/estructura no documentadas como decisión explícita.
+## Etapa 4.2 — Horarios: indicar si un servicio se transmite en vivo ✅ (2026-08-31)
+
+A pedido del usuario: no todos los servicios semanales se transmiten, hacía falta poder marcarlo por servicio (distinto del banner general "en vivo" de las 7:00 a.m., que es una franja aparte).
+
+- Backend: campo `streamed` (boolean) en `ServiceSchedule`, migración `V3__service_schedule_streamed.sql` (`ALTER TABLE` + default `false`, con el servicio de Domingo 10:00 a.m. marcado `true` como valor inicial razonable — **no confirmado con la iglesia, revisar en el panel**).
+- `frontend-admin`: checkbox "Este servicio se transmite en vivo" en Horarios, guarda al toque.
+- `frontend-landing`: badge "En vivo" (mismo dot animado) en la tarjeta del horario correspondiente.
+- **Verificado en producción**: `GET /api/services` devuelve el campo, el checkbox persiste correctamente.
 
 ## Etapa 9 — Seguridad antes de producción real
 
@@ -80,7 +87,39 @@ Criterio de cierre de esta etapa: comparación lado a lado del sitio desplegado 
 - [ ] Confirmar que `JWT_SECRET` en el `.env` del VPS es un valor generado (`openssl rand -base64 32`), no el placeholder de `application.yml`.
 - [ ] Revisar `CORS_ALLOWED_ORIGIN` en el `.env` del VPS una vez `micasachurch.co` esté sirviendo el `frontend-landing` real (Etapa 7, Fase B) — hoy solo incluye los subdominios, falta agregar el dominio raíz si el footer/CORS lo necesita.
 
-## Fuera de alcance de este MVP (documentado, no pendiente de ejecutar)
+## Etapa 10 — Automatización de deploy y detalle menor (pendiente)
 
-- Admin de imágenes con upload (grilla de fotos) — ver `docs/DECISIONS.md`.
-- Automatizar el deploy de `frontend-admin` dentro de `infra/deploy.ps1` (hoy es subida manual) — ver `docs/DECISIONS.md`.
+- [ ] Automatizar el deploy de `frontend-admin` dentro de `infra/deploy.ps1` (hoy es subida manual `ng build` + `scp`) — ver `docs/DECISIONS.md`.
+- [ ] Admin de imágenes con upload (grilla de fotos) — fuera de alcance del MVP, ver `docs/DECISIONS.md`. Reevaluar una vez el cliente tenga fotos reales que rotar con frecuencia.
+
+## Etapa 11 — Contenido dinámico pendiente: imágenes y texto reales (checklist de lanzamiento)
+
+Todo lo que hoy es placeholder, dato de ejemplo, o texto/imagen que un administrador de la iglesia debería revisar y reemplazar antes de considerar el sitio "listo" en el sentido de contenido (no de código). Nada de esto bloquea que el sitio funcione — es la lista de qué falta para que hable con la voz real de la iglesia.
+
+### Imágenes
+
+| Elemento | Estado | Dónde se resuelve |
+|---|---|---|
+| Favicon (pestaña del navegador) | ✅ real, aplicado | — |
+| `apple-touch-icon` (ícono iOS) | ✅ real, aplicado | — |
+| Ícono 512×512 (PWA) | ⏭️ omitido — no hay `manifest.json`/instalación como app, no es necesario hoy | Etapa futura si se agrega soporte PWA |
+| Imagen Open Graph (vista previa al compartir el link) | ❌ pendiente — el archivo real (`fotos/og-image.png`, 1200×630) existe en el proyecto de diseño pero llega truncado por el límite de 256 KiB del MCP | Pedir el archivo directo al cliente/diseñador, o exportarlo de nuevo en un tamaño más liviano, y agregarlo a `frontend-landing/public/` + `<meta property="og:image">` en `index.html` |
+| QR de donación Crediservir | ✅ real, aplicado (encontrado en `uploads/` del proyecto de diseño) | — |
+| QR de donación Bancolombia | ✅ real, aplicado (ídem) | — |
+| Logo circular "M" del header (hoy es un círculo de color con la letra "M", no un logo real) | ❌ pendiente — no se encontró un archivo de logo independiente en el proyecto de diseño (solo el ícono de app, ya usado como favicon) | Pedir el logotipo real de Mi Casa Church (idealmente SVG o PNG con fondo transparente) y reemplazar el `<span>` circular en el header de `frontend-landing`/`frontend-admin` |
+| Foto de portada del hero (`#inicio`) | ❌ pendiente — placeholder de gradiente. Existe una foto real de 2160×2700 en `uploads/pasted-1788174725816-0.png` del proyecto de diseño, pero llega truncada por el límite de 256 KiB | Pedir el archivo directo (no vía el MCP), redimensionar a un peso razonable para web (ej. 1600px de ancho), subir a `frontend-landing/public/img/` y referenciar en `home.html` |
+| Foto de "Quiénes somos" (pastores/comunidad) | ❌ pendiente — mismo caso, placeholder de gradiente. Puede ser la segunda imagen `uploads/pasted-...-0.png` u otra que aporte el cliente | Igual que el punto anterior |
+
+### Texto / datos que hoy son de ejemplo o están hardcodeados (no editables desde el panel)
+
+| Elemento | Estado | Cómo se actualiza |
+|---|---|---|
+| Eventos (`#eventos`) | 🟡 dato de ejemplo — el seed trae 2 eventos ficticios ("Noche de alabanza", "Retiro de jóvenes") | Ya es 100% editable desde el panel (Eventos) — la iglesia solo tiene que borrar los de ejemplo y cargar los reales |
+| Líder/contacto de cada Red (Kids, Teenagers, Jóvenes, Parejas, Hombres, Mujeres) | 🟡 vacío en todas — el seed no trae nombres de líderes | Editable desde el panel (Redes) — falta que la iglesia indique quién lidera cada red |
+| Enlaces y cuentas (WhatsApp, Facebook, Instagram, YouTube, Crediservir, Bancolombia) | 🟢 sembrados con los valores reales del diseño original, pero conviene que la iglesia los confirme (sobre todo el playlist de YouTube y el número de WhatsApp) | Editable desde el panel (Enlaces) |
+| `streamed` por horario (qué servicio se transmite en vivo) | 🟡 valor inicial puesto por decisión técnica (solo Domingo 10:00 a.m.), no confirmado con la iglesia | Editable desde el panel (Horarios), ver Etapa 4.2 |
+| Ministerios (Niños, Jóvenes, Matrimonios, Alabanza) | ⚪ estático, no editable desde el panel — decisión explícita de no sobre-construir un CRUD para contenido que cambia poco (ver `docs/DECISIONS.md`) | Si cambia, requiere editar `frontend-landing/src/app/pages/home/home.ts` (`ministries`) y redeploy |
+| "Quiénes somos" (2 párrafos), copy del hero, copy de ofrendas, dirección | ⚪ estático, pero es copy real ya tomado del diseño original (`Mi Casa Church Ocaña.dc.html`), no placeholder inventado | Igual que arriba — cambios requieren editar `home.html` y redeploy |
+| Contraseña del `AdminUser` | ✅ ya cambiada (Etapa 9) | Cambiable en cualquier momento desde Cuenta → Cambiar mi clave |
+
+Criterio de cierre de esta etapa: la iglesia (no un desarrollador) revisó cada fila marcada ❌/🟡 de esta tabla y decidió qué hacer con ella — reemplazar, dejar como está, o pedir que se construya algo más flexible si el cambio va a ser frecuente.
