@@ -1,0 +1,7 @@
+dependencies {
+    implementation rootProject.libs.spring.boot.starter.web
+    implementation rootProject.libs.spring.boot.starter.security
+    implementation rootProject.libs.jjwt.api
+    runtimeOnly rootProject.libs.jjwt.impl
+    runtimeOnly rootProject.libs.jjwt.jackson
+}

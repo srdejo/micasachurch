@@ -1,0 +1,14 @@
+<h1 class="text-2xl font-serif mb-6">Redes</h1>
+
+<div class="grid md:grid-cols-2 gap-4">
+  @for (n of networks(); track n.id) {
+    <div class="rounded-card bg-card border border-ink/10 p-5">
+      <p class="font-semibold mb-3">{{ n.name }}</p>
+      <label class="block text-xs text-ink-muted mb-1">Descripción</label>
+      <textarea [(ngModel)]="n.description" rows="3" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3"></textarea>
+      <label class="block text-xs text-ink-muted mb-1">Líder / contacto</label>
+      <input [(ngModel)]="n.leadContact" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
+      <button (click)="save(n)" class="rounded-pill bg-ink text-cream text-sm px-4 py-2">Guardar</button>
+    </div>
+  }
+</div>

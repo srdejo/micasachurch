@@ -1,0 +1,49 @@
+<h1 class="text-2xl font-serif mb-6">Panel</h1>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+  <div class="rounded-card bg-card border border-ink/10 p-5">
+    <p class="text-xs text-ink-muted mb-1">Devocional</p>
+    <p class="text-xl font-semibold">Automático</p>
+  </div>
+  <div class="rounded-card bg-card border border-ink/10 p-5">
+    <p class="text-xs text-ink-muted mb-1">Eventos activos</p>
+    <p class="text-xl font-semibold">{{ activeEvents() }}</p>
+  </div>
+  <div class="rounded-card bg-card border border-ink/10 p-5">
+    <p class="text-xs text-ink-muted mb-1">Peticiones sin leer</p>
+    <p class="text-xl font-semibold">{{ unreadPrayerRequests() }}</p>
+  </div>
+  <div class="rounded-card bg-card border border-ink/10 p-5">
+    <p class="text-xs text-ink-muted mb-1">Banner en vivo</p>
+    <p class="text-xl font-semibold">{{ liveBannerVisible() ? 'Activo' : 'Oculto' }}</p>
+  </div>
+</div>
+
+<div class="rounded-card bg-card border border-ink/10 overflow-hidden mb-10">
+  <table class="w-full text-sm">
+    <thead class="bg-surface text-ink-muted text-left">
+      <tr>
+        <th class="px-5 py-3 font-medium">Contenido</th>
+        <th class="px-5 py-3 font-medium">Cada cuánto cambia</th>
+        <th class="px-5 py-3 font-medium">Detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of autoContent; track row.name) {
+        <tr class="border-t border-ink/10">
+          <td class="px-5 py-3 font-medium">{{ row.name }}</td>
+          <td class="px-5 py-3 text-ink-muted">{{ row.frequency }}</td>
+          <td class="px-5 py-3 text-ink-muted">{{ row.detail }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="rounded-card bg-card border border-ink/10 p-6">
+  <p class="font-semibold mb-2">Contenido automático</p>
+  <p class="text-ink-muted text-sm">
+    El devocional "Nuestro Pan Diario" se trae directamente desde su fuente oficial en cada visita —
+    no requiere ninguna acción de tu parte y no se puede editar desde este panel.
+  </p>
+</div>

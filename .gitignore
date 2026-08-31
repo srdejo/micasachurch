@@ -1,0 +1,27 @@
+# Backend (Gradle)
+backend/build/
+backend/**/build/
+backend/.gradle/
+backend/**/bin/
+!backend/gradle/wrapper/gradle-wrapper.jar
+
+# Frontend (Angular)
+frontend-landing/node_modules/
+frontend-landing/dist/
+frontend-landing/.angular/
+frontend-admin/node_modules/
+frontend-admin/dist/
+frontend-admin/.angular/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local

@@ -1,0 +1,53 @@
+<header class="border-b border-ink/10">
+  <div class="mx-auto max-w-3xl px-6 py-4 flex items-center justify-between">
+    <a routerLink="/" class="flex items-center gap-3">
+      <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
+      <span class="font-semibold">Mi Casa Church</span>
+    </a>
+    <a routerLink="/" class="text-sm text-ink-muted hover:text-terracotta">← Volver al inicio</a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-3xl px-6 py-12">
+  <h1 class="text-4xl mb-2 text-center">Nuestro Pan Diario</h1>
+  <p class="text-center text-ink-muted mb-8 capitalize">{{ formattedDate() }}</p>
+
+  <div class="flex items-center justify-center gap-3 mb-10">
+    <button (click)="goToDate(-1)" class="rounded-pill border border-ink/15 px-4 py-2 text-sm hover:border-terracotta">← Día anterior</button>
+    <input type="date" [value]="isoDate()" (change)="onDatePicked($any($event.target).value)"
+      class="rounded-pill border border-ink/15 px-4 py-2 text-sm" />
+    <button (click)="goToDate(1)" class="rounded-pill border border-ink/15 px-4 py-2 text-sm hover:border-terracotta">Día siguiente →</button>
+  </div>
+
+  @if (loading()) {
+    <p class="text-center text-ink-muted py-16">Cargando devocional...</p>
+  } @else if (error()) {
+    <div class="text-center py-16">
+      <p class="text-terracotta mb-4">No pudimos cargar el devocional de este día.</p>
+      <button (click)="retry()" class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream px-5 py-2.5">Reintentar</button>
+    </div>
+  } @else if (entry()) {
+    <article [style.fontSize.rem]="fontScale()">
+      <div class="flex items-center justify-end gap-2 mb-4 text-sm">
+        <button (click)="decreaseFont()" class="rounded-full border border-ink/15 w-8 h-8 hover:border-terracotta">A-</button>
+        <button (click)="increaseFont()" class="rounded-full border border-ink/15 w-8 h-8 hover:border-terracotta">A+</button>
+        <button (click)="share()" class="rounded-pill border border-ink/15 px-4 py-1.5 hover:border-terracotta">Compartir</button>
+      </div>
+      <h2 class="text-2xl font-serif mb-2">{{ entry().title }}</h2>
+      <p class="text-terracotta font-medium mb-1">{{ entry().passage_reference }}</p>
+      <blockquote class="italic text-ink-soft border-l-2 border-gold pl-4 mb-6">{{ entry().verse }}</blockquote>
+      <div class="prose text-ink-soft leading-relaxed" [innerHTML]="entry().content"></div>
+
+      @if (entry().audio_url) {
+        <audio class="w-full mt-6" controls [src]="entry().audio_url"></audio>
+      }
+
+      @if (entry().bible_in_a_year_references?.length) {
+        <div class="mt-8 rounded-card bg-section-light border border-ink/10 p-4 text-sm">
+          <p class="font-semibold mb-1">Biblia en un año</p>
+          <p class="text-ink-muted">{{ entry().bible_in_a_year_references.join(', ') }}</p>
+        </div>
+      }
+    </article>
+  }
+</main>

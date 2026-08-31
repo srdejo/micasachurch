@@ -1,0 +1,26 @@
+<div class="min-h-screen flex bg-surface">
+  <aside class="w-[268px] shrink-0 bg-sidebar text-cream flex flex-col">
+    <div class="px-6 py-6 flex items-center gap-3 border-b border-cream/10">
+      <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
+      <div>
+        <p class="font-semibold leading-tight">Mi Casa Church</p>
+        <p class="text-xs text-cream/50">Panel administrativo</p>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-6 space-y-1">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="bg-terracotta text-cream"
+           class="block rounded-card px-4 py-2.5 text-sm text-cream/70 hover:bg-white/5 hover:text-cream transition-colors">
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+    <div class="px-6 py-5 border-t border-cream/10">
+      <p class="text-xs text-cream/50 mb-2">{{ auth.username() }}</p>
+      <button (click)="logout()" class="text-sm text-cream/70 hover:text-cream">Cerrar sesión</button>
+    </div>
+  </aside>
+  <main class="flex-1 px-8 py-8 overflow-y-auto">
+    <router-outlet />
+  </main>
+</div>

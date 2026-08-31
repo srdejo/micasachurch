@@ -1,0 +1,14 @@
+<h1 class="text-2xl font-serif mb-2">Enlaces</h1>
+<p class="text-ink-muted text-sm mb-6">
+  Enlaces y cuentas usadas en el sitio público. La grilla de fotos con carga de imágenes queda fuera de este MVP.
+</p>
+
+<div class="grid md:grid-cols-2 gap-4">
+  @for (link of links(); track link.id) {
+    <div class="rounded-card bg-card border border-ink/10 p-5">
+      <p class="font-semibold mb-3">{{ link.label }}</p>
+      <input [(ngModel)]="link.value" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
+      <button (click)="save(link)" class="rounded-pill bg-ink text-cream text-sm px-4 py-2">Guardar</button>
+    </div>
+  }
+</div>

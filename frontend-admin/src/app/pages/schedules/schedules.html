@@ -1,0 +1,29 @@
+<h1 class="text-2xl font-serif mb-6">Horarios y en vivo</h1>
+
+<div class="rounded-card bg-card border border-ink/10 p-5 mb-8 flex items-center justify-between">
+  <div>
+    <p class="font-semibold">Banner "En vivo"</p>
+    <p class="text-ink-muted text-sm">Muestra el aviso de transmisión diaria en la landing.</p>
+  </div>
+  <button (click)="toggleBanner()"
+    class="rounded-pill text-sm font-medium px-5 py-2.5"
+    [class.bg-terracotta]="siteSettings().liveBannerVisible"
+    [class.text-cream]="siteSettings().liveBannerVisible"
+    [class.border]="!siteSettings().liveBannerVisible"
+    [class.border-ink]="!siteSettings().liveBannerVisible">
+    {{ siteSettings().liveBannerVisible ? 'Visible' : 'Oculto' }}
+  </button>
+</div>
+
+<div class="grid md:grid-cols-2 gap-4">
+  @for (s of schedules(); track s.id) {
+    <div class="rounded-card bg-card border border-ink/10 p-5">
+      <p class="font-semibold mb-3">{{ s.day }}</p>
+      <label class="block text-xs text-ink-muted mb-1">Hora</label>
+      <input [(ngModel)]="s.time" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
+      <label class="block text-xs text-ink-muted mb-1">Nota</label>
+      <input [(ngModel)]="s.note" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
+      <button (click)="save(s)" class="rounded-pill bg-ink text-cream text-sm px-4 py-2">Guardar</button>
+    </div>
+  }
+</div>

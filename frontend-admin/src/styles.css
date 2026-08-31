@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+@config '../tailwind.config.js';
+
+body {
+  @apply bg-surface text-ink font-sans;
+}
+
+h1, h2, h3, .font-display {
+  @apply font-serif;
+}

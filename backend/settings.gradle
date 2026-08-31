@@ -1,0 +1,6 @@
+rootProject.name = 'micasachurch-backend'
+
+include 'bootstrap',
+        'platform:security',
+        'platform:web-common',
+        'modules:church'

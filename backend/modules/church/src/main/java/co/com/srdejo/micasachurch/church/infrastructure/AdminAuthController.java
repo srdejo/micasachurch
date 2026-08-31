@@ -1,0 +1,39 @@
+package co.com.srdejo.micasachurch.church.infrastructure;
+
+import co.com.srdejo.micasachurch.church.application.LoginUseCase;
+import co.com.srdejo.micasachurch.church.domain.AdminUser;
+import co.com.srdejo.micasachurch.platform.security.JwtClaims;
+import co.com.srdejo.micasachurch.platform.security.JwtService;
+import co.com.srdejo.micasachurch.platform.webcommon.ApiResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AdminAuthController {
+
+    private final LoginUseCase loginUseCase;
+    private final JwtService jwtService;
+
+    public AdminAuthController(LoginUseCase loginUseCase, JwtService jwtService) {
+        this.loginUseCase = loginUseCase;
+        this.jwtService = jwtService;
+    }
+
+    @PostMapping("/api/admin/auth/login")
+    @Transactional(readOnly = true)
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        AdminUser adminUser = loginUseCase.login(request.username(), request.password());
+        String token = jwtService.issue(new JwtClaims(adminUser.getId(), adminUser.getUsername()));
+        return ApiResponse.ok(new LoginResponse(token, adminUser.getUsername()));
+    }
+
+    public record LoginRequest(@NotBlank String username, @NotBlank String password) {
+    }
+
+    public record LoginResponse(String token, String username) {
+    }
+}

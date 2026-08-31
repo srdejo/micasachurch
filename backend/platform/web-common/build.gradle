@@ -1,0 +1,5 @@
+dependencies {
+    implementation rootProject.libs.spring.boot.starter.web
+    implementation rootProject.libs.spring.boot.starter.security
+    implementation rootProject.libs.spring.boot.starter.validation
+}
