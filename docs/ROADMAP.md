@@ -96,30 +96,46 @@ A pedido del usuario: no todos los servicios semanales se transmiten, hacía fal
 
 Todo lo que hoy es placeholder, dato de ejemplo, o texto/imagen que un administrador de la iglesia debería revisar y reemplazar antes de considerar el sitio "listo" en el sentido de contenido (no de código). Nada de esto bloquea que el sitio funcione — es la lista de qué falta para que hable con la voz real de la iglesia.
 
-### Imágenes
+### Imágenes — todas editables desde el panel (Imágenes) ✅ (2026-08-31)
 
-| Elemento | Estado | Dónde se resuelve |
+A pedido del usuario, se construyó subida de imágenes desde el admin en vez de dejarlas fijas en el código — ver Etapa 12. Las 4 imágenes clave del sitio (logo, hero, "Quiénes somos", Open Graph) ahora son un slot subible con recomendación de tamaño/formato visible en el panel; mientras no se suba nada, el sitio público sigue mostrando el placeholder anterior (gradiente / círculo con "M") automáticamente.
+
+| Elemento | Estado |
+|---|---|
+| Favicon (pestaña del navegador) | ✅ real, aplicado directo en el código (no es un dato editable — cambia poco y requiere rebuild) |
+| `apple-touch-icon` (ícono iOS) | ✅ real, aplicado directo en el código (ídem) |
+| Ícono 512×512 (PWA) | ⏭️ omitido — no hay `manifest.json`/instalación como app |
+| Logo del header | 🟡 subible desde Imágenes → "Logo (header)" — todavía no se subió ninguno, sigue mostrando el círculo "M" |
+| Foto de portada del hero | 🟡 subible desde Imágenes → "Foto de portada (hero)" — todavía no se subió ninguna, sigue mostrando el gradiente |
+| Foto de "Quiénes somos" | 🟡 subible desde Imágenes → "Foto Quiénes somos" — ídem |
+| Imagen Open Graph | 🟡 subible desde Imágenes → "Imagen para compartir" — el archivo real (1200×630) existía en el diseño pero llegó truncado por el límite del MCP, así que hay que conseguirlo por otro medio y subirlo por acá |
+| QR de donación Crediservir / Bancolombia | ✅ real, aplicado directo en el código (`frontend-landing/public/img/`) — no pasa por el sistema de subida porque no cambia con frecuencia |
+
+### Texto — editable desde el panel (Contenido) ✅ (2026-08-31)
+
+A pedido del usuario, se sacó del código el copy que antes era estático — ver Etapa 12.
+
+| Elemento | Estado | Dónde se edita |
 |---|---|---|
-| Favicon (pestaña del navegador) | ✅ real, aplicado | — |
-| `apple-touch-icon` (ícono iOS) | ✅ real, aplicado | — |
-| Ícono 512×512 (PWA) | ⏭️ omitido — no hay `manifest.json`/instalación como app, no es necesario hoy | Etapa futura si se agrega soporte PWA |
-| Imagen Open Graph (vista previa al compartir el link) | ❌ pendiente — el archivo real (`fotos/og-image.png`, 1200×630) existe en el proyecto de diseño pero llega truncado por el límite de 256 KiB del MCP | Pedir el archivo directo al cliente/diseñador, o exportarlo de nuevo en un tamaño más liviano, y agregarlo a `frontend-landing/public/` + `<meta property="og:image">` en `index.html` |
-| QR de donación Crediservir | ✅ real, aplicado (encontrado en `uploads/` del proyecto de diseño) | — |
-| QR de donación Bancolombia | ✅ real, aplicado (ídem) | — |
-| Logo circular "M" del header (hoy es un círculo de color con la letra "M", no un logo real) | ❌ pendiente — no se encontró un archivo de logo independiente en el proyecto de diseño (solo el ícono de app, ya usado como favicon) | Pedir el logotipo real de Mi Casa Church (idealmente SVG o PNG con fondo transparente) y reemplazar el `<span>` circular en el header de `frontend-landing`/`frontend-admin` |
-| Foto de portada del hero (`#inicio`) | ❌ pendiente — placeholder de gradiente. Existe una foto real de 2160×2700 en `uploads/pasted-1788174725816-0.png` del proyecto de diseño, pero llega truncada por el límite de 256 KiB | Pedir el archivo directo (no vía el MCP), redimensionar a un peso razonable para web (ej. 1600px de ancho), subir a `frontend-landing/public/img/` y referenciar en `home.html` |
-| Foto de "Quiénes somos" (pastores/comunidad) | ❌ pendiente — mismo caso, placeholder de gradiente. Puede ser la segunda imagen `uploads/pasted-...-0.png` u otra que aporte el cliente | Igual que el punto anterior |
+| Eventos (`#eventos`) | 🟡 dato de ejemplo — el seed trae 2 eventos ficticios | Panel → Eventos (ya era editable desde antes) |
+| Líder/contacto de cada Red | 🟡 vacío en todas | Panel → Redes (ya era editable desde antes) |
+| Enlaces y cuentas | 🟢 sembrados con valores reales, conviene que la iglesia los confirme | Panel → Enlaces (ya era editable desde antes) |
+| `streamed` por horario | 🟡 valor inicial puesto por decisión técnica, no confirmado con la iglesia | Panel → Horarios (Etapa 4.2) |
+| Ministerios (Niños, Jóvenes, Matrimonios, Alabanza) | 🟢 sembrados con el copy real del diseño, ahora con CRUD completo (agregar/editar/eliminar) | Panel → Contenido |
+| Subtítulo del hero, párrafos de "Quiénes somos", copy de Ofrendas | 🟢 sembrados con el copy real del diseño original | Panel → Contenido |
+| Contraseña del `AdminUser` | ✅ ya cambiada | Panel → Cuenta |
 
-### Texto / datos que hoy son de ejemplo o están hardcodeados (no editables desde el panel)
+Criterio de cierre de esta etapa: la iglesia (no un desarrollador) revisó cada fila marcada 🟡 de esta tabla y subió/escribió el contenido real, usando el panel — ya no requiere ninguna intervención de código.
 
-| Elemento | Estado | Cómo se actualiza |
-|---|---|---|
-| Eventos (`#eventos`) | 🟡 dato de ejemplo — el seed trae 2 eventos ficticios ("Noche de alabanza", "Retiro de jóvenes") | Ya es 100% editable desde el panel (Eventos) — la iglesia solo tiene que borrar los de ejemplo y cargar los reales |
-| Líder/contacto de cada Red (Kids, Teenagers, Jóvenes, Parejas, Hombres, Mujeres) | 🟡 vacío en todas — el seed no trae nombres de líderes | Editable desde el panel (Redes) — falta que la iglesia indique quién lidera cada red |
-| Enlaces y cuentas (WhatsApp, Facebook, Instagram, YouTube, Crediservir, Bancolombia) | 🟢 sembrados con los valores reales del diseño original, pero conviene que la iglesia los confirme (sobre todo el playlist de YouTube y el número de WhatsApp) | Editable desde el panel (Enlaces) |
-| `streamed` por horario (qué servicio se transmite en vivo) | 🟡 valor inicial puesto por decisión técnica (solo Domingo 10:00 a.m.), no confirmado con la iglesia | Editable desde el panel (Horarios), ver Etapa 4.2 |
-| Ministerios (Niños, Jóvenes, Matrimonios, Alabanza) | ⚪ estático, no editable desde el panel — decisión explícita de no sobre-construir un CRUD para contenido que cambia poco (ver `docs/DECISIONS.md`) | Si cambia, requiere editar `frontend-landing/src/app/pages/home/home.ts` (`ministries`) y redeploy |
-| "Quiénes somos" (2 párrafos), copy del hero, copy de ofrendas, dirección | ⚪ estático, pero es copy real ya tomado del diseño original (`Mi Casa Church Ocaña.dc.html`), no placeholder inventado | Igual que arriba — cambios requieren editar `home.html` y redeploy |
-| Contraseña del `AdminUser` | ✅ ya cambiada (Etapa 9) | Cambiable en cualquier momento desde Cuenta → Cambiar mi clave |
+## Etapa 12 — Contenido totalmente editable desde el admin (imágenes + texto) ✅ (2026-08-31)
 
-Criterio de cierre de esta etapa: la iglesia (no un desarrollador) revisó cada fila marcada ❌/🟡 de esta tabla y decidió qué hacer con ella — reemplazar, dejar como está, o pedir que se construya algo más flexible si el cambio va a ser frecuente.
+A pedido explícito del usuario: en vez de dejar el logo, las fotos del hero/"Quiénes somos", la imagen OG, los Ministerios y el copy de "Quiénes somos"/hero/ofrendas fijos en el código (como se había planteado inicialmente en la Etapa 11), se construyó la lógica para que un administrador de la iglesia los cargue y edite desde el panel, sin tocar código ni redeploy.
+
+- **Backend**: 3 entidades nuevas —
+  - `SiteImage` + `ImageStorage`: subida multipart (`POST /api/admin/images/{key}`, máx. 5 MB, solo PNG/JPG/WEBP/SVG), guardado en disco (`app.uploads-dir`, configurable por `UPLOADS_DIR`) y servido públicamente sin autenticación en `GET /api/images/{key}` (con caché de 1 hora). 4 claves fijas: `logo`, `hero`, `quienes_somos`, `og_image`.
+  - `SiteContent`: pares clave/valor de texto largo, editable por `PATCH /api/admin/site-content/{id}`, listado público en `GET /api/site-content`.
+  - `Ministry`: CRUD completo (antes era un array hardcodeado en `home.ts`), público en `GET /api/ministries`.
+  - Migración `V4__site_content_ministries_images.sql`, sembrada con el copy y los 4 ministerios que ya estaban en el código — **cero cambio visual** hasta que el admin suba/edite algo.
+- **`frontend-admin`**: dos vistas nuevas — "Contenido" (textos + CRUD de ministerios) e "Imágenes" (4 slots con recomendación de tamaño/formato por imagen, preview, botón de reemplazo).
+- **`frontend-landing`**: logo/hero/"Quiénes somos" son ahora `<img>` apuntando a `GET /api/images/{key}`, con `(error)` haciendo fallback automático al placeholder anterior (círculo "M" / gradiente) si la imagen todavía no fue subida — el sitio nunca muestra una imagen rota. Ministerios, subtítulo del hero, párrafos de "Quiénes somos" y copy de Ofrendas ahora vienen de `GET /api/site-content` / `GET /api/ministries`, con el mismo texto de siempre como valor por defecto si la llamada falla.
+- **Verificado en producción**: `GET /api/ministries` y `GET /api/site-content` responden con los datos sembrados; `GET /api/images/logo` devuelve `404` (ninguna imagen subida todavía, comportamiento esperado); el endpoint de subida rechaza sin token (`403`). La subida real de un archivo no se pudo probar por `curl` en esta sesión porque la contraseña de admin ya había sido cambiada por el usuario desde el panel — pendiente que el usuario la pruebe directamente en `admin.micasachurch.co` → Imágenes.
