@@ -9,3 +9,7 @@ body {
 h1, h2, h3, .font-display {
   @apply font-serif;
 }
+
+button:not(:disabled), label[for], input[type='checkbox'], input[type='file'] + label {
+  cursor: pointer;
+}

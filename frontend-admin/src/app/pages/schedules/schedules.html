@@ -27,7 +27,18 @@
         <input type="checkbox" [checked]="s.streamed" (change)="toggleStreamed(s)" class="rounded border-ink/30" />
         Este servicio se transmite en vivo
       </label>
-      <button (click)="save(s)" class="rounded-pill bg-ink text-cream text-sm px-4 py-2">Guardar</button>
+      <div class="flex items-center gap-3">
+        <button (click)="save(s)" [disabled]="savingId() === s.id"
+          class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
+          {{ savingId() === s.id ? 'Guardando...' : 'Guardar' }}
+        </button>
+        @if (savedId() === s.id) {
+          <span class="text-xs text-terracotta font-medium">Guardado ✓</span>
+        }
+        @if (errorById().get(s.id)) {
+          <span class="text-xs text-terracotta">{{ errorById().get(s.id) }}</span>
+        }
+      </div>
     </div>
   }
 </div>
