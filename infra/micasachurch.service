@@ -1,0 +1,15 @@
+[Unit]
+Description=Micasachurch Backend
+After=network.target postgresql.service
+
+[Service]
+User=srdejo
+WorkingDirectory=/home/srdejo/apps/micasachurch
+EnvironmentFile=/home/srdejo/apps/micasachurch/.env
+ExecStart=/usr/bin/java -jar /home/srdejo/apps/micasachurch/app.jar --spring.profiles.active=prod --server.port=8088
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
