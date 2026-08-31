@@ -46,11 +46,12 @@ DNS de los 4 subdominios creado por el usuario. Ejecutado hasta ahora, en una se
 - [x] Primer deploy real vía `infra/deploy.ps1 -Projects micasachurch` (backend + `frontend-landing`) más subida manual de `frontend-admin` (no automatizado todavía, ver `docs/DECISIONS.md`).
 - [x] Verificado end-to-end en producción: `GET /api/events` responde con datos seed reales, login admin (`admin`/`password` — placeholder, ver checklist abajo) devuelve JWT válido, panel carga y autentica correctamente en `admin.micasachurch.co`.
 
-Pendiente dentro de esta etapa:
-- [ ] **Fase A** (`docs/DEPLOYMENT.md`): migrar `nolost` de `micasachurch.co/api` a `nolost.micasachurch.co` / `nolost-api.micasachurch.co`.
-- [ ] **Fase B**: liberar el vhost de `micasachurch.co` de `nolost` una vez la Fase A esté verificada.
-- [ ] Apuntar el vhost de `micasachurch.co` al `frontend-landing` de este proyecto (hoy sigue sirviendo `nolost` — ver tabla de estado en `docs/PROGRESS.md`).
+- [x] **Fase A** (`docs/DEPLOYMENT.md`): `nolost` migrado a `nolost.micasachurch.co` / `nolost-api.micasachurch.co` — hecho y verificado 2026-08-31 (sin rebuild de frontend, ver `docs/DECISIONS.md`).
+- [x] **Fase B**: vhost de `micasachurch.co` liberado de `nolost` — hecho 2026-08-31.
+- [x] `micasachurch.co`/`www.micasachurch.co` apuntando al `frontend-landing` de este proyecto — verificado en producción (contenido real confirmado, no la página de `nolost`).
 - [x] Cambiar la contraseña del `AdminUser` sembrado — hecho 2026-08-31 (contraseña real generada y aplicada directo en la base). Además se agregó soporte para cambiarla desde el propio panel (ver Etapa 4.1).
+
+**`micasachurch` está completamente en producción en su dominio final** (`micasachurch.co`, `api.micasachurch.co`, `admin.micasachurch.co`), con `nolost` intacto en sus subdominios propios.
 
 ## Etapa 4.1 — Cuenta: cambio de clave propio y gestión de otros admins ✅ (2026-08-31)
 

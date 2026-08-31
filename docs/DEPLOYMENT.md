@@ -1,8 +1,8 @@
 # DEPLOYMENT.md
 
-Estado de despliegue de `micasachurch`: **DNS ya creado (2026-08-31), VPS aún sin provisionar.** El usuario creó los 5 registros DNS (`micasachurch.co`, `api`, `admin`, `nolost`, `nolost-api`, todos resolviendo a la IP de `nolost-vps`). Nada del lado del servidor se ejecutó todavía — ninguna sesión de Claude Code tiene autorización para correr `sudo` contra el VPS (el clasificador de modo automático lo bloquea aunque el `sudoers` de `srdejo` sí lo permitiría sin contraseña para los comandos de nginx/certbot). Este documento es el runbook exacto para que el usuario (o una sesión con esa autorización) lo ejecute.
+**Estado: desplegado en producción y verificado (2026-08-31).** Fases A, B y C (abajo) ejecutadas — `micasachurch.co`/`api.micasachurch.co`/`admin.micasachurch.co` sirven el proyecto nuevo, `nolost.micasachurch.co`/`nolost-api.micasachurch.co` sirven `nolost` sin cambios. Este documento queda como referencia del runbook usado y para el próximo deploy (`infra/deploy.ps1 -Projects micasachurch`, que ya funciona para backend + `frontend-landing`; `frontend-admin` sigue siendo subida manual, ver `docs/DECISIONS.md`).
 
-**Orden obligatorio**: primero migrar `nolost` a sus subdominios propios (Fase A), después liberar `micasachurch.co` (Fase B), recién ahí aprovisionar `micasachurch` (Fase C). Migrar en el orden inverso tumbaría el sitio que hoy sirve `micasachurch.co`.
+**Orden que se siguió** (no cambiarlo si se repite en otro entorno): primero migrar `nolost` a sus subdominios propios (Fase A), después liberar `micasachurch.co` (Fase B), recién ahí aprovisionar `micasachurch` (Fase C — en la práctica, Fase C se hizo antes que A/B porque no dependía de ellas, solo el corte del dominio raíz sí respetó el orden A→B).
 
 ## Subdominios previstos
 

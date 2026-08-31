@@ -4,15 +4,17 @@ Estado actual de `micasachurch`.
 
 ## Estado
 
-Backend y ambos frontends **desplegados y funcionando en producción** en sus subdominios propios (`api.micasachurch.co`, `admin.micasachurch.co`). Falta la Fase A/B de `docs/DEPLOYMENT.md` (migrar `nolost` y liberar `micasachurch.co`) para que el dominio raíz sirva el `frontend-landing` nuevo — ver tabla abajo.
+**`micasachurch` está completo y en producción en su dominio final.** Backend y ambos frontends desplegados; Fase A (migrar `nolost`) y Fase B (liberar `micasachurch.co`) de `docs/DEPLOYMENT.md` ejecutadas y verificadas el 2026-08-31.
 
-### Estado en vivo por subdominio (verificado 2026-08-31)
+### Estado en vivo por subdominio (verificado 2026-08-31, después de la Fase B)
 
 | Subdominio | Sirve | Estado |
 |---|---|---|
+| `micasachurch.co` / `www.micasachurch.co` | `frontend-landing` | ✅ funcionando — contenido real confirmado ("Mi Casa Church", "Bienvenido a...") |
 | `api.micasachurch.co` | backend (`micasachurch.service`, puerto 8088) | ✅ funcionando — `GET /api/events` responde con datos seed reales, login admin devuelve JWT válido |
-| `admin.micasachurch.co` | `frontend-admin` | ✅ funcionando — login end-to-end verificado en el navegador |
-| `micasachurch.co` | **todavía `nolost`** | esperado, sin tocar — falta Fase A/B de `docs/DEPLOYMENT.md` |
+| `admin.micasachurch.co` | `frontend-admin` | ✅ funcionando — login end-to-end verificado en el navegador, incluyendo cambio de clave propio y gestión de otros admins |
+| `nolost.micasachurch.co` | `nolost` (migrado, sin rebuild) | ✅ funcionando — mismo `dist` ya publicado, verificado con el título real de la app |
+| `nolost-api.micasachurch.co` | backend de `nolost` (puerto 8080) | ✅ funcionando — responde en un endpoint protegido (403, esperado sin JWT) |
 
 ### Backend
 
@@ -52,13 +54,10 @@ Los dos frontends usaban `environment.ts` (con `apiUrl: http://localhost:8088/ap
 - Admin de imágenes con upload queda fuera de este MVP — vista "Enlaces" solo cubre enlaces/cuentas.
 - **Password de admin sembrada (`admin`/`password`) sigue siendo el placeholder — ya está expuesta en un backend público real.** Cambiarla es la prioridad de seguridad más alta pendiente.
 - `npm run test`/`ng test` no se corrió en ninguno de los dos frontends (fuera de alcance de la verificación pedida, que se limitó a build).
-- Fase A/B de `docs/DEPLOYMENT.md` (migrar `nolost`, liberar `micasachurch.co`) no ejecutada — requiere seguir el runbook con cuidado, en orden, para no tumbar el sitio que hoy sirve `micasachurch.co`.
-- Brechas de fidelidad visual frente al mockup — ver `docs/ROADMAP.md` Etapa 8 (devocional embebido inline en el home, indicador "en vivo", `<title>`/metadatos, link del footer al admin).
+- Brechas de fidelidad visual frente al mockup — ver `docs/ROADMAP.md` Etapa 8 (devocional embebido inline en el home, indicador "en vivo", `<title>`/metadatos — ambos frontends siguen con el `<title>` default de Angular CLI, "FrontendLanding"/"FrontendAdmin", link del footer al admin).
 
 ## Próximo paso recomendado
 
-1. **Cambiar la contraseña del `AdminUser` sembrado** — ver `docs/ROADMAP.md` Etapa 9.
-2. Fase A de `docs/DEPLOYMENT.md`: migrar `nolost` a `nolost.micasachurch.co` / `nolost-api.micasachurch.co`.
-3. Fase B: liberar `micasachurch.co` y apuntarlo al `frontend-landing` de este proyecto.
-4. Etapa 8 del roadmap: cerrar las brechas de fidelidad visual con el diseño (devocional inline en home es la más visible).
-5. Cuando el cliente provea fotos reales, reemplazar los placeholders de color.
+1. Etapa 8 del roadmap: cerrar las brechas de fidelidad visual con el diseño (devocional inline en home es la más visible; `<title>` de ambos frontends es rápido y visible).
+2. Cuando el cliente provea fotos reales, reemplazar los placeholders de color.
+3. Confirmar `JWT_SECRET` real en el `.env` del VPS (no el placeholder de `application.yml`) — ver `docs/ROADMAP.md` Etapa 9.
