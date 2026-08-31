@@ -6,12 +6,20 @@ public class AdminUser {
 
     private final UUID id;
     private final String username;
-    private final String passwordHash;
+    private String passwordHash;
 
     public AdminUser(UUID id, String username, String passwordHash) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
+    }
+
+    public static AdminUser create(String username, String passwordHash) {
+        return new AdminUser(null, username, passwordHash);
+    }
+
+    public void changePasswordHash(String newPasswordHash) {
+        this.passwordHash = newPasswordHash;
     }
 
     public UUID getId() {

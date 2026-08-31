@@ -1,5 +1,7 @@
 package co.com.srdejo.micasachurch.church.infrastructure;
 
+import co.com.srdejo.micasachurch.church.application.AdminUserService;
+import co.com.srdejo.micasachurch.church.application.ChangePasswordUseCase;
 import co.com.srdejo.micasachurch.church.application.EventService;
 import co.com.srdejo.micasachurch.church.application.LinkEntryService;
 import co.com.srdejo.micasachurch.church.application.LoginUseCase;
@@ -54,5 +56,15 @@ public class ChurchConfig {
     @Bean
     public LoginUseCase loginUseCase(AdminUserRepository adminUserRepository, PasswordEncoder passwordEncoder) {
         return new LoginUseCase(adminUserRepository, passwordEncoder);
+    }
+
+    @Bean
+    public ChangePasswordUseCase changePasswordUseCase(AdminUserRepository adminUserRepository, PasswordEncoder passwordEncoder) {
+        return new ChangePasswordUseCase(adminUserRepository, passwordEncoder);
+    }
+
+    @Bean
+    public AdminUserService adminUserService(AdminUserRepository adminUserRepository, PasswordEncoder passwordEncoder) {
+        return new AdminUserService(adminUserRepository, passwordEncoder);
     }
 }

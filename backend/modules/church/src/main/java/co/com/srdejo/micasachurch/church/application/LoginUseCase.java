@@ -2,6 +2,7 @@ package co.com.srdejo.micasachurch.church.application;
 
 import co.com.srdejo.micasachurch.church.domain.AdminUser;
 import co.com.srdejo.micasachurch.church.domain.AdminUserRepository;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class LoginUseCase {
@@ -16,9 +17,9 @@ public class LoginUseCase {
 
     public AdminUser login(String username, String password) {
         AdminUser adminUser = adminUserRepository.findByUsername(username)
-                .orElseThrow(() -> new InvalidCredentialsException("auth.invalid_credentials"));
+                .orElseThrow(() -> new BadCredentialsException("auth.invalid_credentials"));
         if (!passwordEncoder.matches(password, adminUser.getPasswordHash())) {
-            throw new InvalidCredentialsException("auth.invalid_credentials");
+            throw new BadCredentialsException("auth.invalid_credentials");
         }
         return adminUser;
     }

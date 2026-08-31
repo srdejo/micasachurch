@@ -47,6 +47,11 @@ export interface SiteSettings {
   liveBannerVisible: boolean;
 }
 
+export interface AdminUserItem {
+  id: string;
+  username: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminApiService {
   private readonly http = inject(HttpClient);
@@ -106,5 +111,21 @@ export class AdminApiService {
 
   updateSiteSettings(payload: SiteSettings) {
     return this.http.patch<SiteSettings>(`${this.baseUrl}/site-settings`, payload);
+  }
+
+  changePassword(payload: { currentPassword: string; newPassword: string }) {
+    return this.http.patch<void>(`${this.baseUrl}/auth/change-password`, payload);
+  }
+
+  listAdminUsers() {
+    return this.http.get<AdminUserItem[]>(`${this.baseUrl}/admin-users`);
+  }
+
+  createAdminUser(payload: { username: string; password: string }) {
+    return this.http.post<AdminUserItem>(`${this.baseUrl}/admin-users`, payload);
+  }
+
+  deleteAdminUser(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/admin-users/${id}`);
   }
 }
