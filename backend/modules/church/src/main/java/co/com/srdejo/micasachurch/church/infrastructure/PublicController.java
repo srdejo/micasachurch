@@ -2,14 +2,18 @@ package co.com.srdejo.micasachurch.church.infrastructure;
 
 import co.com.srdejo.micasachurch.church.application.EventService;
 import co.com.srdejo.micasachurch.church.application.LinkEntryService;
+import co.com.srdejo.micasachurch.church.application.MinistryService;
 import co.com.srdejo.micasachurch.church.application.NetworkService;
 import co.com.srdejo.micasachurch.church.application.PrayerRequestService;
 import co.com.srdejo.micasachurch.church.application.ServiceScheduleService;
+import co.com.srdejo.micasachurch.church.application.SiteContentService;
 import co.com.srdejo.micasachurch.church.application.SiteSettingsService;
 import co.com.srdejo.micasachurch.church.domain.Event;
 import co.com.srdejo.micasachurch.church.domain.LinkEntry;
+import co.com.srdejo.micasachurch.church.domain.Ministry;
 import co.com.srdejo.micasachurch.church.domain.Network;
 import co.com.srdejo.micasachurch.church.domain.ServiceSchedule;
+import co.com.srdejo.micasachurch.church.domain.SiteContent;
 import co.com.srdejo.micasachurch.church.domain.SiteSettings;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -30,16 +34,21 @@ public class PublicController {
     private final LinkEntryService linkEntryService;
     private final SiteSettingsService siteSettingsService;
     private final PrayerRequestService prayerRequestService;
+    private final MinistryService ministryService;
+    private final SiteContentService siteContentService;
 
     public PublicController(EventService eventService, ServiceScheduleService serviceScheduleService,
                              NetworkService networkService, LinkEntryService linkEntryService,
-                             SiteSettingsService siteSettingsService, PrayerRequestService prayerRequestService) {
+                             SiteSettingsService siteSettingsService, PrayerRequestService prayerRequestService,
+                             MinistryService ministryService, SiteContentService siteContentService) {
         this.eventService = eventService;
         this.serviceScheduleService = serviceScheduleService;
         this.networkService = networkService;
         this.linkEntryService = linkEntryService;
         this.siteSettingsService = siteSettingsService;
         this.prayerRequestService = prayerRequestService;
+        this.ministryService = ministryService;
+        this.siteContentService = siteContentService;
     }
 
     @GetMapping("/api/events")
@@ -72,6 +81,18 @@ public class PublicController {
         return toResponse(siteSettingsService.get());
     }
 
+    @GetMapping("/api/ministries")
+    @Transactional(readOnly = true)
+    public List<MinistryResponse> ministries() {
+        return ministryService.listAll().stream().map(PublicController::toResponse).toList();
+    }
+
+    @GetMapping("/api/site-content")
+    @Transactional(readOnly = true)
+    public List<SiteContentResponse> siteContent() {
+        return siteContentService.listAll().stream().map(PublicController::toResponse).toList();
+    }
+
     @PostMapping("/api/prayer-requests")
     @Transactional
     public PrayerRequestResponse submitPrayerRequest(@Valid @RequestBody PrayerRequestSubmission request) {
@@ -102,6 +123,18 @@ public class PublicController {
         return new SiteSettingsResponse(siteSettings.isLiveBannerVisible());
     }
 
+    static MinistryResponse toResponse(Ministry ministry) {
+        return new MinistryResponse(ministry.getId(), ministry.getName(), ministry.getDescription(), ministry.getDisplayOrder());
+    }
+
+    static SiteContentResponse toResponse(SiteContent siteContent) {
+        return new SiteContentResponse(siteContent.getId(), siteContent.getKey(), siteContent.getLabel(), siteContent.getValue());
+    }
+
+    static SiteImageResponse toResponse(co.com.srdejo.micasachurch.church.domain.SiteImage siteImage) {
+        return new SiteImageResponse(siteImage.getId(), siteImage.getKey(), siteImage.getUpdatedAt());
+    }
+
     public record PrayerRequestSubmission(String name, String phone, @NotBlank String message) {
     }
 
@@ -122,5 +155,14 @@ public class PublicController {
     }
 
     public record SiteSettingsResponse(boolean liveBannerVisible) {
+    }
+
+    public record MinistryResponse(java.util.UUID id, String name, String description, int displayOrder) {
+    }
+
+    public record SiteContentResponse(java.util.UUID id, String key, String label, String value) {
+    }
+
+    public record SiteImageResponse(java.util.UUID id, String key, java.time.Instant updatedAt) {
     }
 }

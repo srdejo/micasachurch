@@ -2,7 +2,12 @@
 <header class="sticky top-0 z-40 bg-cream/95 backdrop-blur border-b border-ink/10">
   <div class="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
     <a href="#inicio" class="flex items-center gap-3">
-      <span class="h-10 w-10 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif text-lg">M</span>
+      @if (!logoImageFailed()) {
+        <img [src]="imageUrl('logo')" (error)="logoImageFailed.set(true)" alt="Mi Casa Church"
+          class="h-10 w-10 rounded-full object-cover" />
+      } @else {
+        <span class="h-10 w-10 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif text-lg">M</span>
+      }
       <span class="font-semibold tracking-tight">Mi Casa Church</span>
     </a>
     <nav class="hidden md:flex items-center gap-6 text-sm text-ink-soft">
@@ -25,7 +30,7 @@
     <p class="uppercase tracking-widest text-xs text-terracotta font-semibold mb-4">Ocaña, Norte de Santander</p>
     <h1 class="text-5xl md:text-6xl leading-tight mb-6">Bienvenido a <em class="italic text-terracotta">Casa</em></h1>
     <p class="text-lg text-ink-soft mb-8 max-w-md">
-      Queremos conocerte. Ven y visítanos: aquí hay un lugar para ti, tal como estás.
+      {{ contentValue('hero_subtitle', 'Queremos conocerte. Ven y visítanos: aquí hay un lugar para ti, tal como estás.') }}
     </p>
     <div class="flex flex-wrap gap-4 mb-10">
       <a href="#devocional" class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream px-6 py-3 font-medium transition-colors">
@@ -50,7 +55,14 @@
       </div>
     </div>
   </div>
-  <div class="rounded-card h-80 md:h-[28rem] bg-gradient-to-br from-terracotta via-gold to-cream shadow-lg"></div>
+  <div class="rounded-card h-80 md:h-[28rem] overflow-hidden shadow-lg">
+    @if (!heroImageFailed()) {
+      <img [src]="imageUrl('hero')" (error)="heroImageFailed.set(true)" alt="Congregación de Mi Casa Church"
+        class="w-full h-full object-cover" />
+    } @else {
+      <div class="w-full h-full bg-gradient-to-br from-terracotta via-gold to-cream"></div>
+    }
+  </div>
 </section>
 
 <!-- Live banner -->
@@ -116,16 +128,21 @@
 <!-- Nosotros -->
 <section id="nosotros" class="bg-section-alt py-20">
   <div class="mx-auto max-w-5xl px-6 grid md:grid-cols-2 gap-12 items-center">
-    <div class="rounded-card h-64 bg-gradient-to-tr from-gold via-terracotta to-cream"></div>
+    <div class="rounded-card h-64 overflow-hidden">
+      @if (!quienesSomosImageFailed()) {
+        <img [src]="imageUrl('quienes_somos')" (error)="quienesSomosImageFailed.set(true)" alt="Comunidad de Mi Casa Church"
+          class="w-full h-full object-cover" />
+      } @else {
+        <div class="w-full h-full bg-gradient-to-tr from-gold via-terracotta to-cream"></div>
+      }
+    </div>
     <div>
       <h2 class="text-3xl mb-4">Una familia antes que un edificio</h2>
       <p class="text-ink-soft mb-4">
-        En Mi Casa Church creemos que la iglesia es, ante todo, una familia. Un lugar donde cada persona
-        es recibida con calidez, sin importar de dónde venga o qué esté viviendo.
+        {{ contentValue('quienes_somos_paragraph_1', 'En Mi Casa Church creemos que la iglesia es, ante todo, una familia. Un lugar donde cada persona es recibida con calidez, sin importar de dónde venga o qué esté viviendo.') }}
       </p>
       <p class="text-ink-soft">
-        Somos una comunidad en Ocaña que busca vivir el evangelio de manera cercana, sencilla y real,
-        acompañándonos unos a otros en cada etapa de la vida.
+        {{ contentValue('quienes_somos_paragraph_2', 'Somos una comunidad en Ocaña que busca vivir el evangelio de manera cercana, sencilla y real, acompañándonos unos a otros en cada etapa de la vida.') }}
       </p>
     </div>
   </div>
@@ -173,7 +190,7 @@
 <section id="ministerios" class="mx-auto max-w-6xl px-6 py-20">
   <h2 class="text-3xl mb-10 text-center">Ministerios</h2>
   <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-    @for (m of ministries; track m.name) {
+    @for (m of ministries(); track m.id) {
       <div class="rounded-card bg-section-light border border-ink/10 p-6 text-center">
         <p class="font-semibold mb-2">{{ m.name }}</p>
         <p class="text-ink-muted text-sm">{{ m.description }}</p>
@@ -234,7 +251,7 @@
   <div class="mx-auto max-w-2xl px-6 text-center">
     <h2 class="text-3xl mb-4">Ofrendas</h2>
     <p class="text-ink-soft mb-8">
-      Tu ofrenda sostiene el trabajo de la iglesia en Ocaña. Gracias por sembrar con generosidad.
+      {{ contentValue('ofrendas_copy', 'Tu ofrenda sostiene el trabajo de la iglesia en Ocaña. Gracias por sembrar con generosidad.') }}
     </p>
     <div class="grid sm:grid-cols-2 gap-4 text-left">
       <div class="rounded-card bg-section-light border border-ink/10 p-5">

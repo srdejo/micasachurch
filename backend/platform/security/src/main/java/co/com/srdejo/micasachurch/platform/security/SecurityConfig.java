@@ -37,7 +37,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/auth/login").permitAll()
                         .requestMatchers("/api/events", "/api/services", "/api/networks", "/api/links",
-                                "/api/site-settings", "/api/prayer-requests").permitAll()
+                                "/api/site-settings", "/api/prayer-requests", "/api/ministries", "/api/site-content",
+                                "/api/images/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

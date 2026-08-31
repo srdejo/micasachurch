@@ -46,6 +46,20 @@ export interface PrayerRequestSubmission {
   message: string;
 }
 
+export interface MinistryItem {
+  id: string;
+  name: string;
+  description: string;
+  displayOrder: number;
+}
+
+export interface SiteContentItem {
+  id: string;
+  key: string;
+  label: string;
+  value: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ChurchApiService {
   private readonly http = inject(HttpClient);
@@ -73,5 +87,17 @@ export class ChurchApiService {
 
   submitPrayerRequest(payload: PrayerRequestSubmission): Observable<{ id: string }> {
     return this.http.post<{ id: string }>(`${this.baseUrl}/prayer-requests`, payload);
+  }
+
+  getMinistries(): Observable<MinistryItem[]> {
+    return this.http.get<MinistryItem[]>(`${this.baseUrl}/ministries`);
+  }
+
+  getSiteContent(): Observable<SiteContentItem[]> {
+    return this.http.get<SiteContentItem[]>(`${this.baseUrl}/site-content`);
+  }
+
+  imageUrl(key: string): string {
+    return `${this.baseUrl}/images/${key}`;
   }
 }

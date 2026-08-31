@@ -18,6 +18,8 @@ export const routes: Routes = [
       { path: 'redes', loadComponent: () => import('./pages/networks/networks').then((m) => m.Networks) },
       { path: 'horarios', loadComponent: () => import('./pages/schedules/schedules').then((m) => m.Schedules) },
       { path: 'enlaces', loadComponent: () => import('./pages/links/links').then((m) => m.Links) },
+      { path: 'contenido', loadComponent: () => import('./pages/content/content').then((m) => m.ContentPage) },
+      { path: 'imagenes', loadComponent: () => import('./pages/images/images').then((m) => m.ImagesPage) },
       { path: 'cuenta', loadComponent: () => import('./pages/account/account').then((m) => m.Account) },
     ],
   },

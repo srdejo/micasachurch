@@ -6,8 +6,10 @@ import {
   ChurchApiService,
   EventItem,
   LinkEntryItem,
+  MinistryItem,
   NetworkItem,
   ServiceScheduleItem,
+  SiteContentItem,
   SiteSettings,
 } from '../../core/church-api.service';
 import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
@@ -33,12 +35,12 @@ export class Home implements OnInit {
   readonly devotionalLoading = signal(true);
   readonly devotionalError = signal(false);
 
-  readonly ministries = [
-    { name: 'Niños', description: 'Un espacio seguro y divertido para que los más pequeños conozcan a Jesús.' },
-    { name: 'Jóvenes', description: 'Comunidad, propósito y fe para la nueva generación.' },
-    { name: 'Matrimonios', description: 'Acompañamiento para fortalecer el hogar y la pareja.' },
-    { name: 'Alabanza', description: 'Un equipo dedicado a guiar la adoración cada semana.' },
-  ];
+  readonly ministries = signal<MinistryItem[]>([]);
+  readonly siteContent = signal<SiteContentItem[]>([]);
+
+  readonly heroImageFailed = signal(false);
+  readonly quienesSomosImageFailed = signal(false);
+  readonly logoImageFailed = signal(false);
 
   readonly prayerForm = { name: '', phone: '', message: '' };
   readonly prayerSubmitted = signal(false);
@@ -54,7 +56,17 @@ export class Home implements OnInit {
       next: (data) => this.siteSettings.set(data),
       error: () => this.siteSettings.set({ liveBannerVisible: true }),
     });
+    this.api.getMinistries().subscribe({ next: (data) => this.ministries.set(data), error: () => this.ministries.set([]) });
+    this.api.getSiteContent().subscribe({ next: (data) => this.siteContent.set(data), error: () => this.siteContent.set([]) });
     this.loadDevotional();
+  }
+
+  contentValue(key: string, fallback: string): string {
+    return this.siteContent().find((c) => c.key === key)?.value ?? fallback;
+  }
+
+  imageUrl(key: string): string {
+    return this.api.imageUrl(key);
   }
 
   private loadDevotional(): void {

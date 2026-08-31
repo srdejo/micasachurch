@@ -5,16 +5,22 @@ import co.com.srdejo.micasachurch.church.application.ChangePasswordUseCase;
 import co.com.srdejo.micasachurch.church.application.EventService;
 import co.com.srdejo.micasachurch.church.application.LinkEntryService;
 import co.com.srdejo.micasachurch.church.application.LoginUseCase;
+import co.com.srdejo.micasachurch.church.application.MinistryService;
 import co.com.srdejo.micasachurch.church.application.NetworkService;
 import co.com.srdejo.micasachurch.church.application.PrayerRequestService;
 import co.com.srdejo.micasachurch.church.application.ServiceScheduleService;
+import co.com.srdejo.micasachurch.church.application.SiteContentService;
+import co.com.srdejo.micasachurch.church.application.SiteImageService;
 import co.com.srdejo.micasachurch.church.application.SiteSettingsService;
 import co.com.srdejo.micasachurch.church.domain.AdminUserRepository;
 import co.com.srdejo.micasachurch.church.domain.EventRepository;
 import co.com.srdejo.micasachurch.church.domain.LinkEntryRepository;
+import co.com.srdejo.micasachurch.church.domain.MinistryRepository;
 import co.com.srdejo.micasachurch.church.domain.NetworkRepository;
 import co.com.srdejo.micasachurch.church.domain.PrayerRequestRepository;
 import co.com.srdejo.micasachurch.church.domain.ServiceScheduleRepository;
+import co.com.srdejo.micasachurch.church.domain.SiteContentRepository;
+import co.com.srdejo.micasachurch.church.domain.SiteImageRepository;
 import co.com.srdejo.micasachurch.church.domain.SiteSettingsRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,5 +72,20 @@ public class ChurchConfig {
     @Bean
     public AdminUserService adminUserService(AdminUserRepository adminUserRepository, PasswordEncoder passwordEncoder) {
         return new AdminUserService(adminUserRepository, passwordEncoder);
+    }
+
+    @Bean
+    public MinistryService ministryService(MinistryRepository ministryRepository) {
+        return new MinistryService(ministryRepository);
+    }
+
+    @Bean
+    public SiteContentService siteContentService(SiteContentRepository siteContentRepository) {
+        return new SiteContentService(siteContentRepository);
+    }
+
+    @Bean
+    public SiteImageService siteImageService(SiteImageRepository siteImageRepository) {
+        return new SiteImageService(siteImageRepository);
     }
 }

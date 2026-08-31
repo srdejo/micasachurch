@@ -19,6 +19,8 @@ export class Shell {
     { path: 'redes', label: 'Redes' },
     { path: 'horarios', label: 'Horarios y en vivo' },
     { path: 'enlaces', label: 'Enlaces' },
+    { path: 'contenido', label: 'Contenido' },
+    { path: 'imagenes', label: 'Imágenes' },
     { path: 'cuenta', label: 'Cuenta' },
   ];
 

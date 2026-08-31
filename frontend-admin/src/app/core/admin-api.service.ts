@@ -53,6 +53,26 @@ export interface AdminUserItem {
   username: string;
 }
 
+export interface SiteContentItem {
+  id: string;
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface MinistryItem {
+  id: string;
+  name: string;
+  description: string;
+  displayOrder: number;
+}
+
+export interface SiteImageItem {
+  id: string;
+  key: string;
+  updatedAt: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminApiService {
   private readonly http = inject(HttpClient);
@@ -128,5 +148,43 @@ export class AdminApiService {
 
   deleteAdminUser(id: string) {
     return this.http.delete<void>(`${this.baseUrl}/admin-users/${id}`);
+  }
+
+  listSiteContent() {
+    return this.http.get<SiteContentItem[]>(`${this.baseUrl}/site-content`);
+  }
+
+  updateSiteContent(id: string, value: string) {
+    return this.http.patch<SiteContentItem>(`${this.baseUrl}/site-content/${id}`, { value });
+  }
+
+  listMinistries() {
+    return this.http.get<MinistryItem[]>(`${this.baseUrl}/ministries`);
+  }
+
+  createMinistry(payload: Omit<MinistryItem, 'id'>) {
+    return this.http.post<MinistryItem>(`${this.baseUrl}/ministries`, payload);
+  }
+
+  updateMinistry(id: string, payload: Omit<MinistryItem, 'id'>) {
+    return this.http.put<MinistryItem>(`${this.baseUrl}/ministries/${id}`, payload);
+  }
+
+  deleteMinistry(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/ministries/${id}`);
+  }
+
+  listSiteImages() {
+    return this.http.get<SiteImageItem[]>(`${this.baseUrl}/images`);
+  }
+
+  uploadSiteImage(key: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<SiteImageItem>(`${this.baseUrl}/images/${key}`, formData);
+  }
+
+  imageUrl(key: string): string {
+    return `${environment.apiUrl}/images/${key}`;
   }
 }
