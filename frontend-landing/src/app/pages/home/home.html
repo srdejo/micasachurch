@@ -99,8 +99,8 @@
 
 <!-- Live banner -->
 @if (siteSettings().liveBannerVisible) {
-  <a [href]="linkValue('facebook') || 'https://facebook.com'" target="_blank" rel="noopener"
-    class="flex flex-wrap items-center justify-center gap-3.5 px-[22px] py-4 bg-terracotta text-cream no-underline text-center hover:bg-terracotta-hover">
+  <button type="button" (click)="openLiveModal()"
+    class="w-full flex flex-wrap items-center justify-center gap-3.5 px-[22px] py-4 bg-terracotta text-cream text-center border-0 cursor-pointer hover:bg-terracotta-hover">
     <span class="flex items-center gap-[9px] text-[12.5px] tracking-[0.16em] uppercase font-bold">
       <span class="relative flex h-2.5 w-2.5">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cream opacity-75"></span>
@@ -110,7 +110,23 @@
     </span>
     <span class="text-[16.5px] font-medium">Transmisión todos los días a las 7:00 a.m. por Facebook</span>
     <span class="text-[15px] font-bold border-b border-cream/60 pb-px">Ver ahora</span>
-  </a>
+  </button>
+}
+
+<!-- Modal En vivo -->
+@if (liveModalOpen()) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-ink/80 px-4" (click)="closeLiveModal()">
+    <div class="relative w-full max-w-[720px]" (click)="$event.stopPropagation()">
+      <button type="button" (click)="closeLiveModal()" aria-label="Cerrar"
+        class="absolute -top-11 right-0 text-cream text-[15px] font-semibold border-0 bg-transparent cursor-pointer hover:text-gold">Cerrar ✕</button>
+      <div class="relative aspect-video rounded-[18px] overflow-hidden bg-ink">
+        <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F100064597875305&tabs=videos&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false"
+          title="Transmisión en vivo de Mi Casa Church por Facebook"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          loading="lazy" class="absolute inset-0 w-full h-full border-0"></iframe>
+      </div>
+    </div>
+  </div>
 }
 
 <!-- Prédicas -->
@@ -123,19 +139,19 @@
     </div>
     <div class="grid grid-cols-[1.6fr_1fr] max-[980px]:grid-cols-1 gap-[26px] items-start">
       <div class="relative aspect-video rounded-[18px] overflow-hidden bg-ink">
-        <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F100064597875305&tabs=videos&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false"
-          title="Prédicas y transmisiones en vivo de Mi Casa Church"
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          loading="lazy" class="absolute inset-0 w-full h-full border-0"></iframe>
+        <iframe src="https://www.youtube.com/embed/videoseries?list=UUsH7cdrkVZi7tQNZJhAkB1g&rel=0"
+          title="Prédicas de Mi Casa Church"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          allowfullscreen loading="lazy" class="absolute inset-0 w-full h-full border-0"></iframe>
       </div>
       <div class="flex flex-col gap-4 p-7 bg-section-light border border-ink/[0.14] rounded-[18px]">
-        <span class="font-serif text-[29px] leading-[1.1]">En vivo a las 7:00 a.m. y en cada reunión</span>
-        <p class="m-0 text-[16.5px] leading-[1.65] text-ink-muted">El reproductor toma automáticamente la transmisión en vivo de Facebook cuando está activa, y muestra las prédicas pasadas el resto del tiempo.</p>
+        <span class="font-serif text-[29px] leading-[1.1]">Las últimas prédicas, siempre al día</span>
+        <p class="m-0 text-[16.5px] leading-[1.65] text-ink-muted">El reproductor toma automáticamente los videos más recientes del canal. Usa la lista dentro del reproductor para saltar entre prédicas.</p>
         <div class="flex flex-wrap gap-2.5 mt-0.5">
           <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
             class="bg-ink text-cream px-[22px] py-[13px] rounded-pill font-semibold text-[14.5px] hover:bg-terracotta">Suscribirse</a>
-          <a [href]="linkValue('facebook') || 'https://www.facebook.com/micasachurchocana'" target="_blank" rel="noopener"
-            class="border border-ink/25 text-ink px-[22px] py-[13px] rounded-pill font-semibold text-[14.5px] hover:border-ink">En vivo 7:00 a.m.</a>
+          <button type="button" (click)="openLiveModal()"
+            class="border border-ink/25 text-ink px-[22px] py-[13px] rounded-pill font-semibold text-[14.5px] cursor-pointer hover:border-ink">En vivo 7:00 a.m.</button>
         </div>
       </div>
     </div>
@@ -311,14 +327,14 @@
           <span class="text-[15px] font-semibold">Seguir →</span>
         </div>
       </a>
-      <a [href]="linkValue('facebook') || 'https://www.facebook.com/micasachurchocana'" target="_blank" rel="noopener"
-        class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl border border-cream/[0.22] text-cream no-underline min-h-[190px] hover:border-cream hover:bg-cream/[0.06]">
+      <button type="button" (click)="openLiveModal()"
+        class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl border border-cream/[0.22] text-cream text-left bg-transparent cursor-pointer min-h-[190px] hover:border-cream hover:bg-cream/[0.06]">
         <span class="text-[12.5px] tracking-[0.16em] uppercase font-bold text-gold">Facebook</span>
         <div class="flex flex-col gap-1">
           <span class="font-serif text-[27px] leading-[1.1]">En vivo 7:00 a.m.</span>
           <span class="text-[15px] font-semibold">Ver ahora →</span>
         </div>
-      </a>
+      </button>
       <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
         class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl border border-cream/[0.22] text-cream no-underline min-h-[190px] hover:border-cream hover:bg-cream/[0.06]">
         <span class="text-[12.5px] tracking-[0.16em] uppercase font-bold text-gold">YouTube</span>
@@ -456,10 +472,10 @@
 <!-- Barra fija inferior (solo móvil) -->
 <div class="hidden max-[980px]:flex fixed bottom-0 inset-x-0 z-[70] gap-2.5 px-3.5 bg-cream/96 backdrop-blur-[10px] border-t border-ink/[0.12]"
      style="padding-top: 10px; padding-bottom: calc(12px + env(safe-area-inset-bottom));">
-  <a [href]="linkValue('facebook') || 'https://www.facebook.com/micasachurchocana'" target="_blank" rel="noopener"
-    class="flex-1 flex items-center justify-center gap-2 min-h-[52px] rounded-pill bg-terracotta text-cream font-semibold text-[15.5px] hover:bg-terracotta-hover">
+  <button type="button" (click)="openLiveModal()"
+    class="flex-1 flex items-center justify-center gap-2 min-h-[52px] rounded-pill bg-terracotta text-cream font-semibold text-[15.5px] border-0 cursor-pointer hover:bg-terracotta-hover">
     <span class="h-2 w-2 rounded-full bg-cream"></span>En vivo
-  </a>
+  </button>
   <a [href]="linkValue('whatsapp') || 'https://wa.me/573045332589'" target="_blank" rel="noopener"
     class="flex-1 flex items-center justify-center min-h-[52px] rounded-pill bg-ink text-cream font-semibold text-[15.5px] hover:bg-ink/90">WhatsApp</a>
 </div>

@@ -47,6 +47,7 @@ export class Home implements OnInit {
   readonly prayerError = signal<string | null>(null);
 
   readonly mobileMenuOpen = signal(false);
+  readonly liveModalOpen = signal(false);
   readonly prettyDate = this.formatPrettyDate(new Date());
 
   toggleMobileMenu(): void {
@@ -55,6 +56,14 @@ export class Home implements OnInit {
 
   closeMobileMenu(): void {
     this.mobileMenuOpen.set(false);
+  }
+
+  openLiveModal(): void {
+    this.liveModalOpen.set(true);
+  }
+
+  closeLiveModal(): void {
+    this.liveModalOpen.set(false);
   }
 
   private formatPrettyDate(date: Date): string {
