@@ -84,7 +84,7 @@ public class PublicController {
     @GetMapping("/api/ministries")
     @Transactional(readOnly = true)
     public List<MinistryResponse> ministries() {
-        return ministryService.listAll().stream().map(PublicController::toResponse).toList();
+        return ministryService.listPublished().stream().map(PublicController::toResponse).toList();
     }
 
     @GetMapping("/api/site-content")

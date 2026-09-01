@@ -2,9 +2,11 @@ package co.com.srdejo.micasachurch.church.infrastructure;
 
 import co.com.srdejo.micasachurch.church.application.AdminUserService;
 import co.com.srdejo.micasachurch.church.domain.AdminUser;
+import co.com.srdejo.micasachurch.platform.security.JwtClaims;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +37,8 @@ public class AdminUserController {
 
     @PostMapping
     @Transactional
-    public AdminUserResponse create(@Valid @RequestBody CreateAdminUserRequest request) {
-        AdminUser adminUser = adminUserService.create(request.username(), request.password());
+    public AdminUserResponse create(@AuthenticationPrincipal JwtClaims claims, @Valid @RequestBody CreateAdminUserRequest request) {
+        AdminUser adminUser = adminUserService.invite(request.username(), request.email(), claims.username());
         return toResponse(adminUser);
     }
 
@@ -47,12 +49,12 @@ public class AdminUserController {
     }
 
     private static AdminUserResponse toResponse(AdminUser adminUser) {
-        return new AdminUserResponse(adminUser.getId(), adminUser.getUsername());
+        return new AdminUserResponse(adminUser.getId(), adminUser.getUsername(), adminUser.getEmail());
     }
 
-    public record CreateAdminUserRequest(@NotBlank String username, @NotBlank @Size(min = 8) String password) {
+    public record CreateAdminUserRequest(@NotBlank String username, @NotBlank @Email String email) {
     }
 
-    public record AdminUserResponse(UUID id, String username) {
+    public record AdminUserResponse(UUID id, String username, String email) {
     }
 }

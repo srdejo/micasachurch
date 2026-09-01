@@ -10,5 +10,7 @@ public interface SiteContentRepository {
 
     Optional<SiteContent> findById(UUID id);
 
+    List<SiteContent> findAllWithDraft();
+
     SiteContent save(SiteContent siteContent);
 }

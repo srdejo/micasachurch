@@ -19,19 +19,37 @@ public class MinistryService {
         return ministryRepository.findAllOrdered();
     }
 
+    public List<Ministry> listPublished() {
+        return ministryRepository.findAllPublishedOrdered();
+    }
+
     public Ministry create(String name, String description, int displayOrder) {
-        return ministryRepository.save(Ministry.create(name, description, displayOrder));
+        return ministryRepository.save(Ministry.createDraft(name, description, displayOrder));
     }
 
     public Ministry update(UUID id, String name, String description, int displayOrder) {
         Ministry ministry = ministryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ministry.not_found"));
-        ministry.update(name, description, displayOrder);
+        ministry.setDisplayOrder(displayOrder);
+        ministry.stageDraft(name, description, true);
         return ministryRepository.save(ministry);
     }
 
     public void delete(UUID id) {
         ministryRepository.findById(id).orElseThrow(() -> new NotFoundException("ministry.not_found"));
         ministryRepository.deleteById(id);
+    }
+
+    public int publishPending() {
+        List<Ministry> pending = ministryRepository.findAllWithDraft();
+        for (Ministry ministry : pending) {
+            ministry.publishDraft();
+            ministryRepository.save(ministry);
+        }
+        return pending.size();
+    }
+
+    public int countPending() {
+        return ministryRepository.findAllWithDraft().size();
     }
 }

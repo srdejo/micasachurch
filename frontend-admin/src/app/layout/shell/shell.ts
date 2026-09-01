@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AdminApiService } from '../../core/admin-api.service';
 import { AuthService } from '../../core/auth.service';
+import { PublishStateService } from '../../core/publish-state.service';
 
 @Component({
   selector: 'app-shell',
@@ -9,8 +11,24 @@ import { AuthService } from '../../core/auth.service';
   imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './shell.html',
 })
-export class Shell {
+export class Shell implements OnInit {
   readonly auth = inject(AuthService);
+  readonly publishState = inject(PublishStateService);
+  private readonly api = inject(AdminApiService);
+
+  readonly logoFailed = signal(false);
+
+  ngOnInit(): void {
+    this.publishState.refresh();
+  }
+
+  logoUrl(): string {
+    return this.api.imageUrl('logo');
+  }
+
+  publishChanges(): void {
+    this.publishState.publish();
+  }
 
   readonly navItems = [
     { path: 'panel', label: 'Panel' },

@@ -10,4 +10,6 @@ public interface EventSpringDataRepository extends JpaRepository<EventJpaEntity,
     List<EventJpaEntity> findByPublishedTrueOrderByDisplayOrderAsc();
 
     List<EventJpaEntity> findAllByOrderByDisplayOrderAsc();
+
+    List<EventJpaEntity> findByHasDraftTrue();
 }

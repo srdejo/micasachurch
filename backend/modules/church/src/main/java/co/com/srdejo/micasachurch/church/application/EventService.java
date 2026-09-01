@@ -24,17 +24,31 @@ public class EventService {
     }
 
     public Event create(String day, String month, String title, String detail, boolean published, int displayOrder) {
-        return eventRepository.save(Event.create(day, month, title, detail, published, displayOrder));
+        return eventRepository.save(Event.createDraft(day, month, title, detail, published, displayOrder));
     }
 
     public Event update(UUID id, String day, String month, String title, String detail, boolean published, int displayOrder) {
         Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException("event.not_found"));
-        event.update(day, month, title, detail, published, displayOrder);
+        event.setDisplayOrder(displayOrder);
+        event.stageDraft(day, month, title, detail, published);
         return eventRepository.save(event);
     }
 
     public void delete(UUID id) {
         eventRepository.findById(id).orElseThrow(() -> new NotFoundException("event.not_found"));
         eventRepository.deleteById(id);
+    }
+
+    public int publishPending() {
+        List<Event> pending = eventRepository.findAllWithDraft();
+        for (Event event : pending) {
+            event.publishDraft();
+            eventRepository.save(event);
+        }
+        return pending.size();
+    }
+
+    public int countPending() {
+        return eventRepository.findAllWithDraft().size();
     }
 }

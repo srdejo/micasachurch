@@ -20,7 +20,8 @@ public class MinistryRepositoryAdapter implements MinistryRepository {
     @Override
     public Ministry save(Ministry ministry) {
         MinistryJpaEntity entity = new MinistryJpaEntity(ministry.getId(), ministry.getName(), ministry.getDescription(),
-                ministry.getDisplayOrder());
+                ministry.getDisplayOrder(), ministry.isPublished(), ministry.getDraftName(), ministry.getDraftDescription(),
+                ministry.getDraftPublished(), ministry.hasDraft());
         return toDomain(springDataRepository.save(entity));
     }
 
@@ -35,11 +36,23 @@ public class MinistryRepositoryAdapter implements MinistryRepository {
     }
 
     @Override
+    public List<Ministry> findAllPublishedOrdered() {
+        return springDataRepository.findByPublishedTrueOrderByDisplayOrderAsc().stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public List<Ministry> findAllWithDraft() {
+        return springDataRepository.findByHasDraftTrue().stream().map(this::toDomain).toList();
+    }
+
+    @Override
     public void deleteById(UUID id) {
         springDataRepository.deleteById(id);
     }
 
     private Ministry toDomain(MinistryJpaEntity entity) {
-        return new Ministry(entity.getId(), entity.getName(), entity.getDescription(), entity.getDisplayOrder());
+        return new Ministry(entity.getId(), entity.getName(), entity.getDescription(), entity.getDisplayOrder(),
+                entity.isPublished(), entity.getDraftName(), entity.getDraftDescription(), entity.getDraftPublished(),
+                entity.isHasDraft());
     }
 }

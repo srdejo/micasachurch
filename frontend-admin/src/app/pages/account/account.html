@@ -1,54 +1,86 @@
-<h1 class="text-2xl font-serif mb-2">Cuenta</h1>
-<p class="text-ink-muted text-sm mb-6">Cambiá tu clave o gestioná otros usuarios que pueden entrar al panel.</p>
+<div class="flex flex-col gap-1 mb-7">
+  <h1 class="font-serif text-[40px] leading-none">Cuenta</h1>
+  <span class="text-[15px] text-ink-muted">Cambiá tu clave o gestioná otros usuarios que pueden entrar al panel</span>
+</div>
 
 <div class="grid md:grid-cols-2 gap-6">
-  <div class="rounded-card bg-card border border-ink/10 p-6">
-    <p class="font-semibold mb-4">Cambiar mi clave</p>
-    <form (ngSubmit)="changePassword()" class="space-y-3">
-      <input [ngModel]="currentPassword()" (ngModelChange)="currentPassword.set($event)" name="currentPassword"
-        type="password" placeholder="Clave actual" required
-        class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
-      <input [ngModel]="newPassword()" (ngModelChange)="newPassword.set($event)" name="newPassword"
-        type="password" placeholder="Clave nueva (mínimo 8 caracteres)" required minlength="8"
-        class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
-      @if (passwordError()) {
-        <p class="text-terracotta text-sm">{{ passwordError() }}</p>
-      }
-      @if (passwordSuccess()) {
-        <p class="text-sm text-ink">Clave actualizada.</p>
-      }
-      <button type="submit" [disabled]="changingPassword()"
-        class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
-        {{ changingPassword() ? 'Guardando...' : 'Cambiar clave' }}
-      </button>
-    </form>
+  <div class="rounded-card bg-card border border-ink/[0.14] p-6 flex flex-col gap-6">
+    <div>
+      <p class="font-semibold mb-4">Correo de recuperación</p>
+      <p class="text-ink-muted text-xs mb-3">Lo usamos para enviarte el enlace si olvidas tu clave.</p>
+      <form (ngSubmit)="saveEmail()" class="space-y-3">
+        <input [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" type="email" placeholder="tu@correo.com" required
+          class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
+        @if (emailError()) {
+          <p class="text-terracotta text-sm">{{ emailError() }}</p>
+        }
+        @if (emailSuccess()) {
+          <p class="text-sm text-terracotta">Correo actualizado ✓</p>
+        }
+        <button type="submit" [disabled]="savingEmail()"
+          class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
+          {{ savingEmail() ? 'Guardando...' : 'Guardar correo' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="pt-6 border-t border-ink/10">
+      <p class="font-semibold mb-4">Cambiar mi clave</p>
+      <form (ngSubmit)="changePassword()" class="space-y-3">
+        <input [ngModel]="currentPassword()" (ngModelChange)="currentPassword.set($event)" name="currentPassword"
+          type="password" placeholder="Clave actual" required
+          class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
+        <input [ngModel]="newPassword()" (ngModelChange)="newPassword.set($event)" name="newPassword"
+          type="password" placeholder="Clave nueva (mínimo 8 caracteres)" required minlength="8"
+          class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
+        @if (passwordError()) {
+          <p class="text-terracotta text-sm">{{ passwordError() }}</p>
+        }
+        @if (passwordSuccess()) {
+          <p class="text-sm text-ink">Clave actualizada.</p>
+        }
+        <button type="submit" [disabled]="changingPassword()"
+          class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
+          {{ changingPassword() ? 'Guardando...' : 'Cambiar clave' }}
+        </button>
+      </form>
+    </div>
   </div>
 
-  <div class="rounded-card bg-card border border-ink/10 p-6">
+  <div class="rounded-card bg-card border border-ink/[0.14] p-6">
     <p class="font-semibold mb-4">Usuarios administradores</p>
 
     <div class="space-y-2 mb-5">
       @for (user of adminUsers(); track user.id) {
         <div class="flex items-center justify-between rounded-card border border-ink/10 px-3 py-2 text-sm">
-          <span>{{ user.username }}</span>
+          <div class="flex flex-col">
+            <span>{{ user.username }}</span>
+            @if (user.email) {
+              <span class="text-xs text-ink-muted">{{ user.email }}</span>
+            }
+          </div>
           <button (click)="deleteAdminUser(user)" class="text-terracotta hover:underline">Eliminar</button>
         </div>
       }
     </div>
 
+    <p class="text-ink-muted text-xs mb-3">Se le enviará un correo de invitación para que cree su propia clave. El enlace vence en 24 horas.</p>
     <form (ngSubmit)="createAdminUser()" class="space-y-3">
       <input [ngModel]="newUsername()" (ngModelChange)="newUsername.set($event)" name="newUsername"
         type="text" placeholder="Usuario nuevo" required
         class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
-      <input [ngModel]="newUserPassword()" (ngModelChange)="newUserPassword.set($event)" name="newUserPassword"
-        type="password" placeholder="Clave (mínimo 8 caracteres)" required minlength="8"
+      <input [ngModel]="newUserEmail()" (ngModelChange)="newUserEmail.set($event)" name="newUserEmail"
+        type="email" placeholder="Correo del nuevo usuario" required
         class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm" />
       @if (createUserError()) {
         <p class="text-terracotta text-sm">{{ createUserError() }}</p>
       }
+      @if (userInvited()) {
+        <p class="text-sm text-terracotta">Invitación enviada ✓</p>
+      }
       <button type="submit" [disabled]="creatingUser()"
         class="rounded-pill bg-terracotta text-cream text-sm px-4 py-2 disabled:opacity-60">
-        {{ creatingUser() ? 'Creando...' : 'Agregar usuario' }}
+        {{ creatingUser() ? 'Enviando...' : 'Invitar usuario' }}
       </button>
     </form>
   </div>

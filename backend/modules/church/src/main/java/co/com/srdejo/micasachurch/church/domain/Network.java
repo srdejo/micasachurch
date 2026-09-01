@@ -6,7 +6,7 @@ public class Network {
 
     private final UUID id;
     private final String key;
-    private final String name;
+    private String name;
     private String description;
     private String leadContact;
 
@@ -18,7 +18,14 @@ public class Network {
         this.leadContact = leadContact;
     }
 
-    public void update(String description, String leadContact) {
+    public static Network create(String name, String description, String leadContact) {
+        UUID id = UUID.randomUUID();
+        String key = "custom_" + id.toString().replace("-", "").substring(0, 12);
+        return new Network(id, key, name, description, leadContact);
+    }
+
+    public void update(String name, String description, String leadContact) {
+        this.name = name;
         this.description = description;
         this.leadContact = leadContact;
     }

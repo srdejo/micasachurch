@@ -27,14 +27,22 @@ public class SiteContentJpaEntity {
     @Column(nullable = false, columnDefinition = "text")
     private String value;
 
+    @Column(name = "draft_value", columnDefinition = "text")
+    private String draftValue;
+
+    @Column(name = "has_draft", nullable = false)
+    private boolean hasDraft;
+
     protected SiteContentJpaEntity() {
     }
 
-    public SiteContentJpaEntity(UUID id, String key, String label, String value) {
+    public SiteContentJpaEntity(UUID id, String key, String label, String value, String draftValue, boolean hasDraft) {
         this.id = id;
         this.key = key;
         this.label = label;
         this.value = value;
+        this.draftValue = draftValue;
+        this.hasDraft = hasDraft;
     }
 
     public UUID getId() {
@@ -51,5 +59,13 @@ public class SiteContentJpaEntity {
 
     public String getValue() {
         return value;
+    }
+
+    public String getDraftValue() {
+        return draftValue;
+    }
+
+    public boolean isHasDraft() {
+        return hasDraft;
     }
 }

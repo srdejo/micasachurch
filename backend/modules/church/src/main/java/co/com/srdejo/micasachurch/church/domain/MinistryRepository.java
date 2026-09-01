@@ -12,5 +12,9 @@ public interface MinistryRepository {
 
     List<Ministry> findAllOrdered();
 
+    List<Ministry> findAllPublishedOrdered();
+
+    List<Ministry> findAllWithDraft();
+
     void deleteById(UUID id);
 }

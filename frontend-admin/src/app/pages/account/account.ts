@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminApiService, AdminUserItem } from '../../core/admin-api.service';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-account',
@@ -12,6 +13,7 @@ import { AdminApiService, AdminUserItem } from '../../core/admin-api.service';
 })
 export class Account implements OnInit {
   private readonly api = inject(AdminApiService);
+  private readonly auth = inject(AuthService);
 
   readonly adminUsers = signal<AdminUserItem[]>([]);
 
@@ -21,17 +23,29 @@ export class Account implements OnInit {
   readonly passwordSuccess = signal(false);
   readonly changingPassword = signal(false);
 
+  readonly email = signal('');
+  readonly emailError = signal<string | null>(null);
+  readonly emailSuccess = signal(false);
+  readonly savingEmail = signal(false);
+
   readonly newUsername = signal('');
-  readonly newUserPassword = signal('');
+  readonly newUserEmail = signal('');
   readonly createUserError = signal<string | null>(null);
   readonly creatingUser = signal(false);
+  readonly userInvited = signal(false);
 
   ngOnInit(): void {
     this.loadAdminUsers();
   }
 
   private loadAdminUsers(): void {
-    this.api.listAdminUsers().subscribe((data) => this.adminUsers.set(data));
+    this.api.listAdminUsers().subscribe((data) => {
+      this.adminUsers.set(data);
+      const self = data.find((u) => u.username === this.auth.username());
+      if (self?.email && !this.email()) {
+        this.email.set(self.email);
+      }
+    });
   }
 
   changePassword(): void {
@@ -54,21 +68,39 @@ export class Account implements OnInit {
       });
   }
 
+  saveEmail(): void {
+    this.emailError.set(null);
+    this.emailSuccess.set(false);
+    this.savingEmail.set(true);
+    this.api.updateOwnEmail({ email: this.email() }).subscribe({
+      next: () => {
+        this.savingEmail.set(false);
+        this.emailSuccess.set(true);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.savingEmail.set(false);
+        this.emailError.set(err.error?.error ?? 'No se pudo guardar el correo.');
+      },
+    });
+  }
+
   createAdminUser(): void {
     this.createUserError.set(null);
+    this.userInvited.set(false);
     this.creatingUser.set(true);
     this.api
-      .createAdminUser({ username: this.newUsername(), password: this.newUserPassword() })
+      .createAdminUser({ username: this.newUsername(), email: this.newUserEmail() })
       .subscribe({
         next: () => {
           this.creatingUser.set(false);
+          this.userInvited.set(true);
           this.newUsername.set('');
-          this.newUserPassword.set('');
+          this.newUserEmail.set('');
           this.loadAdminUsers();
         },
         error: (err: HttpErrorResponse) => {
           this.creatingUser.set(false);
-          this.createUserError.set(err.error?.error ?? 'No se pudo crear el usuario.');
+          this.createUserError.set(err.error?.error ?? 'No se pudo invitar al usuario.');
         },
       });
   }

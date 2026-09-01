@@ -14,5 +14,7 @@ public interface EventRepository {
 
     List<Event> findAllOrdered();
 
+    List<Event> findAllWithDraft();
+
     void deleteById(UUID id);
 }

@@ -36,10 +36,30 @@ public class EventJpaEntity {
     @Column(name = "display_order", nullable = false)
     private int displayOrder;
 
+    @Column(name = "draft_day")
+    private String draftDay;
+
+    @Column(name = "draft_month")
+    private String draftMonth;
+
+    @Column(name = "draft_title")
+    private String draftTitle;
+
+    @Column(name = "draft_detail", columnDefinition = "text")
+    private String draftDetail;
+
+    @Column(name = "draft_published")
+    private Boolean draftPublished;
+
+    @Column(name = "has_draft", nullable = false)
+    private boolean hasDraft;
+
     protected EventJpaEntity() {
     }
 
-    public EventJpaEntity(UUID id, String day, String month, String title, String detail, boolean published, int displayOrder) {
+    public EventJpaEntity(UUID id, String day, String month, String title, String detail, boolean published, int displayOrder,
+                           String draftDay, String draftMonth, String draftTitle, String draftDetail, Boolean draftPublished,
+                           boolean hasDraft) {
         this.id = id;
         this.day = day;
         this.month = month;
@@ -47,6 +67,12 @@ public class EventJpaEntity {
         this.detail = detail;
         this.published = published;
         this.displayOrder = displayOrder;
+        this.draftDay = draftDay;
+        this.draftMonth = draftMonth;
+        this.draftTitle = draftTitle;
+        this.draftDetail = draftDetail;
+        this.draftPublished = draftPublished;
+        this.hasDraft = hasDraft;
     }
 
     public UUID getId() {
@@ -75,5 +101,29 @@ public class EventJpaEntity {
 
     public int getDisplayOrder() {
         return displayOrder;
+    }
+
+    public String getDraftDay() {
+        return draftDay;
+    }
+
+    public String getDraftMonth() {
+        return draftMonth;
+    }
+
+    public String getDraftTitle() {
+        return draftTitle;
+    }
+
+    public String getDraftDetail() {
+        return draftDetail;
+    }
+
+    public Boolean getDraftPublished() {
+        return draftPublished;
+    }
+
+    public boolean isHasDraft() {
+        return hasDraft;
     }
 }

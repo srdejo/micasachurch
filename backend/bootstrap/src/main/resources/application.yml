@@ -20,6 +20,11 @@ spring.servlet.multipart:
 
 app:
   uploads-dir: ${UPLOADS_DIR:uploads}
+  admin-public-url: ${ADMIN_PUBLIC_URL:http://admin.micasachurch.test}
+
+contact:
+  api:
+    base-url: ${CONTACT_API_URL:http://localhost:3000}
 
 security:
   jwt:

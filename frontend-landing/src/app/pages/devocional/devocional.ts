@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ChurchApiService } from '../../core/church-api.service';
 import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
 import { DevotionalArticle } from '../../shared/devotional-article/devotional-article';
 
@@ -12,6 +13,7 @@ import { DevotionalArticle } from '../../shared/devotional-article/devotional-ar
 })
 export class Devocional implements OnInit {
   private readonly api = inject(DevotionalApiService);
+  private readonly churchApi = inject(ChurchApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -21,6 +23,11 @@ export class Devocional implements OnInit {
   readonly currentDate = signal(new Date());
   readonly fontScale = signal(1);
   readonly shared = signal(false);
+  readonly logoImageFailed = signal(false);
+
+  imageUrl(key: string): string {
+    return this.churchApi.imageUrl(key);
+  }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {

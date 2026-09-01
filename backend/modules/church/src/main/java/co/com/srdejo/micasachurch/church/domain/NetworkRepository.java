@@ -11,4 +11,6 @@ public interface NetworkRepository {
     Optional<Network> findById(UUID id);
 
     List<Network> findAll();
+
+    void deleteById(UUID id);
 }

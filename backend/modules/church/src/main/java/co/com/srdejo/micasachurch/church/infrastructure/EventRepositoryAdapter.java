@@ -20,7 +20,8 @@ public class EventRepositoryAdapter implements EventRepository {
     @Override
     public Event save(Event event) {
         EventJpaEntity entity = new EventJpaEntity(event.getId(), event.getDay(), event.getMonth(), event.getTitle(),
-                event.getDetail(), event.isPublished(), event.getDisplayOrder());
+                event.getDetail(), event.isPublished(), event.getDisplayOrder(), event.getDraftDay(), event.getDraftMonth(),
+                event.getDraftTitle(), event.getDraftDetail(), event.getDraftPublished(), event.hasDraft());
         return toDomain(springDataRepository.save(entity));
     }
 
@@ -40,12 +41,18 @@ public class EventRepositoryAdapter implements EventRepository {
     }
 
     @Override
+    public List<Event> findAllWithDraft() {
+        return springDataRepository.findByHasDraftTrue().stream().map(this::toDomain).toList();
+    }
+
+    @Override
     public void deleteById(UUID id) {
         springDataRepository.deleteById(id);
     }
 
     private Event toDomain(EventJpaEntity entity) {
         return new Event(entity.getId(), entity.getDay(), entity.getMonth(), entity.getTitle(), entity.getDetail(),
-                entity.isPublished(), entity.getDisplayOrder());
+                entity.isPublished(), entity.getDisplayOrder(), entity.getDraftDay(), entity.getDraftMonth(),
+                entity.getDraftTitle(), entity.getDraftDetail(), entity.getDraftPublished(), entity.isHasDraft());
     }
 }

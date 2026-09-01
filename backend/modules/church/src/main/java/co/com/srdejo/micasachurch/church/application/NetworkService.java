@@ -19,9 +19,18 @@ public class NetworkService {
         return networkRepository.findAll();
     }
 
-    public Network update(UUID id, String description, String leadContact) {
+    public Network create(String name, String description, String leadContact) {
+        return networkRepository.save(Network.create(name, description, leadContact));
+    }
+
+    public Network update(UUID id, String name, String description, String leadContact) {
         Network network = networkRepository.findById(id).orElseThrow(() -> new NotFoundException("network.not_found"));
-        network.update(description, leadContact);
+        network.update(name, description, leadContact);
         return networkRepository.save(network);
+    }
+
+    public void delete(UUID id) {
+        networkRepository.findById(id).orElseThrow(() -> new NotFoundException("network.not_found"));
+        networkRepository.deleteById(id);
     }
 }

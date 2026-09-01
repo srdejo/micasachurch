@@ -24,13 +24,17 @@ public class AdminUserJpaEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Column
+    private String email;
+
     protected AdminUserJpaEntity() {
     }
 
-    public AdminUserJpaEntity(UUID id, String username, String passwordHash) {
+    public AdminUserJpaEntity(UUID id, String username, String passwordHash, String email) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
+        this.email = email;
     }
 
     public UUID getId() {
@@ -43,5 +47,9 @@ public class AdminUserJpaEntity {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

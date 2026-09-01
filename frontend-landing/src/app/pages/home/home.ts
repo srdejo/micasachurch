@@ -13,12 +13,11 @@ import {
   SiteSettings,
 } from '../../core/church-api.service';
 import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
-import { DevotionalArticle } from '../../shared/devotional-article/devotional-article';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DevotionalArticle],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
@@ -46,6 +45,25 @@ export class Home implements OnInit {
   readonly prayerSubmitted = signal(false);
   readonly prayerSubmitting = signal(false);
   readonly prayerError = signal<string | null>(null);
+
+  readonly mobileMenuOpen = signal(false);
+  readonly prettyDate = this.formatPrettyDate(new Date());
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
+  private formatPrettyDate(date: Date): string {
+    const meses = [
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+    ];
+    return `${date.getDate()} de ${meses[date.getMonth()]} de ${date.getFullYear()}`;
+  }
 
   ngOnInit(): void {
     this.api.getEvents().subscribe({ next: (data) => this.events.set(data), error: () => this.events.set([]) });

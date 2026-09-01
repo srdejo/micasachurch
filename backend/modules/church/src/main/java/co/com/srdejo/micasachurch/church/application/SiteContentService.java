@@ -22,7 +22,20 @@ public class SiteContentService {
     public SiteContent update(UUID id, String value) {
         SiteContent siteContent = siteContentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("site_content.not_found"));
-        siteContent.update(value);
+        siteContent.stageDraft(value);
         return siteContentRepository.save(siteContent);
+    }
+
+    public int publishPending() {
+        List<SiteContent> pending = siteContentRepository.findAllWithDraft();
+        for (SiteContent siteContent : pending) {
+            siteContent.publishDraft();
+            siteContentRepository.save(siteContent);
+        }
+        return pending.size();
+    }
+
+    public int countPending() {
+        return siteContentRepository.findAllWithDraft().size();
     }
 }

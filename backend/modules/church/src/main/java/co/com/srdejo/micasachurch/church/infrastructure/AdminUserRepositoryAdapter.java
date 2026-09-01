@@ -44,7 +44,8 @@ public class AdminUserRepositoryAdapter implements AdminUserRepository {
 
     @Override
     public AdminUser save(AdminUser adminUser) {
-        AdminUserJpaEntity entity = new AdminUserJpaEntity(adminUser.getId(), adminUser.getUsername(), adminUser.getPasswordHash());
+        AdminUserJpaEntity entity = new AdminUserJpaEntity(adminUser.getId(), adminUser.getUsername(), adminUser.getPasswordHash(),
+                adminUser.getEmail());
         return toDomain(springDataRepository.save(entity));
     }
 
@@ -54,6 +55,6 @@ public class AdminUserRepositoryAdapter implements AdminUserRepository {
     }
 
     private AdminUser toDomain(AdminUserJpaEntity entity) {
-        return new AdminUser(entity.getId(), entity.getUsername(), entity.getPasswordHash());
+        return new AdminUser(entity.getId(), entity.getUsername(), entity.getPasswordHash(), entity.getEmail());
     }
 }

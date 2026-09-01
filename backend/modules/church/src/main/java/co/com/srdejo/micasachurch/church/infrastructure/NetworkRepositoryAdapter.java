@@ -34,6 +34,11 @@ public class NetworkRepositoryAdapter implements NetworkRepository {
         return springDataRepository.findAll().stream().map(this::toDomain).toList();
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        springDataRepository.deleteById(id);
+    }
+
     private Network toDomain(NetworkJpaEntity entity) {
         return new Network(entity.getId(), entity.getKey(), entity.getName(), entity.getDescription(), entity.getLeadContact());
     }

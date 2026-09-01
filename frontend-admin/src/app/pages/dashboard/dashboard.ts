@@ -16,10 +16,11 @@ export class Dashboard implements OnInit {
   readonly liveBannerVisible = signal(true);
 
   readonly autoContent = [
-    { name: 'Devocional diario', frequency: 'Automático, todos los días', detail: 'Se trae en vivo desde Nuestro Pan Diario. No requiere acción del admin.' },
-    { name: 'Horarios de servicio', frequency: 'Cuando tú lo edites', detail: 'Se actualiza al instante en la vista "Horarios y en vivo".' },
-    { name: 'Eventos', frequency: 'Cuando tú lo edites', detail: 'Publica o retira eventos desde la vista "Eventos".' },
-    { name: 'Banner en vivo', frequency: 'Cuando tú lo edites', detail: 'Actívalo o desactívalo desde "Horarios y en vivo".' },
+    { name: 'Devocional diario', frequency: 'Automático, cada mañana' },
+    { name: 'Prédicas', frequency: 'Automático desde YouTube' },
+    { name: 'Eventos', frequency: 'Cuando haya algo nuevo' },
+    { name: 'Peticiones de oración', frequency: 'Revisar a diario' },
+    { name: 'Horarios y cuentas', frequency: 'Rara vez' },
   ];
 
   ngOnInit(): void {

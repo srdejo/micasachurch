@@ -10,6 +10,7 @@ export interface EventItem {
   detail: string;
   published: boolean;
   displayOrder: number;
+  hasDraft: boolean;
 }
 
 export interface PrayerRequestItem {
@@ -51,6 +52,7 @@ export interface SiteSettings {
 export interface AdminUserItem {
   id: string;
   username: string;
+  email: string | null;
 }
 
 export interface SiteContentItem {
@@ -58,6 +60,7 @@ export interface SiteContentItem {
   key: string;
   label: string;
   value: string;
+  hasDraft: boolean;
 }
 
 export interface MinistryItem {
@@ -65,6 +68,7 @@ export interface MinistryItem {
   name: string;
   description: string;
   displayOrder: number;
+  hasDraft: boolean;
 }
 
 export interface SiteImageItem {
@@ -82,11 +86,11 @@ export class AdminApiService {
     return this.http.get<EventItem[]>(`${this.baseUrl}/events`);
   }
 
-  createEvent(payload: Omit<EventItem, 'id'>) {
+  createEvent(payload: Omit<EventItem, 'id' | 'hasDraft'>) {
     return this.http.post<EventItem>(`${this.baseUrl}/events`, payload);
   }
 
-  updateEvent(id: string, payload: Omit<EventItem, 'id'>) {
+  updateEvent(id: string, payload: Omit<EventItem, 'id' | 'hasDraft'>) {
     return this.http.put<EventItem>(`${this.baseUrl}/events/${id}`, payload);
   }
 
@@ -106,8 +110,16 @@ export class AdminApiService {
     return this.http.get<NetworkItem[]>(`${this.baseUrl}/networks`);
   }
 
-  updateNetwork(id: string, payload: { description: string; leadContact: string | null }) {
+  createNetwork(payload: { name: string; description: string; leadContact: string | null }) {
+    return this.http.post<NetworkItem>(`${this.baseUrl}/networks`, payload);
+  }
+
+  updateNetwork(id: string, payload: { name: string; description: string; leadContact: string | null }) {
     return this.http.patch<NetworkItem>(`${this.baseUrl}/networks/${id}`, payload);
+  }
+
+  deleteNetwork(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/networks/${id}`);
   }
 
   listServices() {
@@ -138,11 +150,23 @@ export class AdminApiService {
     return this.http.patch<void>(`${this.baseUrl}/auth/change-password`, payload);
   }
 
+  updateOwnEmail(payload: { email: string }) {
+    return this.http.patch<void>(`${this.baseUrl}/auth/email`, payload);
+  }
+
+  forgotPassword(payload: { username: string }) {
+    return this.http.post<void>(`${this.baseUrl}/auth/forgot-password`, payload);
+  }
+
+  resetPassword(payload: { token: string; newPassword: string }) {
+    return this.http.post<void>(`${this.baseUrl}/auth/reset-password`, payload);
+  }
+
   listAdminUsers() {
     return this.http.get<AdminUserItem[]>(`${this.baseUrl}/admin-users`);
   }
 
-  createAdminUser(payload: { username: string; password: string }) {
+  createAdminUser(payload: { username: string; email: string }) {
     return this.http.post<AdminUserItem>(`${this.baseUrl}/admin-users`, payload);
   }
 
@@ -162,11 +186,11 @@ export class AdminApiService {
     return this.http.get<MinistryItem[]>(`${this.baseUrl}/ministries`);
   }
 
-  createMinistry(payload: Omit<MinistryItem, 'id'>) {
+  createMinistry(payload: Omit<MinistryItem, 'id' | 'hasDraft'>) {
     return this.http.post<MinistryItem>(`${this.baseUrl}/ministries`, payload);
   }
 
-  updateMinistry(id: string, payload: Omit<MinistryItem, 'id'>) {
+  updateMinistry(id: string, payload: Omit<MinistryItem, 'id' | 'hasDraft'>) {
     return this.http.put<MinistryItem>(`${this.baseUrl}/ministries/${id}`, payload);
   }
 

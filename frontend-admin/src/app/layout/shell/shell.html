@@ -1,26 +1,44 @@
 <div class="min-h-screen flex bg-surface">
-  <aside class="w-[268px] shrink-0 bg-sidebar text-cream flex flex-col">
-    <div class="px-6 py-6 flex items-center gap-3 border-b border-cream/10">
-      <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
-      <div>
-        <p class="font-semibold leading-tight">Mi Casa Church</p>
-        <p class="text-xs text-cream/50">Panel administrativo</p>
+  <aside class="w-[268px] shrink-0 bg-sidebar text-cream flex flex-col sticky top-0 h-screen">
+    <div class="px-5 pt-6 pb-5 flex items-center gap-[11px]">
+      @if (!logoFailed()) {
+        <img [src]="logoUrl()" (error)="logoFailed.set(true)" alt="Mi Casa Church"
+          class="h-[34px] w-[34px] rounded-full object-cover" />
+      } @else {
+        <span class="h-[34px] w-[34px] rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
+      }
+      <div class="flex flex-col">
+        <span class="font-serif text-lg leading-[1.1]">Mi Casa Church</span>
+        <span class="text-[11.5px] tracking-[0.14em] uppercase text-cream/50 font-semibold">Administración</span>
       </div>
     </div>
-    <nav class="flex-1 px-3 py-6 space-y-1">
+    <nav class="flex-1 px-3 py-4 space-y-0.5">
       @for (item of navItems; track item.path) {
-        <a [routerLink]="item.path" routerLinkActive="bg-terracotta text-cream"
-           class="block rounded-card px-4 py-2.5 text-sm text-cream/70 hover:bg-white/5 hover:text-cream transition-colors">
+        <a [routerLink]="item.path" routerLinkActive="bg-terracotta text-cream font-semibold"
+           class="block rounded-[10px] px-3.5 py-2.5 text-[15px] text-cream/78 hover:bg-white/[0.08] hover:text-cream transition-colors">
           {{ item.label }}
         </a>
       }
     </nav>
-    <div class="px-6 py-5 border-t border-cream/10">
+    <div class="mx-5 mb-5 flex flex-col gap-2.5 p-4 border border-cream/[0.16] rounded-[14px]">
+      <span class="text-xs tracking-[0.14em] uppercase text-cream/50 font-semibold">Sitio público</span>
+      <a href="https://micasachurch.co" target="_blank" rel="noopener" class="text-cream text-[14.5px] font-semibold hover:text-cream/80">Ver la página →</a>
+    </div>
+    <div class="px-5 py-4 border-t border-cream/10">
       <p class="text-xs text-cream/50 mb-2">{{ auth.username() }}</p>
       <button (click)="logout()" class="text-sm text-cream/70 hover:text-cream">Cerrar sesión</button>
     </div>
   </aside>
   <main class="flex-1 px-8 py-8 overflow-y-auto">
+    <div class="flex flex-wrap items-center justify-end gap-3.5 mb-6 pb-5 border-b border-ink/[0.14]">
+      <span class="text-sm text-ink-muted">
+        {{ publishState.pendingCount() === 0 ? 'Todo publicado' : publishState.pendingCount() + ' cambio(s) sin publicar' }}
+      </span>
+      <button (click)="publishChanges()" [disabled]="publishState.publishing() || publishState.pendingCount() === 0"
+        class="bg-ink hover:bg-terracotta text-cream font-semibold text-[14.5px] px-[26px] py-[13px] rounded-pill disabled:opacity-50 transition-colors">
+        {{ publishState.publishing() ? 'Publicando...' : 'Publicar cambios' }}
+      </button>
+    </div>
     <router-outlet />
   </main>
 </div>

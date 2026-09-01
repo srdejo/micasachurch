@@ -1,6 +1,7 @@
 package co.com.srdejo.micasachurch.church.infrastructure;
 
 import co.com.srdejo.micasachurch.church.application.SiteContentService;
+import co.com.srdejo.micasachurch.church.domain.SiteContent;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,16 +25,24 @@ public class AdminSiteContentController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<PublicController.SiteContentResponse> list() {
-        return siteContentService.listAll().stream().map(PublicController::toResponse).toList();
+    public List<AdminSiteContentResponse> list() {
+        return siteContentService.listAll().stream().map(AdminSiteContentController::toAdminResponse).toList();
     }
 
     @PatchMapping("/{id}")
     @Transactional
-    public PublicController.SiteContentResponse update(@PathVariable UUID id, @RequestBody SiteContentRequest request) {
-        return PublicController.toResponse(siteContentService.update(id, request.value()));
+    public AdminSiteContentResponse update(@PathVariable UUID id, @RequestBody SiteContentRequest request) {
+        return toAdminResponse(siteContentService.update(id, request.value()));
+    }
+
+    private static AdminSiteContentResponse toAdminResponse(SiteContent siteContent) {
+        return new AdminSiteContentResponse(siteContent.getId(), siteContent.getKey(), siteContent.getLabel(),
+                siteContent.hasDraft() ? siteContent.getDraftValue() : siteContent.getValue(), siteContent.hasDraft());
     }
 
     public record SiteContentRequest(String value) {
+    }
+
+    public record AdminSiteContentResponse(UUID id, String key, String label, String value, boolean hasDraft) {
     }
 }

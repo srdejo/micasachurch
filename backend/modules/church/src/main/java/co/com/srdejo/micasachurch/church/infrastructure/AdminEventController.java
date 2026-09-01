@@ -29,24 +29,24 @@ public class AdminEventController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<PublicController.EventResponse> list() {
-        return eventService.listAll().stream().map(PublicController::toResponse).toList();
+    public List<AdminEventResponse> list() {
+        return eventService.listAll().stream().map(AdminEventController::toAdminResponse).toList();
     }
 
     @PostMapping
     @Transactional
-    public PublicController.EventResponse create(@Valid @RequestBody EventRequest request) {
+    public AdminEventResponse create(@Valid @RequestBody EventRequest request) {
         Event event = eventService.create(request.day(), request.month(), request.title(), request.detail(),
                 request.published(), request.displayOrder());
-        return PublicController.toResponse(event);
+        return toAdminResponse(event);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public PublicController.EventResponse update(@PathVariable UUID id, @Valid @RequestBody EventRequest request) {
+    public AdminEventResponse update(@PathVariable UUID id, @Valid @RequestBody EventRequest request) {
         Event event = eventService.update(id, request.day(), request.month(), request.title(), request.detail(),
                 request.published(), request.displayOrder());
-        return PublicController.toResponse(event);
+        return toAdminResponse(event);
     }
 
     @DeleteMapping("/{id}")
@@ -55,7 +55,22 @@ public class AdminEventController {
         eventService.delete(id);
     }
 
+    private static AdminEventResponse toAdminResponse(Event event) {
+        boolean hasDraft = event.hasDraft();
+        return new AdminEventResponse(event.getId(),
+                hasDraft ? event.getDraftDay() : event.getDay(),
+                hasDraft ? event.getDraftMonth() : event.getMonth(),
+                hasDraft ? event.getDraftTitle() : event.getTitle(),
+                hasDraft ? event.getDraftDetail() : event.getDetail(),
+                hasDraft ? Boolean.TRUE.equals(event.getDraftPublished()) : event.isPublished(),
+                event.getDisplayOrder(), hasDraft);
+    }
+
     public record EventRequest(@NotBlank String day, @NotBlank String month, @NotBlank String title, String detail,
                                 boolean published, int displayOrder) {
+    }
+
+    public record AdminEventResponse(UUID id, String day, String month, String title, String detail, boolean published,
+                                      int displayOrder, boolean hasDraft) {
     }
 }

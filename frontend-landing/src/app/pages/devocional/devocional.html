@@ -2,7 +2,12 @@
   <header class="sticky top-0 z-40 bg-ink/92 backdrop-blur border-b border-cream/15">
     <div class="mx-auto max-w-5xl px-6 py-3.5 flex items-center justify-between">
       <a routerLink="/" class="flex items-center gap-3">
-        <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
+        @if (!logoImageFailed()) {
+          <img [src]="imageUrl('logo')" (error)="logoImageFailed.set(true)" alt="Mi Casa Church"
+            class="h-9 w-9 rounded-full object-cover" />
+        } @else {
+          <span class="h-9 w-9 rounded-full bg-terracotta text-cream flex items-center justify-center font-serif">M</span>
+        }
         <span class="font-serif text-lg">Mi Casa Church</span>
       </a>
       <a routerLink="/" [fragment]="'visitar'"

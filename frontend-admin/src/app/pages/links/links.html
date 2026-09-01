@@ -8,7 +8,18 @@
     <div class="rounded-card bg-card border border-ink/10 p-5">
       <p class="font-semibold mb-3">{{ link.label }}</p>
       <input [(ngModel)]="link.value" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
-      <button (click)="save(link)" class="rounded-pill bg-ink text-cream text-sm px-4 py-2">Guardar</button>
+      <div class="flex items-center gap-3">
+        <button (click)="save(link)" [disabled]="status()[link.id] === 'saving'"
+          class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
+          {{ status()[link.id] === 'saving' ? 'Guardando...' : 'Guardar' }}
+        </button>
+        @if (status()[link.id] === 'saved') {
+          <span class="text-terracotta text-sm font-medium">Guardado ✓</span>
+        }
+        @if (status()[link.id] === 'error') {
+          <span class="text-terracotta text-sm font-medium">No se pudo guardar. Intenta de nuevo.</span>
+        }
+      </div>
     </div>
   }
 </div>

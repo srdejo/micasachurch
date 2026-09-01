@@ -8,4 +8,8 @@ import java.util.UUID;
 public interface MinistrySpringDataRepository extends JpaRepository<MinistryJpaEntity, UUID> {
 
     List<MinistryJpaEntity> findAllByOrderByDisplayOrderAsc();
+
+    List<MinistryJpaEntity> findByPublishedTrueOrderByDisplayOrderAsc();
+
+    List<MinistryJpaEntity> findByHasDraftTrue();
 }

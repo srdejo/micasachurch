@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/auth/login").permitAll()
+                        .requestMatchers("/api/admin/auth/login", "/api/admin/auth/forgot-password",
+                                "/api/admin/auth/reset-password").permitAll()
                         .requestMatchers("/api/events", "/api/services", "/api/networks", "/api/links",
                                 "/api/site-settings", "/api/prayer-requests", "/api/ministries", "/api/site-content",
                                 "/api/images/**").permitAll()

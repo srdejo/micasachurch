@@ -9,15 +9,30 @@ public class SiteContent {
     private final String label;
     private String value;
 
-    public SiteContent(UUID id, String key, String label, String value) {
+    private String draftValue;
+    private boolean hasDraft;
+
+    public SiteContent(UUID id, String key, String label, String value, String draftValue, boolean hasDraft) {
         this.id = id;
         this.key = key;
         this.label = label;
         this.value = value;
+        this.draftValue = draftValue;
+        this.hasDraft = hasDraft;
     }
 
-    public void update(String value) {
-        this.value = value;
+    public void stageDraft(String value) {
+        this.draftValue = value;
+        this.hasDraft = true;
+    }
+
+    public void publishDraft() {
+        if (!hasDraft) {
+            return;
+        }
+        this.value = draftValue;
+        this.draftValue = null;
+        this.hasDraft = false;
     }
 
     public UUID getId() {
@@ -34,5 +49,13 @@ public class SiteContent {
 
     public String getValue() {
         return value;
+    }
+
+    public String getDraftValue() {
+        return draftValue;
+    }
+
+    public boolean hasDraft() {
+        return hasDraft;
     }
 }

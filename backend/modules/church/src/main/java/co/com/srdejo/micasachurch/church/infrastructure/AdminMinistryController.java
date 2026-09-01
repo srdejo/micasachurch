@@ -29,22 +29,22 @@ public class AdminMinistryController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<PublicController.MinistryResponse> list() {
-        return ministryService.listAll().stream().map(PublicController::toResponse).toList();
+    public List<AdminMinistryResponse> list() {
+        return ministryService.listAll().stream().map(AdminMinistryController::toAdminResponse).toList();
     }
 
     @PostMapping
     @Transactional
-    public PublicController.MinistryResponse create(@Valid @RequestBody MinistryRequest request) {
+    public AdminMinistryResponse create(@Valid @RequestBody MinistryRequest request) {
         Ministry ministry = ministryService.create(request.name(), request.description(), request.displayOrder());
-        return PublicController.toResponse(ministry);
+        return toAdminResponse(ministry);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public PublicController.MinistryResponse update(@PathVariable UUID id, @Valid @RequestBody MinistryRequest request) {
+    public AdminMinistryResponse update(@PathVariable UUID id, @Valid @RequestBody MinistryRequest request) {
         Ministry ministry = ministryService.update(id, request.name(), request.description(), request.displayOrder());
-        return PublicController.toResponse(ministry);
+        return toAdminResponse(ministry);
     }
 
     @DeleteMapping("/{id}")
@@ -53,6 +53,17 @@ public class AdminMinistryController {
         ministryService.delete(id);
     }
 
+    private static AdminMinistryResponse toAdminResponse(Ministry ministry) {
+        boolean hasDraft = ministry.hasDraft();
+        return new AdminMinistryResponse(ministry.getId(),
+                hasDraft ? ministry.getDraftName() : ministry.getName(),
+                hasDraft ? ministry.getDraftDescription() : ministry.getDescription(),
+                ministry.getDisplayOrder(), hasDraft);
+    }
+
     public record MinistryRequest(@NotBlank String name, String description, int displayOrder) {
+    }
+
+    public record AdminMinistryResponse(UUID id, String name, String description, int displayOrder, boolean hasDraft) {
     }
 }

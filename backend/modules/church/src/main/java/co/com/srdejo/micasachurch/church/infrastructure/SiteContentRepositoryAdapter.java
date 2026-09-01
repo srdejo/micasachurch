@@ -28,13 +28,19 @@ public class SiteContentRepositoryAdapter implements SiteContentRepository {
     }
 
     @Override
+    public List<SiteContent> findAllWithDraft() {
+        return springDataRepository.findByHasDraftTrue().stream().map(this::toDomain).toList();
+    }
+
+    @Override
     public SiteContent save(SiteContent siteContent) {
         SiteContentJpaEntity entity = new SiteContentJpaEntity(siteContent.getId(), siteContent.getKey(),
-                siteContent.getLabel(), siteContent.getValue());
+                siteContent.getLabel(), siteContent.getValue(), siteContent.getDraftValue(), siteContent.hasDraft());
         return toDomain(springDataRepository.save(entity));
     }
 
     private SiteContent toDomain(SiteContentJpaEntity entity) {
-        return new SiteContent(entity.getId(), entity.getKey(), entity.getLabel(), entity.getValue());
+        return new SiteContent(entity.getId(), entity.getKey(), entity.getLabel(), entity.getValue(), entity.getDraftValue(),
+                entity.isHasDraft());
     }
 }

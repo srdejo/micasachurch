@@ -27,14 +27,35 @@ public class MinistryJpaEntity {
     @Column(name = "display_order", nullable = false)
     private int displayOrder;
 
+    @Column(nullable = false)
+    private boolean published;
+
+    @Column(name = "draft_name")
+    private String draftName;
+
+    @Column(name = "draft_description", columnDefinition = "text")
+    private String draftDescription;
+
+    @Column(name = "draft_published")
+    private Boolean draftPublished;
+
+    @Column(name = "has_draft", nullable = false)
+    private boolean hasDraft;
+
     protected MinistryJpaEntity() {
     }
 
-    public MinistryJpaEntity(UUID id, String name, String description, int displayOrder) {
+    public MinistryJpaEntity(UUID id, String name, String description, int displayOrder, boolean published, String draftName,
+                              String draftDescription, Boolean draftPublished, boolean hasDraft) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.displayOrder = displayOrder;
+        this.published = published;
+        this.draftName = draftName;
+        this.draftDescription = draftDescription;
+        this.draftPublished = draftPublished;
+        this.hasDraft = hasDraft;
     }
 
     public UUID getId() {
@@ -51,5 +72,25 @@ public class MinistryJpaEntity {
 
     public int getDisplayOrder() {
         return displayOrder;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public String getDraftName() {
+        return draftName;
+    }
+
+    public String getDraftDescription() {
+        return draftDescription;
+    }
+
+    public Boolean getDraftPublished() {
+        return draftPublished;
+    }
+
+    public boolean isHasDraft() {
+        return hasDraft;
     }
 }

@@ -1,49 +1,51 @@
-<h1 class="text-2xl font-serif mb-6">Panel</h1>
+<div class="flex flex-col gap-1 mb-7">
+  <h1 class="font-serif text-[40px] leading-none">Panel</h1>
+  <span class="text-[15px] text-ink-muted">Resumen de lo que cambia en el sitio</span>
+</div>
 
-<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-  <div class="rounded-card bg-card border border-ink/10 p-5">
-    <p class="text-xs text-ink-muted mb-1">Devocional</p>
-    <p class="text-xl font-semibold">Automático</p>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
+  <div class="rounded-card bg-card border border-ink/[0.14] p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-ink-muted font-semibold">Devocional de hoy</span>
+    <span class="font-serif text-3xl leading-[1.05]">Al día</span>
+    <span class="text-[13.5px] text-ink-subtle">Se trae automático de Nuestro Pan Diario</span>
   </div>
-  <div class="rounded-card bg-card border border-ink/10 p-5">
-    <p class="text-xs text-ink-muted mb-1">Eventos activos</p>
-    <p class="text-xl font-semibold">{{ activeEvents() }}</p>
+  <div class="rounded-card bg-card border border-ink/[0.14] p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-ink-muted font-semibold">Eventos activos</span>
+    <span class="font-serif text-3xl leading-[1.05]">{{ activeEvents() }}</span>
+    <span class="text-[13.5px] text-ink-subtle">Visibles en la página</span>
   </div>
-  <div class="rounded-card bg-card border border-ink/10 p-5">
-    <p class="text-xs text-ink-muted mb-1">Peticiones sin leer</p>
-    <p class="text-xl font-semibold">{{ unreadPrayerRequests() }}</p>
+  <div class="rounded-card bg-card border border-ink/[0.14] p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-ink-muted font-semibold">Peticiones sin leer</span>
+    <span class="font-serif text-3xl leading-[1.05]">{{ unreadPrayerRequests() }}</span>
+    <span class="text-[13.5px] text-ink-subtle">Equipo de oración</span>
   </div>
-  <div class="rounded-card bg-card border border-ink/10 p-5">
-    <p class="text-xs text-ink-muted mb-1">Banner en vivo</p>
-    <p class="text-xl font-semibold">{{ liveBannerVisible() ? 'Activo' : 'Oculto' }}</p>
+  <div class="rounded-card bg-card border border-ink/[0.14] p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-ink-muted font-semibold">Franja en vivo</span>
+    <span class="font-serif text-3xl leading-[1.05]">{{ liveBannerVisible() ? 'Visible' : 'Oculta' }}</span>
+    <span class="text-[13.5px] text-ink-subtle">Facebook, 7:00 a.m.</span>
   </div>
 </div>
 
-<div class="rounded-card bg-card border border-ink/10 overflow-hidden mb-10">
-  <table class="w-full text-sm">
-    <thead class="bg-surface text-ink-muted text-left">
-      <tr>
-        <th class="px-5 py-3 font-medium">Contenido</th>
-        <th class="px-5 py-3 font-medium">Cada cuánto cambia</th>
-        <th class="px-5 py-3 font-medium">Detalle</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (row of autoContent; track row.name) {
-        <tr class="border-t border-ink/10">
-          <td class="px-5 py-3 font-medium">{{ row.name }}</td>
-          <td class="px-5 py-3 text-ink-muted">{{ row.frequency }}</td>
-          <td class="px-5 py-3 text-ink-muted">{{ row.detail }}</td>
-        </tr>
+<div class="grid lg:grid-cols-[1.2fr_1fr] gap-5 items-start">
+  <div class="rounded-[18px] bg-card border border-ink/[0.14] p-[26px] flex flex-col gap-4">
+    <span class="font-serif text-2xl">Qué cambia y cada cuánto</span>
+    <div class="flex flex-col">
+      @for (row of autoContent; track row.name; let last = $last) {
+        <div class="flex items-center justify-between gap-5 py-3" [class.border-b]="!last" [ngClass]="!last ? 'border-ink/10' : ''">
+          <span class="text-base font-medium">{{ row.name }}</span>
+          <span class="text-sm text-ink-muted">{{ row.frequency }}</span>
+        </div>
       }
-    </tbody>
-  </table>
-</div>
-
-<div class="rounded-card bg-card border border-ink/10 p-6">
-  <p class="font-semibold mb-2">Contenido automático</p>
-  <p class="text-ink-muted text-sm">
-    El devocional "Nuestro Pan Diario" se trae directamente desde su fuente oficial en cada visita —
-    no requiere ninguna acción de tu parte y no se puede editar desde este panel.
-  </p>
+    </div>
+  </div>
+  <div class="rounded-[18px] bg-sidebar text-cream p-[26px] flex flex-col gap-3.5">
+    <span class="font-serif text-2xl">Contenido automático</span>
+    <p class="m-0 text-[15.5px] leading-[1.65] text-cream/75">
+      El devocional diario y las prédicas de YouTube se actualizan solos. No hay que tocarlos desde aquí.
+    </p>
+    <div class="flex flex-col gap-2 mt-1">
+      <div class="flex items-center gap-2.5 text-[14.5px]"><span class="w-2 h-2 rounded-full bg-[#6FCF97]"></span>Nuestro Pan Diario · API</div>
+      <div class="flex items-center gap-2.5 text-[14.5px]"><span class="w-2 h-2 rounded-full bg-[#6FCF97]"></span>YouTube · últimas subidas</div>
+    </div>
+  </div>
 </div>
