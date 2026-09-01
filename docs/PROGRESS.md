@@ -48,6 +48,17 @@ Estado actual de `micasachurch`.
 
 Los dos frontends usaban `environment.ts` (con `apiUrl: http://localhost:8088/api`) incluso en el build de producción — a `angular.json` le faltaba el `fileReplacements` de `production` para sustituir por `environment.prod.ts`. Esto causaba que el login del admin fallara en el navegador (mostrando el mensaje genérico "Usuario o clave inválidos", aunque el backend funcionaba bien — confirmado con `curl` antes de encontrar la causa real). Corregido en ambos `angular.json`, rebuild y redeploy — verificado que el bundle desplegado ahora apunta a `https://api.micasachurch.co/api` y el login funciona end-to-end.
 
+## Deploy 2026-09-01
+
+Commit `5252bf2` desplegado a producción: flujo de publicación con borradores (eventos/ministerios/contenido del sitio,
+cola de cambios pendientes vía `PublishService`/`AdminPublishController`), recuperación de password del admin por email
+(`ForgotPasswordUseCase`/`ResetPasswordUseCase`, tokens en `password_reset_tokens`, envío vía el servicio `contact`
+compartido del VPS), responsive mobile-first en el home de `frontend-landing`, enlace de TikTok, y ajuste de nginx
+(`client_max_body_size 6M` en `api.micasachurch.co`, redirect `www`→apex documentado). Backend, `frontend-landing` y
+`frontend-admin` (manual) desplegados y verificados (`200` en los tres subdominios, migraciones Flyway V5–V7 corridas
+limpio). Pendiente: confirmar `ADMIN_PUBLIC_URL`/`CONTACT_API_URL` reales en el `.env` del VPS si los links de los
+correos de reseteo de password apuntan mal (quedaron con los defaults de `application.yml`).
+
 ## Bloqueos o problemas conocidos
 
 - Fotos reales de congregación/pastores no disponibles (el MCP de diseño limita descargas binarias a 256 KiB, las imágenes del mockup superan ese límite) — placeholders de color de marca hasta que el cliente suba fotos reales.
