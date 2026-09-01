@@ -56,8 +56,9 @@ cola de cambios pendientes vía `PublishService`/`AdminPublishController`), recu
 compartido del VPS), responsive mobile-first en el home de `frontend-landing`, enlace de TikTok, y ajuste de nginx
 (`client_max_body_size 6M` en `api.micasachurch.co`, redirect `www`→apex documentado). Backend, `frontend-landing` y
 `frontend-admin` (manual) desplegados y verificados (`200` en los tres subdominios, migraciones Flyway V5–V7 corridas
-limpio). Pendiente: confirmar `ADMIN_PUBLIC_URL`/`CONTACT_API_URL` reales en el `.env` del VPS si los links de los
-correos de reseteo de password apuntan mal (quedaron con los defaults de `application.yml`).
+limpio). Verificado por el usuario (2026-09-01): el correo de recuperación de password llega y el link apunta
+correctamente a `admin.micasachurch.co` con los defaults de `application.yml` (`ADMIN_PUBLIC_URL`/`CONTACT_API_URL`) —
+no hizo falta fijarlos en el `.env` del VPS.
 
 ## Bloqueos o problemas conocidos
 
