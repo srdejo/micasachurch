@@ -64,12 +64,13 @@ no hizo falta fijarlos en el `.env` del VPS.
 
 - Fotos reales de congregación/pastores no disponibles (el MCP de diseño limita descargas binarias a 256 KiB, las imágenes del mockup superan ese límite) — placeholders de color de marca hasta que el cliente suba fotos reales.
 - Admin de imágenes con upload queda fuera de este MVP — vista "Enlaces" solo cubre enlaces/cuentas.
-- **Password de admin sembrada (`admin`/`password`) sigue siendo el placeholder — ya está expuesta en un backend público real.** Cambiarla es la prioridad de seguridad más alta pendiente.
+- ~~Password de admin sembrada (`admin`/`password`)~~ **Resuelto (2026-09-02)**: el usuario cambió la contraseña de admin en producción usando la función de cambio de contraseña de la propia app. Ya no queda ninguna credencial por defecto expuesta en el backend público.
+- ~~`JWT_SECRET` sin confirmar~~ **Resuelto (2026-09-02)**: el usuario confirma que el `JWT_SECRET` del `.env` del VPS se generó siguiendo las instrucciones documentadas (`docs/ROADMAP.md` Etapa 9), no es el placeholder de `application.yml`. No quedan pendientes de seguridad abiertos en este proyecto.
 - `npm run test`/`ng test` no se corrió en ninguno de los dos frontends (fuera de alcance de la verificación pedida, que se limitó a build).
-- Brechas de fidelidad visual frente al mockup — ver `docs/ROADMAP.md` Etapa 8 (devocional embebido inline en el home, indicador "en vivo", `<title>`/metadatos — ambos frontends siguen con el `<title>` default de Angular CLI, "FrontendLanding"/"FrontendAdmin", link del footer al admin).
+- Brechas de fidelidad visual frente al mockup — ver `docs/ROADMAP.md` Etapa 8 (devocional embebido inline en el home, indicador "en vivo", link del footer al admin). **Corrección (2026-09-02)**: los `<title>` ya NO son los defaults del Angular CLI — verificado en producción, la landing sirve "Mi Casa Church — Ocaña" y el admin "Mi Casa Church · Admin". Esa parte de la brecha está cerrada; actualizar `docs/ROADMAP.md` Etapa 8 en consecuencia.
 
 ## Próximo paso recomendado
 
 1. Etapa 8 del roadmap: cerrar las brechas de fidelidad visual con el diseño (devocional inline en home es la más visible; `<title>` de ambos frontends es rápido y visible).
 2. Cuando el cliente provea fotos reales, reemplazar los placeholders de color.
-3. Confirmar `JWT_SECRET` real en el `.env` del VPS (no el placeholder de `application.yml`) — ver `docs/ROADMAP.md` Etapa 9.
+3. ~~Confirmar `JWT_SECRET` real en el `.env` del VPS~~ — hecho 2026-09-02, generado según las instrucciones de `docs/ROADMAP.md` Etapa 9.
