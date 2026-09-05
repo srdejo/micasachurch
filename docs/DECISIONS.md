@@ -45,3 +45,7 @@ Como ya estaba documentado en la decisión de abajo, `infra/deploy.ps1` (`Deploy
 ## Observabilidad HTTP: filtro de logging fuera de Spring Security (2026-09-05)
 
 Se agrego `RequestLoggingFilter` en `platform/web-common` registrado con `FilterRegistrationBean` en `Ordered.HIGHEST_PRECEDENCE`, por fuera de la cadena de Spring Security, para poder loguear tambien las peticiones rechazadas con 401/403 antes de llegar a un controlador. El `requestId` se genera en el filtro y nunca se acepta de un header del cliente. `platform:security` paso a depender de `platform:web-common` (antes no la declaraba) para poder poner el `userId` en el MDC desde `JwtAuthenticationFilter`.
+
+## Bug: peticiones sin token respondian 403 en vez de 401 (corregido 2026-09-05)
+
+`SecurityConfig` no registraba `.exceptionHandling(...)`, asi que Spring Security usaba su entry point por defecto (`Http403ForbiddenEntryPoint`): una peticion sin token y una de un usuario autenticado sin permiso daban el mismo 403, y sin cuerpo. Se agrego `SecurityErrorResponder` (`AuthenticationEntryPoint` + `AccessDeniedHandler` en una sola clase) en `platform:security`, registrado en el `filterChain`, que responde 401 sin token y 403 sin permiso, ambos con el `ApiResponse` de `platform:web-common`.
