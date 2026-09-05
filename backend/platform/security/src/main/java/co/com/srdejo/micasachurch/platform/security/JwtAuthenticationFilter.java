@@ -1,9 +1,12 @@
 package co.com.srdejo.micasachurch.platform.security;
 
+import co.com.srdejo.micasachurch.platform.webcommon.logging.LogContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +20,8 @@ import java.util.List;
 @Component
 @Order(10)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
 
@@ -34,7 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 var authentication = new UsernamePasswordAuthenticationToken(claims, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (Exception ignored) {
+                LogContext.putUserId(claims.adminId().toString());
+            } catch (Exception ex) {
+                // Un token vencido es rutina (el front no alcanzo a refrescar); uno con firma
+                // invalida no lo es. Sin este rastro, un 401 se ve identico en ambos casos.
+                log.debug("Token JWT rechazado: {}", ex.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }

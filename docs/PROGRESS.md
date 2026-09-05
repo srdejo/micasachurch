@@ -74,3 +74,7 @@ no hizo falta fijarlos en el `.env` del VPS.
 1. Etapa 8 del roadmap: cerrar las brechas de fidelidad visual con el diseño (devocional inline en home es la más visible; `<title>` de ambos frontends es rápido y visible).
 2. Cuando el cliente provea fotos reales, reemplazar los placeholders de color.
 3. ~~Confirmar `JWT_SECRET` real en el `.env` del VPS~~ — hecho 2026-09-02, generado según las instrucciones de `docs/ROADMAP.md` Etapa 9.
+
+## Observabilidad HTTP en backend (2026-09-05)
+
+El backend corre bajo systemd y no dejaba ninguna linea de log en tiempo de ejecucion (`journalctl -u micasachurch -f` no mostraba nada tras el arranque). Se agrego `RequestLoggingFilter` (fuera de la cadena de Spring Security, HIGHEST_PRECEDENCE) que loguea metodo/ruta/status/duracion de cada peticion incluyendo los 401/403, MDC con `requestId`/`userId` (`co.com.srdejo.micasachurch.platform.webcommon.logging`), y se cerro el hueco de `GlobalExceptionHandler.handleGeneric` que no dejaba rastro alguno en los 500. `JwtAuthenticationFilter` ahora pone el `userId` en el MDC al autenticar y loguea en DEBUG el motivo cuando rechaza un token.

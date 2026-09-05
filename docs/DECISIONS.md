@@ -41,3 +41,7 @@ Como ya estaba documentado en la decisión de abajo, `infra/deploy.ps1` (`Deploy
 ## Infra: `deploy.ps1` extendido con dos rutas de frontend
 
 `micasachurch` es el primer proyecto del workspace con dos frontends. El flujo genérico `Deploy-Frontend` de `infra/deploy.ps1` solo maneja un `FrontendPath` por proyecto, así que se dejó `FrontendPath` apuntando a `frontend-landing` (el sitio público, prioridad de despliegue) y se agregaron `LandingFrontendPath`/`AdminFrontendPath` como campos informativos para cuando ese flujo se extienda a manejar ambos frontends. No se modificó la lógica genérica de despliegue de otros proyectos.
+
+## Observabilidad HTTP: filtro de logging fuera de Spring Security (2026-09-05)
+
+Se agrego `RequestLoggingFilter` en `platform/web-common` registrado con `FilterRegistrationBean` en `Ordered.HIGHEST_PRECEDENCE`, por fuera de la cadena de Spring Security, para poder loguear tambien las peticiones rechazadas con 401/403 antes de llegar a un controlador. El `requestId` se genera en el filtro y nunca se acepta de un header del cliente. `platform:security` paso a depender de `platform:web-common` (antes no la declaraba) para poder poner el `userId` en el MDC desde `JwtAuthenticationFilter`.
