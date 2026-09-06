@@ -19,10 +19,30 @@ public class ServiceScheduleService {
         return serviceScheduleRepository.findAll();
     }
 
-    public ServiceSchedule update(UUID id, String time, String note, boolean streamed) {
+    public ServiceSchedule create(String day, String time, String note, boolean streamed) {
+        int nextOrder = serviceScheduleRepository.findAll().stream()
+                .mapToInt(ServiceSchedule::getDisplayOrder)
+                .max()
+                .orElse(0) + 1;
+        return serviceScheduleRepository.save(ServiceSchedule.create(day, time, note, streamed, nextOrder));
+    }
+
+    /**
+     * @param day dia del servicio. Si llega vacio se conserva el que ya tenia: el panel viejo
+     *            enviaba solo hora, nota y transmision, y un despliegue a medias no deberia
+     *            borrar el dia.
+     */
+    public ServiceSchedule update(UUID id, String day, String time, String note, boolean streamed) {
         ServiceSchedule serviceSchedule = serviceScheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("service_schedule.not_found"));
-        serviceSchedule.update(time, note, streamed);
+        String dayToApply = (day == null || day.isBlank()) ? serviceSchedule.getDay() : day;
+        serviceSchedule.update(dayToApply, time, note, streamed);
         return serviceScheduleRepository.save(serviceSchedule);
+    }
+
+    public void delete(UUID id) {
+        serviceScheduleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("service_schedule.not_found"));
+        serviceScheduleRepository.deleteById(id);
     }
 }

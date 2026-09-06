@@ -63,9 +63,11 @@ no hizo falta fijarlos en el `.env` del VPS.
 ## Bloqueos o problemas conocidos
 
 - Fotos reales de congregación/pastores no disponibles (el MCP de diseño limita descargas binarias a 256 KiB, las imágenes del mockup superan ese límite) — placeholders de color de marca hasta que el cliente suba fotos reales.
-- Admin de imágenes con upload queda fuera de este MVP — vista "Enlaces" solo cubre enlaces/cuentas.
+- Galería de fotos (N imágenes con alta/baja/orden) fuera del MVP. **Aclaración 2026-09-06**: el upload de imágenes sí existe — vista **Imágenes** del panel, 4 slots fijos (`logo`, `hero`, `quienes_somos`, `og_image`), `POST /api/admin/images/{key}` multipart, máx. 5 MB, PNG/JPEG/WebP/SVG. Lo que no existe es una grilla de fotos libres.
 - ~~Password de admin sembrada (`admin`/`password`)~~ **Resuelto (2026-09-02)**: el usuario cambió la contraseña de admin en producción usando la función de cambio de contraseña de la propia app. Ya no queda ninguna credencial por defecto expuesta en el backend público.
 - ~~`JWT_SECRET` sin confirmar~~ **Resuelto (2026-09-02)**: el usuario confirma que el `JWT_SECRET` del `.env` del VPS se generó siguiendo las instrucciones documentadas (`docs/ROADMAP.md` Etapa 9), no es el placeholder de `application.yml`. No quedan pendientes de seguridad abiertos en este proyecto.
+- ~~`CORS_ALLOWED_ORIGIN` sin revisar tras liberar el dominio raíz~~ **Resuelto (2026-09-06)**: verificado funcionalmente desde el navegador — `fetch` a `https://api.micasachurch.co/api/events` con origen `https://micasachurch.co` devuelve `200` con cuerpo legible, así que el apex ya está permitido. Los checkboxes de `docs/ROADMAP.md` Etapa 9 (JWT_SECRET y CORS) quedaron marcados ese mismo día; estaban desfasados frente a este archivo y por eso el dashboard seguía mostrando el proyecto en BLOCKED.
+- ~~Deploy de `frontend-admin` sin automatizar~~ **Resuelto (2026-09-06)**: `infra/deploy.ps1` ya despliega los dos frontends (`Deploy-OneFrontend` + `AdminFrontendPath`); `docs/DECISIONS.md` decía lo contrario y quedó corregido. Falta correr `infra/deploy.ps1 -Projects micasachurch` una vez para verificarlo end-to-end.
 - `npm run test`/`ng test` no se corrió en ninguno de los dos frontends (fuera de alcance de la verificación pedida, que se limitó a build).
 - Brechas de fidelidad visual frente al mockup — ver `docs/ROADMAP.md` Etapa 8 (devocional embebido inline en el home, indicador "en vivo", link del footer al admin). **Corrección (2026-09-02)**: los `<title>` ya NO son los defaults del Angular CLI — verificado en producción, la landing sirve "Mi Casa Church — Ocaña" y el admin "Mi Casa Church · Admin". Esa parte de la brecha está cerrada; actualizar `docs/ROADMAP.md` Etapa 8 en consecuencia.
 
@@ -78,3 +80,21 @@ no hizo falta fijarlos en el `.env` del VPS.
 ## Observabilidad HTTP en backend (2026-09-05)
 
 El backend corre bajo systemd y no dejaba ninguna linea de log en tiempo de ejecucion (`journalctl -u micasachurch -f` no mostraba nada tras el arranque). Se agrego `RequestLoggingFilter` (fuera de la cadena de Spring Security, HIGHEST_PRECEDENCE) que loguea metodo/ruta/status/duracion de cada peticion incluyendo los 401/403, MDC con `requestId`/`userId` (`co.com.srdejo.micasachurch.platform.webcommon.logging`), y se cerro el hueco de `GlobalExceptionHandler.handleGeneric` que no dejaba rastro alguno en los 500. `JwtAuthenticationFilter` ahora pone el `userId` en el MDC al autenticar y loguea en DEBUG el motivo cuando rechaza un token.
+
+## Revisión punto a punto del panel (2026-09-06)
+
+Se recorrieron las nueve vistas del `frontend-admin` en producción con clics reales, se probó el ciclo
+completo de un evento (crear → publicar → verificar en el sitio → borrar), una red, un horario, un
+enlace y una petición de oración de punta a punta. **13 fallos corregidos en el repo** (sesión que no
+volvía al login tras un 401, "Cerrar sesión" fuera de pantalla, borrado de eventos sin confirmar,
+filas que seguían diciendo "Cambios sin publicar" después de publicar, enlaces de WhatsApp sin
+indicativo, fechas en inglés, auto-borrado de administradores, entre otros) y una lista de pendientes
+abiertos. Detalle completo en [`docs/REVISION-ADMIN-2026-09-06.md`](REVISION-ADMIN-2026-09-06.md).
+
+**Nada de esto está en producción todavía**: falta `ng build` de los dos frontends, `./gradlew build`
+del backend y `infra/deploy.ps1 -Projects micasachurch` desde la máquina de Daniel.
+
+**Incidente durante la revisión**: probando el borrado de administradores contra el API se eliminó el
+usuario `admin` (el backend desplegado aún no tiene la protección de auto-borrado). Se recreó por
+invitación a srdejo@gmail.com; la clave hubo que definirla de nuevo.
+

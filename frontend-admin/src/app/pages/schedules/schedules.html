@@ -3,10 +3,13 @@
   <span class="text-[15px] text-ink-muted">Servicios y franja de transmisión</span>
 </div>
 
+<p class="text-ink-muted text-sm mb-6">Lo que edites aquí se ve en el sitio de inmediato: esta sección no pasa por el botón «Publicar cambios».</p>
+
 <div class="rounded-card bg-sidebar text-cream p-6 mb-8 flex items-center justify-between">
   <div>
     <p class="font-semibold">Banner "En vivo"</p>
-    <p class="text-ink-muted text-sm">Muestra el aviso de transmisión diaria en la landing.</p>
+    <p class="text-ink-muted text-sm">Muestra la franja de aviso en la parte de arriba de la página. Los enlaces
+      «En vivo 7:00 a.m.» de Prédicas y de Facebook siguen visibles aunque lo ocultes.</p>
   </div>
   <button (click)="toggleBanner()"
     class="rounded-pill text-sm font-medium px-5 py-2.5"
@@ -21,7 +24,8 @@
 <div class="grid md:grid-cols-2 gap-4">
   @for (s of schedules(); track s.id) {
     <div class="rounded-card bg-card border border-ink/10 p-5">
-      <p class="font-semibold mb-3">{{ s.day }}</p>
+      <label class="block text-xs text-ink-muted mb-1">Día</label>
+      <input [(ngModel)]="s.day" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
       <label class="block text-xs text-ink-muted mb-1">Hora</label>
       <input [(ngModel)]="s.time" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
       <label class="block text-xs text-ink-muted mb-1">Nota</label>
@@ -41,7 +45,43 @@
         @if (errorById().get(s.id)) {
           <span class="text-xs text-terracotta">{{ errorById().get(s.id) }}</span>
         }
+        <button (click)="askDelete(s)" class="ml-auto text-terracotta text-sm hover:underline">Eliminar</button>
       </div>
     </div>
   }
 </div>
+
+<div class="rounded-card bg-card border border-ink/10 p-5 mt-6">
+  <p class="font-semibold mb-1">Agregar un servicio</p>
+  <p class="text-ink-muted text-sm mb-4">Se publica en cuanto lo agregues, así que llénalo completo antes de guardarlo.</p>
+  <div class="flex flex-wrap items-end gap-3">
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-muted">Día</label>
+      <input [(ngModel)]="newDay" placeholder="Viernes" class="rounded-card border border-ink/15 px-3 py-2 text-sm w-[160px]" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-muted">Hora</label>
+      <input [(ngModel)]="newTime" placeholder="7:00 p.m." class="rounded-card border border-ink/15 px-3 py-2 text-sm w-[140px]" />
+    </div>
+    <div class="flex flex-col gap-1 grow min-w-[180px]">
+      <label class="text-xs text-ink-muted">Nota (opcional)</label>
+      <input [(ngModel)]="newNote" placeholder="Servicio de jóvenes" class="rounded-card border border-ink/15 px-3 py-2 text-sm w-full" />
+    </div>
+    <button (click)="add()" [disabled]="!newDay().trim() || !newTime().trim() || creating()"
+      class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream text-sm font-semibold px-5 py-2.5 disabled:opacity-60">
+      {{ creating() ? 'Agregando...' : 'Agregar servicio' }}
+    </button>
+    @if (createError()) {
+      <span class="text-xs text-terracotta">{{ createError() }}</span>
+    }
+  </div>
+</div>
+
+@if (pendingDelete(); as target) {
+  <app-confirm-dialog
+    title="Eliminar servicio"
+    [message]="'Se va a eliminar «' + target.day + ' ' + target.time + '». Desaparece del sitio público de inmediato y no se puede deshacer.'"
+    [busy]="deleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="pendingDelete.set(null)" />
+}

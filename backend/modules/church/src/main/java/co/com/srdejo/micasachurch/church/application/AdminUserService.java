@@ -59,8 +59,17 @@ public class AdminUserService {
         return adminUserRepository.save(adminUser);
     }
 
-    public void delete(UUID id) {
-        adminUserRepository.findById(id).orElseThrow(() -> new NotFoundException("adminuser.not_found"));
+    /**
+     * @param requestedBy username of the admin performing the deletion. An admin deleting their own
+     *                    account would keep a valid JWT for a user that no longer exists and lose
+     *                    access as soon as it expires, so it is rejected explicitly. The last-admin
+     *                    guard alone does not cover it: with two admins, either could lock themselves out.
+     */
+    public void delete(UUID id, String requestedBy) {
+        AdminUser adminUser = adminUserRepository.findById(id).orElseThrow(() -> new NotFoundException("adminuser.not_found"));
+        if (adminUser.getUsername().equals(requestedBy)) {
+            throw new BusinessRuleException("adminuser.self_delete");
+        }
         if (adminUserRepository.count() <= 1) {
             throw new BusinessRuleException("adminuser.last_admin");
         }

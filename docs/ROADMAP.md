@@ -84,13 +84,13 @@ A pedido del usuario: no todos los servicios semanales se transmiten, hacía fal
 ## Etapa 9 — Seguridad antes de producción real
 
 - [x] Cambiar la contraseña del `AdminUser` sembrado — hecho 2026-08-31.
-- [ ] Confirmar que `JWT_SECRET` en el `.env` del VPS es un valor generado (`openssl rand -base64 32`), no el placeholder de `application.yml`.
-- [ ] Revisar `CORS_ALLOWED_ORIGIN` en el `.env` del VPS una vez `micasachurch.co` esté sirviendo el `frontend-landing` real (Etapa 7, Fase B) — hoy solo incluye los subdominios, falta agregar el dominio raíz si el footer/CORS lo necesita.
+- [x] Confirmar que `JWT_SECRET` en el `.env` del VPS es un valor generado (`openssl rand -base64 32`), no el placeholder de `application.yml` — confirmado por el usuario 2026-09-06: el `JWT_SECRET` ya está en el `.env` del servidor (ver `docs/PROGRESS.md`, bloqueos).
+- [x] Revisar `CORS_ALLOWED_ORIGIN` en el `.env` del VPS una vez `micasachurch.co` esté sirviendo el `frontend-landing` real (Etapa 7, Fase B) — verificado 2026-09-06 desde el navegador: un `fetch` a `https://api.micasachurch.co/api/events` originado en `https://micasachurch.co` devuelve `200` y el cuerpo es legible, o sea el dominio raíz ya está en `CORS_ALLOWED_ORIGIN`.
 
 ## Etapa 10 — Automatización de deploy y detalle menor (pendiente)
 
-- [ ] Automatizar el deploy de `frontend-admin` dentro de `infra/deploy.ps1` (hoy es subida manual `ng build` + `scp`) — ver `docs/DECISIONS.md`.
-- [ ] Admin de imágenes con upload (grilla de fotos) — fuera de alcance del MVP, ver `docs/DECISIONS.md`. Reevaluar una vez el cliente tenga fotos reales que rotar con frecuencia.
+- [x] Automatizar el deploy de `frontend-admin` dentro de `infra/deploy.ps1` — **ya implementado** (verificado en el código 2026-09-06): `Deploy-Frontend` llama a `Deploy-OneFrontend` una segunda vez cuando el proyecto define `AdminFrontendPath`, así que `infra/deploy.ps1 -Projects micasachurch` construye y sube los dos frontends. Config de este proyecto: `AdminFrontendPath` → `frontend-admin`, `AdminFrontendDistSubpath` → `dist\frontend-admin\browser` (correcto: `angular.json` no fija `outputPath`, así que Angular usa `dist/<proyecto>/browser`), `RemoteAdminFrontendDir` → `~/apps/micasachurch/frontend-admin`. **Falta correrlo una vez de punta a punta** para confirmarlo en producción — hasta hoy el admin siempre se subió a mano.
+- [ ] **Galería de fotos** en el admin (subir/borrar/reordenar N imágenes) — redacción corregida 2026-09-06, la anterior ("admin de imágenes con upload") daba a entender que no había upload y sí lo hay. Lo que existe desde 2026-08-31 es la vista **Imágenes** con **4 slots fijos** (`logo`, `hero`, `quienes_somos`, `og_image`, definidos en `AdminImageController.ALLOWED_KEYS`): un slot = una imagen, subir reemplaza la anterior, no se puede agregar un slot nuevo ni borrar una imagen sin tocar código. Lo que falta es una grilla de fotos arbitrarias (galería de la congregación) con alta, baja y orden. Sigue fuera de alcance hasta que la iglesia entregue fotos reales que valga la pena rotar.
 
 ## Etapa 11 — Contenido dinámico pendiente: imágenes y texto reales (checklist de lanzamiento)
 
@@ -139,3 +139,40 @@ A pedido explícito del usuario: en vez de dejar el logo, las fotos del hero/"Qu
 - **`frontend-admin`**: dos vistas nuevas — "Contenido" (textos + CRUD de ministerios) e "Imágenes" (4 slots con recomendación de tamaño/formato por imagen, preview, botón de reemplazo).
 - **`frontend-landing`**: logo/hero/"Quiénes somos" son ahora `<img>` apuntando a `GET /api/images/{key}`, con `(error)` haciendo fallback automático al placeholder anterior (círculo "M" / gradiente) si la imagen todavía no fue subida — el sitio nunca muestra una imagen rota. Ministerios, subtítulo del hero, párrafos de "Quiénes somos" y copy de Ofrendas ahora vienen de `GET /api/site-content` / `GET /api/ministries`, con el mismo texto de siempre como valor por defecto si la llamada falla.
 - **Verificado en producción**: `GET /api/ministries` y `GET /api/site-content` responden con los datos sembrados; `GET /api/images/logo` devuelve `404` (ninguna imagen subida todavía, comportamiento esperado); el endpoint de subida rechaza sin token (`403`). La subida real de un archivo no se pudo probar por `curl` en esta sesión porque la contraseña de admin ya había sido cambiada por el usuario desde el panel — pendiente que el usuario la pruebe directamente en `admin.micasachurch.co` → Imágenes.
+
+## Etapa 12 — Pendientes abiertos tras la revisión del panel (2026-09-06)
+
+Ver [`docs/REVISION-ADMIN-2026-09-06.md`](REVISION-ADMIN-2026-09-06.md) para el detalle y la evidencia.
+
+- [x] `display_order` en `service_schedules` — hecho 2026-09-06: migración `V8`, columna en la entidad,
+      `findAllByOrderByDisplayOrderAsc()` en el repositorio y `displayOrder` en la respuesta del API. El
+      hero del sitio ya no reordena por su cuenta, sólo agrupa las horas de un mismo día.
+- [x] Crear y eliminar horarios desde el panel — hecho 2026-09-06: `POST /api/admin/services` y
+      `DELETE /api/admin/services/{id}`, más el día editable en el `PATCH` (opcional, para no romper
+      con un frontend viejo). En el panel: formulario de alta que no crea nada hasta estar lleno, y
+      borrado con diálogo de confirmación.
+- [x] "Agregar red" ya no publica una tarjeta vacía — hecho 2026-09-06: el formulario de alta pide
+      nombre y descripción y sólo entonces llama al API.
+- [x] Decidir qué apaga el interruptor del banner "En vivo" — **decidido 2026-09-06 por Daniel: sólo
+      el banner**. El comportamiento del código ya era el correcto; lo que engañaba era el texto del
+      panel, que prometía apagar "el aviso de transmisión diaria" sin más. Reescrito para decir que
+      los enlaces «En vivo 7:00 a.m.» de Prédicas y Facebook no dependen de él.
+- [ ] Registrar correo para `daniloduarte` y `robinson` — sin correo no pueden recuperar la clave ni
+      servir de respaldo. **Bloqueado**: hacen falta sus direcciones reales, y el API sólo deja cambiar
+      el correo propio (`PATCH /api/admin/auth/email`), así que cada uno debe hacerlo desde su sesión.
+- [x] Peticiones de oración: filtro "Sin atender / Todas" con contadores, y por defecto se muestran
+      las que faltan por atender — hecho 2026-09-06. No hace falta borrado en el backend para que la
+      lista sea usable.
+- [x] Respaldar `~/apps/micasachurch/uploads` — hecho 2026-09-06: `Backup-Database` de
+      `infra/deploy.ps1` empaqueta también la carpeta de uploads (`RemoteUploadsDir`) y la descarga
+      junto al dump. **Sin probar todavía**: es PowerShell y sólo corre desde el Windows de Daniel.
+- [ ] Correr `ng test` en los dos frontends al menos una vez.
+
+### Diálogos de confirmación propios (2026-09-06)
+
+Los cuatro `confirm()` del navegador (eventos, redes, ministerios, usuarios) se reemplazaron por un
+componente `app-confirm-dialog` con el estilo del panel, y el `alert()` de error al eliminar un
+usuario pasó a ser un mensaje en pantalla. El foco entra en "Cancelar", Escape cierra y el clic fuera
+también. Además de verse como el resto del panel, deja de bloquear el hilo del navegador — que era lo
+que impedía probar los borrados desde herramientas de automatización.
+

@@ -1,0 +1,19 @@
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-ink/80 px-4" (click)="cancel()">
+  <div role="dialog" aria-modal="true" [attr.aria-label]="title()" (click)="$event.stopPropagation()"
+    class="w-full max-w-[440px] rounded-card bg-card border border-ink/10 p-7 shadow-[0_18px_48px_rgba(22,19,15,0.28)]">
+    <p class="font-serif text-[27px] leading-[1.15] m-0">{{ title() }}</p>
+    @if (message()) {
+      <p class="text-ink-muted text-[15px] leading-[1.6] mt-2.5 mb-0">{{ message() }}</p>
+    }
+    <div class="flex justify-end gap-3 mt-7">
+      <button #cancelButton type="button" (click)="cancel()" [disabled]="busy()"
+        class="rounded-pill border border-ink/25 text-sm font-semibold px-5 py-2.5 hover:bg-ink/[0.04] disabled:opacity-60">
+        {{ cancelLabel() }}
+      </button>
+      <button type="button" (click)="confirmed.emit()" [disabled]="busy()"
+        class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream text-sm font-semibold px-5 py-2.5 disabled:opacity-60">
+        {{ busy() ? 'Eliminando...' : confirmLabel() }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
@@ -26,6 +26,25 @@ export class Home implements OnInit {
 
   readonly events = signal<EventItem[]>([]);
   readonly services = signal<ServiceScheduleItem[]>([]);
+  /**
+   * Horarios del hero, agrupados por día. El backend los devuelve ordenados por `displayOrder`
+   * (migración V8); aquí sólo se juntan las varias horas de un mismo día, como en el pie de página.
+   * Antes esto era `services().slice(0, 3)` y el "Domingo 8:30 a.m." desaparecía del hero.
+   */
+  readonly heroSchedule = computed(() => {
+    const byDay = new Map<string, { day: string; times: string[] }>();
+    for (const service of this.services()) {
+      const key = service.day.trim().toLowerCase();
+      const entry = byDay.get(key) ?? { day: service.day, times: [] };
+      entry.times.push(service.time);
+      byDay.set(key, entry);
+    }
+    return [...byDay.values()].map((e) => ({
+      day: e.day,
+      time: e.times.length > 1 ? `${e.times.slice(0, -1).join(', ')} y ${e.times.at(-1)}` : e.times[0],
+    }));
+  });
+
   readonly networks = signal<NetworkItem[]>([]);
   readonly links = signal<LinkEntryItem[]>([]);
   readonly siteSettings = signal<SiteSettings>({ liveBannerVisible: true });

@@ -25,15 +25,19 @@ public class ServiceScheduleJpaEntity {
     @Column(nullable = false)
     private boolean streamed;
 
+    @Column(name = "display_order", nullable = false)
+    private int displayOrder;
+
     protected ServiceScheduleJpaEntity() {
     }
 
-    public ServiceScheduleJpaEntity(UUID id, String day, String time, String note, boolean streamed) {
+    public ServiceScheduleJpaEntity(UUID id, String day, String time, String note, boolean streamed, int displayOrder) {
         this.id = id;
         this.day = day;
         this.time = time;
         this.note = note;
         this.streamed = streamed;
+        this.displayOrder = displayOrder;
     }
 
     public UUID getId() {
@@ -54,5 +58,9 @@ public class ServiceScheduleJpaEntity {
 
     public boolean isStreamed() {
         return streamed;
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
     }
 }

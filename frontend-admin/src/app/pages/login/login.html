@@ -15,6 +15,9 @@
         class="w-full rounded-card border border-ink/15 px-4 py-3 outline-none focus:border-terracotta" />
       <input [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" type="password" placeholder="Clave"
         class="w-full rounded-card border border-ink/15 px-4 py-3 outline-none focus:border-terracotta" />
+      @if (notice()) {
+        <p class="text-ink-muted text-sm">{{ notice() }}</p>
+      }
       @if (error()) {
         <p class="text-terracotta text-sm">{{ error() }}</p>
       }
