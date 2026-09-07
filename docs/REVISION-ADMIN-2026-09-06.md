@@ -75,8 +75,10 @@ Ver `docs/ROADMAP.md`, Etapa 12.
 
 ## Lo que sigue abierto
 
-- **Dos administradores sin correo.** `daniloduarte` y `robinson` tienen `email: null`: no pueden usar
-  "olvidé mi clave" ni servir de respaldo si el administrador principal pierde acceso.
+- **Queda un solo administrador.** `daniloduarte` y `robinson` no tenían correo registrado y se
+  eliminaron a pedido de Daniel (2026-09-06); los recreará por invitación, que es el camino que sí deja
+  correo y clave propia. Mientras tanto `admin` es el único acceso al panel: conviene invitar a un
+  segundo administrador pronto.
 - **Las peticiones de oración siguen sin poder borrarse** (sólo marcarse como atendidas). Ya hay filtro
   por estado, que era lo urgente; borrarlas necesitaría un endpoint nuevo.
 - **Las imágenes subidas no se pueden borrar ni restaurar desde el panel.** Cada slot guarda una sola
