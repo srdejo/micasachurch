@@ -157,16 +157,27 @@ Ver [`docs/REVISION-ADMIN-2026-09-06.md`](REVISION-ADMIN-2026-09-06.md) para el 
       el banner**. El comportamiento del código ya era el correcto; lo que engañaba era el texto del
       panel, que prometía apagar "el aviso de transmisión diaria" sin más. Reescrito para decir que
       los enlaces «En vivo 7:00 a.m.» de Prédicas y Facebook no dependen de él.
-- [ ] Registrar correo para `daniloduarte` y `robinson` — sin correo no pueden recuperar la clave ni
-      servir de respaldo. **Bloqueado**: hacen falta sus direcciones reales, y el API sólo deja cambiar
-      el correo propio (`PATCH /api/admin/auth/email`), así que cada uno debe hacerlo desde su sesión.
+- [x] Correos de `daniloduarte` y `robinson` — resuelto de otra forma 2026-09-06: **ambos usuarios se
+      eliminaron** a pedido de Daniel, que los volverá a crear con la invitación por correo (así nacen
+      con dirección registrada y con su propia clave). Hoy queda un único administrador, `admin`.
+      Conviene invitar a un segundo pronto: con uno solo no hay a quién pedirle ayuda si se pierde el
+      acceso.
 - [x] Peticiones de oración: filtro "Sin atender / Todas" con contadores, y por defecto se muestran
       las que faltan por atender — hecho 2026-09-06. No hace falta borrado en el backend para que la
       lista sea usable.
 - [x] Respaldar `~/apps/micasachurch/uploads` — hecho 2026-09-06: `Backup-Database` de
       `infra/deploy.ps1` empaqueta también la carpeta de uploads (`RemoteUploadsDir`) y la descarga
       junto al dump. **Sin probar todavía**: es PowerShell y sólo corre desde el Windows de Daniel.
-- [ ] Correr `ng test` en los dos frontends al menos una vez.
+- [x] Correr `ng test` en los dos frontends al menos una vez — hecho 2026-09-07. No corría por una
+      razón más simple de la que parecía: **no había ni un solo archivo `.spec.ts`**, así que el
+      comando terminaba en "No tests found". Se escribieron pruebas sobre la lógica que sí puede
+      romperse en silencio: en `frontend-admin`, `AuthService` (lectura del `exp` del JWT, token
+      ilegible, `logout` vs `sessionExpired`), `authGuard` y `PublishStateService` (contador,
+      publicación fallida); en `frontend-landing`, `DevotionalApiService` (fecha `MM-DD-YYYY`, la API
+      que unos días devuelve arreglo y otros objeto suelto, día sin devocional) y `ChurchApiService`
+      (rutas y método de cada consulta). **20 pruebas en verde**, 13 en el admin y 7 en el landing.
+      Los `node_modules` del repo están instalados desde Windows, así que sus binarios nativos no
+      corren en Linux: la verificación se hizo con un `npm ci` limpio sobre una copia del código.
 
 ### Diálogos de confirmación propios (2026-09-06)
 
