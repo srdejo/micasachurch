@@ -29,6 +29,10 @@ app:
 contact:
   api:
     base-url: ${CONTACT_API_URL:http://localhost:3000}
+  mail:
+    # Nombre visible del remitente. La direccion la resuelve contact, que es quien
+    # conoce la cuenta que envia; aqui solo se declara quien firma el correo.
+    from-name: ${MAIL_FROM_NAME:Mi Casa Church}
 
 security:
   jwt:

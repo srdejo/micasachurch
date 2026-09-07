@@ -106,8 +106,9 @@ public class ChurchConfig {
     }
 
     @Bean
-    public PasswordResetMailSender passwordResetMailSender(RestClient contactApiClient) {
-        return new ContactApiPasswordResetMailSender(contactApiClient);
+    public PasswordResetMailSender passwordResetMailSender(RestClient contactApiClient,
+                                                          @Value("${contact.mail.from-name}") String fromName) {
+        return new ContactApiPasswordResetMailSender(contactApiClient, fromName);
     }
 
     @Bean

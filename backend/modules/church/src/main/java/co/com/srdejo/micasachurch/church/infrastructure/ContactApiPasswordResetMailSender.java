@@ -12,14 +12,20 @@ import java.util.Map;
  * ({@code contact/src/server.js}, `POST /api/send`) instead of talking SMTP directly — same pattern
  * used by consulting's ContactApiDiagnosticoNotifier. That endpoint is restricted to loopback callers,
  * so this only works when both services run on the same host (true in prod).
+ *
+ * <p>Manda su propio {@code fromName} para que el correo se firme con el nombre de este
+ * proyecto y no con el del último que haya configurado el {@code .env} de contact. La
+ * dirección no se decide aquí: la resuelve contact, que es quien conoce la cuenta que envía.
  */
 public class ContactApiPasswordResetMailSender implements PasswordResetMailSender {
 
     private final RestClient contactApiClient;
+    private final String fromName;
     private final MailTemplateRenderer templateRenderer = new MailTemplateRenderer();
 
-    public ContactApiPasswordResetMailSender(RestClient contactApiClient) {
+    public ContactApiPasswordResetMailSender(RestClient contactApiClient, String fromName) {
         this.contactApiClient = contactApiClient;
+        this.fromName = fromName;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class ContactApiPasswordResetMailSender implements PasswordResetMailSende
         try {
             contactApiClient.post()
                     .uri("/api/send")
-                    .body(new SendRequest(toEmail, subject, html))
+                    .body(new SendRequest(toEmail, subject, html, fromName))
                     .retrieve()
                     .toBodilessEntity();
         } catch (RestClientException ex) {
@@ -47,6 +53,6 @@ public class ContactApiPasswordResetMailSender implements PasswordResetMailSende
         }
     }
 
-    private record SendRequest(String to, String subject, String html) {
+    private record SendRequest(String to, String subject, String html, String fromName) {
     }
 }
