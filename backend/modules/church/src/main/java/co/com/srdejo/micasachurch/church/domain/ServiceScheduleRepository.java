@@ -10,5 +10,8 @@ public interface ServiceScheduleRepository {
 
     Optional<ServiceSchedule> findById(UUID id);
 
+    /** Ordenados por `displayOrder`: es el orden con el que se muestran en el sitio publico. */
     List<ServiceSchedule> findAll();
+
+    void deleteById(UUID id);
 }

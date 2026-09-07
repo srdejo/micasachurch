@@ -44,8 +44,8 @@ public class AdminUserController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void delete(@PathVariable UUID id) {
-        adminUserService.delete(id);
+    public void delete(@AuthenticationPrincipal JwtClaims claims, @PathVariable UUID id) {
+        adminUserService.delete(id, claims.username());
     }
 
     private static AdminUserResponse toResponse(AdminUser adminUser) {

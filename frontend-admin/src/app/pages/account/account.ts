@@ -4,11 +4,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminApiService, AdminUserItem } from '../../core/admin-api.service';
 import { AuthService } from '../../core/auth.service';
+import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmDialog],
   templateUrl: './account.html',
 })
 export class Account implements OnInit {
@@ -16,6 +17,8 @@ export class Account implements OnInit {
   private readonly auth = inject(AuthService);
 
   readonly adminUsers = signal<AdminUserItem[]>([]);
+  /** Para no ofrecer "Eliminar" sobre uno mismo: borrarse deja la sesion viva pero sin usuario. */
+  readonly currentUsername = this.auth.username;
 
   readonly currentPassword = signal('');
   readonly newPassword = signal('');
@@ -33,6 +36,10 @@ export class Account implements OnInit {
   readonly createUserError = signal<string | null>(null);
   readonly creatingUser = signal(false);
   readonly userInvited = signal(false);
+  readonly pendingDelete = signal<AdminUserItem | null>(null);
+  readonly deleting = signal(false);
+  /** Antes este error salia en un alert() del navegador. */
+  readonly deleteError = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadAdminUsers();
@@ -105,13 +112,28 @@ export class Account implements OnInit {
       });
   }
 
-  deleteAdminUser(user: AdminUserItem): void {
-    if (!confirm(`¿Eliminar el usuario "${user.username}"?`)) {
+  askDeleteAdminUser(user: AdminUserItem): void {
+    this.deleteError.set(null);
+    this.pendingDelete.set(user);
+  }
+
+  confirmDeleteAdminUser(): void {
+    const user = this.pendingDelete();
+    if (!user) {
       return;
     }
+    this.deleting.set(true);
     this.api.deleteAdminUser(user.id).subscribe({
-      next: () => this.loadAdminUsers(),
-      error: (err: HttpErrorResponse) => alert(err.error?.error ?? 'No se pudo eliminar el usuario.'),
+      next: () => {
+        this.deleting.set(false);
+        this.pendingDelete.set(null);
+        this.loadAdminUsers();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.deleting.set(false);
+        this.pendingDelete.set(null);
+        this.deleteError.set(err.error?.error ?? 'No se pudo eliminar el usuario.');
+      },
     });
   }
 }

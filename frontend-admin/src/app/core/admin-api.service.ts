@@ -36,6 +36,7 @@ export interface ServiceScheduleItem {
   time: string;
   note: string;
   streamed: boolean;
+  displayOrder: number;
 }
 
 export interface LinkEntryItem {
@@ -126,8 +127,16 @@ export class AdminApiService {
     return this.http.get<ServiceScheduleItem[]>(`${this.baseUrl}/services`);
   }
 
-  updateService(id: string, payload: { time: string; note: string; streamed: boolean }) {
+  updateService(id: string, payload: { day: string; time: string; note: string; streamed: boolean }) {
     return this.http.patch<ServiceScheduleItem>(`${this.baseUrl}/services/${id}`, payload);
+  }
+
+  createService(payload: { day: string; time: string; note: string; streamed: boolean }) {
+    return this.http.post<ServiceScheduleItem>(`${this.baseUrl}/services`, payload);
+  }
+
+  deleteService(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/services/${id}`);
   }
 
   listLinks() {

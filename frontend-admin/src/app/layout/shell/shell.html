@@ -12,7 +12,7 @@
         <span class="text-[11.5px] tracking-[0.14em] uppercase text-cream/50 font-semibold">Administración</span>
       </div>
     </div>
-    <nav class="flex-1 px-3 py-4 space-y-0.5">
+    <nav class="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-0.5">
       @for (item of navItems; track item.path) {
         <a [routerLink]="item.path" routerLinkActive="bg-terracotta text-cream font-semibold"
            class="block rounded-[10px] px-3.5 py-2.5 text-[15px] text-cream/78 hover:bg-white/[0.08] hover:text-cream transition-colors">
@@ -31,6 +31,9 @@
   </aside>
   <main class="flex-1 px-8 py-8 overflow-y-auto">
     <div class="flex flex-wrap items-center justify-end gap-3.5 mb-6 pb-5 border-b border-ink/[0.14]">
+      @if (publishState.error()) {
+        <span class="text-sm text-terracotta">{{ publishState.error() }}</span>
+      }
       <span class="text-sm text-ink-muted">
         {{ publishState.pendingCount() === 0 ? 'Todo publicado' : publishState.pendingCount() + ' cambio(s) sin publicar' }}
       </span>

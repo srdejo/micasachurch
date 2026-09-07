@@ -3,7 +3,34 @@
     <h1 class="font-serif text-[40px] leading-none">Redes</h1>
     <span class="text-[15px] text-ink-muted">Grupos pequeños que se muestran en la sección "Redes"</span>
   </div>
-  <button (click)="add()" class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream text-sm font-semibold px-5 py-2.5">Agregar red</button>
+</div>
+
+<p class="text-ink-muted text-sm mb-6">Lo que edites aquí se ve en el sitio de inmediato: esta sección no pasa por el botón «Publicar cambios».</p>
+
+<div class="rounded-card bg-card border border-ink/10 p-5 mb-6">
+  <p class="font-semibold mb-1">Agregar una red</p>
+  <p class="text-ink-muted text-sm mb-4">Aparece en el sitio en cuanto la agregues, así que ponle nombre y descripción antes.</p>
+  <div class="flex flex-wrap items-end gap-3">
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-muted">Nombre</label>
+      <input [(ngModel)]="newName" placeholder="Matrimonios" class="rounded-card border border-ink/15 px-3 py-2 text-sm w-[180px]" />
+    </div>
+    <div class="flex flex-col gap-1 grow min-w-[220px]">
+      <label class="text-xs text-ink-muted">Descripción</label>
+      <input [(ngModel)]="newDescription" placeholder="Red para parejas casadas." class="rounded-card border border-ink/15 px-3 py-2 text-sm w-full" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-muted">Líder / contacto (opcional)</label>
+      <input [(ngModel)]="newLeadContact" class="rounded-card border border-ink/15 px-3 py-2 text-sm w-[200px]" />
+    </div>
+    <button (click)="add()" [disabled]="!newName().trim() || !newDescription().trim() || creating()"
+      class="rounded-pill bg-terracotta hover:bg-terracotta-hover text-cream text-sm font-semibold px-5 py-2.5 disabled:opacity-60">
+      {{ creating() ? 'Agregando...' : 'Agregar red' }}
+    </button>
+    @if (createError()) {
+      <span class="text-xs text-terracotta">{{ createError() }}</span>
+    }
+  </div>
 </div>
 
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -28,8 +55,17 @@
             <span class="text-terracotta text-sm font-medium">Error al guardar</span>
           }
         </div>
-        <button (click)="remove(n)" class="text-terracotta text-sm hover:underline">Eliminar</button>
+        <button (click)="askDelete(n)" class="text-terracotta text-sm hover:underline">Eliminar</button>
       </div>
     </div>
   }
 </div>
+
+@if (pendingDelete(); as target) {
+  <app-confirm-dialog
+    title="Eliminar red"
+    [message]="'Se va a eliminar la red «' + target.name + '». Desaparece del sitio público de inmediato y no se puede deshacer.'"
+    [busy]="deleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="pendingDelete.set(null)" />
+}

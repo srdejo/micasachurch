@@ -19,6 +19,7 @@ export interface ServiceScheduleItem {
   time: string;
   note: string;
   streamed: boolean;
+  displayOrder: number;
 }
 
 export interface NetworkItem {

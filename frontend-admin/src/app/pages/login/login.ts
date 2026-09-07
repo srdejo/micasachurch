@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { AdminApiService } from '../../core/admin-api.service';
 import { AuthService } from '../../core/auth.service';
 
@@ -15,12 +15,19 @@ export class Login {
   private readonly auth = inject(AuthService);
   private readonly api = inject(AdminApiService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly username = signal('');
   readonly password = signal('');
   readonly error = signal<string | null>(null);
   readonly loading = signal(false);
   readonly logoFailed = signal(false);
+  /** Aviso cuando el interceptor cerró la sesión por un 401, para no dejarlo sin explicación. */
+  readonly notice = signal<string | null>(
+    this.route.snapshot.queryParamMap.get('sesion') === 'expirada'
+      ? 'Tu sesión expiró. Ingresa de nuevo.'
+      : null,
+  );
 
   logoUrl(): string {
     return this.api.imageUrl('logo');

@@ -20,7 +20,8 @@ public class ServiceScheduleRepositoryAdapter implements ServiceScheduleReposito
     @Override
     public ServiceSchedule save(ServiceSchedule serviceSchedule) {
         ServiceScheduleJpaEntity entity = new ServiceScheduleJpaEntity(serviceSchedule.getId(), serviceSchedule.getDay(),
-                serviceSchedule.getTime(), serviceSchedule.getNote(), serviceSchedule.isStreamed());
+                serviceSchedule.getTime(), serviceSchedule.getNote(), serviceSchedule.isStreamed(),
+                serviceSchedule.getDisplayOrder());
         return toDomain(springDataRepository.save(entity));
     }
 
@@ -31,10 +32,16 @@ public class ServiceScheduleRepositoryAdapter implements ServiceScheduleReposito
 
     @Override
     public List<ServiceSchedule> findAll() {
-        return springDataRepository.findAll().stream().map(this::toDomain).toList();
+        return springDataRepository.findAllByOrderByDisplayOrderAsc().stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        springDataRepository.deleteById(id);
     }
 
     private ServiceSchedule toDomain(ServiceScheduleJpaEntity entity) {
-        return new ServiceSchedule(entity.getId(), entity.getDay(), entity.getTime(), entity.getNote(), entity.isStreamed());
+        return new ServiceSchedule(entity.getId(), entity.getDay(), entity.getTime(), entity.getNote(),
+                entity.isStreamed(), entity.getDisplayOrder());
     }
 }

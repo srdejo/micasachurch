@@ -26,7 +26,7 @@
             class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
             {{ status()[event.id] === 'saving' ? 'Guardando...' : 'Guardar' }}
           </button>
-          <button (click)="remove(event.id)" class="rounded-pill border border-terracotta text-terracotta text-sm px-4 py-2">Eliminar</button>
+          <button (click)="askDelete(event)" class="rounded-pill border border-terracotta text-terracotta text-sm px-4 py-2">Eliminar</button>
         </div>
         @if (status()[event.id] === 'saved') {
           <span class="text-xs text-terracotta font-medium">En cola ✓</span>
@@ -43,3 +43,12 @@
     <p class="text-ink-muted text-sm">No hay eventos todavía.</p>
   }
 </div>
+
+@if (pendingDelete(); as target) {
+  <app-confirm-dialog
+    title="Eliminar evento"
+    [message]="'Se va a eliminar «' + target.title + '». Esta acción no se puede deshacer.'"
+    [busy]="deleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="pendingDelete.set(null)" />
+}

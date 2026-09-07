@@ -61,9 +61,18 @@
               <span class="text-xs text-terracotta font-medium">Sin publicar</span>
             }
           </div>
-          <button (click)="deleteMinistry(m)" class="text-terracotta text-sm hover:underline">Eliminar</button>
+          <button (click)="askDeleteMinistry(m)" class="text-terracotta text-sm hover:underline">Eliminar</button>
         </div>
       </div>
     }
   </div>
 </div>
+
+@if (pendingDelete(); as target) {
+  <app-confirm-dialog
+    title="Eliminar ministerio"
+    [message]="'Se va a eliminar «' + target.name + '». Esta acción no se puede deshacer.'"
+    [busy]="deleting()"
+    (confirmed)="confirmDeleteMinistry()"
+    (cancelled)="pendingDelete.set(null)" />
+}
