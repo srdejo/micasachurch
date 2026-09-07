@@ -178,6 +178,13 @@ Ver [`docs/REVISION-ADMIN-2026-09-06.md`](REVISION-ADMIN-2026-09-06.md) para el 
       (rutas y método de cada consulta). **20 pruebas en verde**, 13 en el admin y 7 en el landing.
       Los `node_modules` del repo están instalados desde Windows, así que sus binarios nativos no
       corren en Linux: la verificación se hizo con un `npm ci` limpio sobre una copia del código.
+- [x] Las invitaciones de administrador ya no se firman con el nombre de otro proyecto — hecho
+      2026-09-07. El correo "Te invitaron a administrar la página" salía como "Leo Pura
+      Distribución" porque `ContactApiPasswordResetMailSender` no mandaba remitente y `contact`
+      caía a su `GMAIL_FROM` por defecto. Ahora manda `fromName` (`contact.mail.from-name`,
+      `MAIL_FROM_NAME`, por defecto "Mi Casa Church"). La dirección sigue siendo la de la cuenta
+      de Gmail: cambiarla exige verificar un alias en "Enviar como". Verificado con
+      `./gradlew test` en verde.
 
 ### Diálogos de confirmación propios (2026-09-06)
 
