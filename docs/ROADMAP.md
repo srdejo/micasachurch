@@ -87,10 +87,11 @@ A pedido del usuario: no todos los servicios semanales se transmiten, hacía fal
 - [x] Confirmar que `JWT_SECRET` en el `.env` del VPS es un valor generado (`openssl rand -base64 32`), no el placeholder de `application.yml` — confirmado por el usuario 2026-09-06: el `JWT_SECRET` ya está en el `.env` del servidor (ver `docs/PROGRESS.md`, bloqueos).
 - [x] Revisar `CORS_ALLOWED_ORIGIN` en el `.env` del VPS una vez `micasachurch.co` esté sirviendo el `frontend-landing` real (Etapa 7, Fase B) — verificado 2026-09-06 desde el navegador: un `fetch` a `https://api.micasachurch.co/api/events` originado en `https://micasachurch.co` devuelve `200` y el cuerpo es legible, o sea el dominio raíz ya está en `CORS_ALLOWED_ORIGIN`.
 
-## Etapa 10 — Automatización de deploy y detalle menor (pendiente)
+## Etapa 10 — Automatización de deploy ✅ (2026-09-23)
+
+**Criterio de cierre**: `infra/deploy.ps1 -Projects micasachurch` sube landing y admin en una sola corrida. El cableado está verificado en el código; la corrida de punta a punta la hace Daniel, que es quien despliega.
 
 - [x] Automatizar el deploy de `frontend-admin` dentro de `infra/deploy.ps1` — **ya implementado** (verificado en el código 2026-09-06): `Deploy-Frontend` llama a `Deploy-OneFrontend` una segunda vez cuando el proyecto define `AdminFrontendPath`, así que `infra/deploy.ps1 -Projects micasachurch` construye y sube los dos frontends. Config de este proyecto: `AdminFrontendPath` → `frontend-admin`, `AdminFrontendDistSubpath` → `dist\frontend-admin\browser` (correcto: `angular.json` no fija `outputPath`, así que Angular usa `dist/<proyecto>/browser`), `RemoteAdminFrontendDir` → `~/apps/micasachurch/frontend-admin`. **Falta correrlo una vez de punta a punta** para confirmarlo en producción — hasta hoy el admin siempre se subió a mano.
-- [ ] **Galería de fotos** en el admin (subir/borrar/reordenar N imágenes) — redacción corregida 2026-09-06, la anterior ("admin de imágenes con upload") daba a entender que no había upload y sí lo hay. Lo que existe desde 2026-08-31 es la vista **Imágenes** con **4 slots fijos** (`logo`, `hero`, `quienes_somos`, `og_image`, definidos en `AdminImageController.ALLOWED_KEYS`): un slot = una imagen, subir reemplaza la anterior, no se puede agregar un slot nuevo ni borrar una imagen sin tocar código. Lo que falta es una grilla de fotos arbitrarias (galería de la congregación) con alta, baja y orden. Sigue fuera de alcance hasta que la iglesia entregue fotos reales que valga la pena rotar.
 
 ## Etapa 11 — Contenido dinámico pendiente: imágenes y texto reales (checklist de lanzamiento)
 
@@ -194,3 +195,13 @@ usuario pasó a ser un mensaje en pantalla. El foco entra en "Cancelar", Escape 
 también. Además de verse como el resto del panel, deja de bloquear el hilo del navegador — que era lo
 que impedía probar los borrados desde herramientas de automatización.
 
+---
+
+## Mejoras futuras (no priorizadas)
+
+Ideas registradas que **no** están roadmapeadas: no cuentan para el avance del proyecto y se suben a
+una etapa solo cuando exista la decisión y el insumo para construirlas.
+
+- [ ] **Galería de fotos** en el admin (subir/borrar/reordenar N imágenes) — redacción corregida 2026-09-06, la anterior ("admin de imágenes con upload") daba a entender que no había upload y sí lo hay. Lo que existe desde 2026-08-31 es la vista **Imágenes** con **4 slots fijos** (`logo`, `hero`, `quienes_somos`, `og_image`, definidos en `AdminImageController.ALLOWED_KEYS`): un slot = una imagen, subir reemplaza la anterior, no se puede agregar un slot nuevo ni borrar una imagen sin tocar código. Lo que falta es una grilla de fotos arbitrarias (galería de la congregación) con alta, baja y orden. Sigue fuera de alcance hasta que la iglesia entregue fotos reales que valga la pena rotar.
+  **Movido aquí el 2026-09-23**: depende de que la iglesia entregue fotos reales, no de trabajo
+  técnico pendiente. El sitio está en producción y esto no le falta para funcionar.
