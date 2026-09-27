@@ -1,12 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, effect, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminApiService, MinistryItem, SiteContentItem } from '../../core/admin-api.service';
 import { PublishStateService } from '../../core/publish-state.service';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+/** Secciones del landing en el orden en que aparecen, para que sea evidente dónde se ve cada texto. */
+const SECTIONS: { key: string; title: string }[] = [
+  { key: 'inicio', title: 'Inicio' },
+  { key: 'predicas', title: 'Prédicas' },
+  { key: 'quienes_somos', title: 'Quiénes somos' },
+  { key: 'ofrendas', title: 'Ofrendas' },
+];
 
 @Component({
   selector: 'app-content',
@@ -20,6 +28,15 @@ export class ContentPage implements OnInit {
 
   readonly siteContent = signal<SiteContentItem[]>([]);
   readonly ministries = signal<MinistryItem[]>([]);
+  readonly contentBySection = computed(() => {
+    const items = this.siteContent();
+    const known = SECTIONS.map((section) => ({
+      ...section,
+      items: items.filter((i) => i.section === section.key).sort((a, b) => a.displayOrder - b.displayOrder),
+    }));
+    const others = items.filter((i) => !SECTIONS.some((s) => s.key === i.section));
+    return [...known, { key: 'otros', title: 'Otros', items: others }].filter((group) => group.items.length > 0);
+  });
 
   readonly contentStatus = signal<Record<string, SaveStatus>>({});
   readonly contentError = signal<Record<string, string>>({});

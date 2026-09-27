@@ -1,24 +1,24 @@
-<h1 class="text-2xl font-serif mb-2">Enlaces</h1>
-<p class="text-ink-muted text-sm mb-1">
+<h1 class="text-[48px] leading-[0.95] font-display mb-2">Enlaces</h1>
+<p class="text-secondary-muted text-sm mb-1">
   Enlaces y cuentas que se muestran en el sitio público: WhatsApp, redes sociales y cuentas para ofrendas.
 </p>
-<p class="text-ink-muted text-sm mb-6">Lo que edites aquí se ve en el sitio de inmediato: esta sección no pasa por el botón «Publicar cambios».</p>
+<p class="text-secondary-muted text-sm mb-6">Lo que edites aquí se ve en el sitio de inmediato: esta sección no pasa por el botón «Publicar cambios».</p>
 
 <div class="grid md:grid-cols-2 gap-4">
   @for (link of links(); track link.id) {
-    <div class="rounded-card bg-card border border-ink/10 p-5">
+    <div class="rounded-card bg-card border border-secondary/10 p-5">
       <p class="font-semibold mb-3">{{ link.label }}</p>
-      <input [(ngModel)]="link.value" class="w-full rounded-card border border-ink/15 px-3 py-2 text-sm mb-3" />
+      <input [(ngModel)]="link.value" class="w-full rounded-card border border-secondary/15 px-3 py-2 text-sm mb-3" />
       <div class="flex items-center gap-3">
         <button (click)="save(link)" [disabled]="status()[link.id] === 'saving'"
-          class="rounded-pill bg-ink text-cream text-sm px-4 py-2 disabled:opacity-60">
+          class="rounded-pill bg-secondary text-tertiary text-sm px-4 py-2 disabled:opacity-60">
           {{ status()[link.id] === 'saving' ? 'Guardando...' : 'Guardar' }}
         </button>
         @if (status()[link.id] === 'saved') {
-          <span class="text-terracotta text-sm font-medium">Guardado ✓</span>
+          <span class="text-primary-strong text-sm font-medium">Guardado ✓</span>
         }
         @if (status()[link.id] === 'error') {
-          <span class="text-terracotta text-sm font-medium">No se pudo guardar. Intenta de nuevo.</span>
+          <span class="text-primary-strong text-sm font-medium">No se pudo guardar. Intenta de nuevo.</span>
         }
       </div>
     </div>

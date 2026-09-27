@@ -102,3 +102,28 @@ El motivo es doble. El entorno del agente es efímero —cada sesión arranca co
 Alternativas descartadas: una **deploy key por repo** (son 10 y una llave sirve para un solo repositorio; además no se puede limitar a un patrón de ramas — eso lo hace un *ruleset*, no el tipo de credencial); un **token fino** con `Contents: Read and write` sobre los 10 repos (más simple que 10 llaves y sería la vía si algún día se automatiza, pero deja el token en disco y exigiría proteger `main` con un ruleset); y una **GitHub App** (lo más correcto, demasiado montaje para lo que se gana).
 
 Consecuencia práctica: que `git push` falle en el entorno del agente con `Host key verification failed` es el **comportamiento esperado**, no un problema por resolver ni un bloqueante que reportar. Cada sesión deja las ramas listas y los comandos de push en `RESUMEN-DIARIO.md`, en la raíz del workspace. Aplica a los 10 repos.
+
+## "En vivo" enlaza a Facebook en vez de incrustarlo (2026-09-27)
+
+El modal con el plugin de página de Facebook (`facebook.com/plugins/page.php`) no mostraba imagen en
+PC ni en móvil —lo bloquean los navegadores y el antirrastreo— y al cerrarlo la página saltaba de
+sección (bugs 4, 5 y 10 de `bugs-encontrados-pagina-web.md`). Se quitó el modal: todos los controles
+"En vivo" abren en pestaña nueva el enlace `facebook` administrable
+(`https://www.facebook.com/micasachurchocana` por defecto; la migración V9 corrigió el valor sembrado en
+V2, que no era la página real). Arreglar el modal dejaba en pie la dependencia de un plugin que Facebook
+no garantiza; el enlace directo elimina los tres bugs de raíz.
+
+## Colores de marca editables desde el admin, tipografías libres (2026-09-27)
+
+Tres colores (primario `#f89e1b`, secundario `#000000`, terciario `#ffffff`) viven en `site_settings`
+(V9) y se editan en el Panel del admin. El landing los aplica en el navegador como variables CSS
+`--brand-*`; los tokens de Tailwind (`primary`, `secondary`, `tertiary` y derivados con `color-mix`)
+apuntan a esas variables, así que un cambio no requiere redesplegar. El HTML prerenderizado lleva los
+valores por defecto (inyectarlos en el servidor exigiría SSR por petición). El panel usa la paleta
+fija y, para texto naranja sobre blanco, un tono oscurecido (`primary-strong`) porque el de marca no
+alcanza contraste legible; en el landing, el texto sobre el primario siempre va en el secundario.
+
+Gotham y Dharma Gothic (la guía de marca) son comerciales: se usan League Gothic (títulos) y
+Montserrat Bold (subtítulos, etiquetas, botones), las equivalentes libres más cercanas, con Montserrat
+Regular y Poppins para texto. Todas autoalojadas en `public/fonts/` con su licencia OFL. Si la iglesia
+licencia las originales, basta cambiar los archivos y la familia de `font-display`.

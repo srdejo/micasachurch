@@ -16,7 +16,6 @@ import co.com.srdejo.micasachurch.church.domain.ServiceSchedule;
 import co.com.srdejo.micasachurch.church.domain.SiteContent;
 import co.com.srdejo.micasachurch.church.domain.SiteSettings;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -120,7 +119,8 @@ public class PublicController {
     }
 
     static SiteSettingsResponse toResponse(SiteSettings siteSettings) {
-        return new SiteSettingsResponse(siteSettings.isLiveBannerVisible());
+        return new SiteSettingsResponse(siteSettings.isLiveBannerVisible(), siteSettings.getPrimaryColor(),
+                siteSettings.getSecondaryColor(), siteSettings.getTertiaryColor());
     }
 
     static MinistryResponse toResponse(Ministry ministry) {
@@ -128,14 +128,15 @@ public class PublicController {
     }
 
     static SiteContentResponse toResponse(SiteContent siteContent) {
-        return new SiteContentResponse(siteContent.getId(), siteContent.getKey(), siteContent.getLabel(), siteContent.getValue());
+        return new SiteContentResponse(siteContent.getId(), siteContent.getKey(), siteContent.getLabel(),
+                siteContent.getSection(), siteContent.getValue());
     }
 
     static SiteImageResponse toResponse(co.com.srdejo.micasachurch.church.domain.SiteImage siteImage) {
         return new SiteImageResponse(siteImage.getId(), siteImage.getKey(), siteImage.getUpdatedAt());
     }
 
-    public record PrayerRequestSubmission(String name, String phone, @NotBlank String message) {
+    public record PrayerRequestSubmission(String name, String phone, String message) {
     }
 
     public record PrayerRequestResponse(java.util.UUID id) {
@@ -155,13 +156,14 @@ public class PublicController {
     public record LinkEntryResponse(java.util.UUID id, String key, String label, String value) {
     }
 
-    public record SiteSettingsResponse(boolean liveBannerVisible) {
+    public record SiteSettingsResponse(boolean liveBannerVisible, String primaryColor, String secondaryColor,
+                                       String tertiaryColor) {
     }
 
     public record MinistryResponse(java.util.UUID id, String name, String description, int displayOrder) {
     }
 
-    public record SiteContentResponse(java.util.UUID id, String key, String label, String value) {
+    public record SiteContentResponse(java.util.UUID id, String key, String label, String section, String value) {
     }
 
     public record SiteImageResponse(java.util.UUID id, String key, java.time.Instant updatedAt) {

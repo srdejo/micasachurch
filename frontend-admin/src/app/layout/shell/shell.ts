@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AdminApiService } from '../../core/admin-api.service';
 import { AuthService } from '../../core/auth.service';
 import { PublishStateService } from '../../core/publish-state.service';
 
@@ -14,16 +13,9 @@ import { PublishStateService } from '../../core/publish-state.service';
 export class Shell implements OnInit {
   readonly auth = inject(AuthService);
   readonly publishState = inject(PublishStateService);
-  private readonly api = inject(AdminApiService);
-
-  readonly logoFailed = signal(false);
 
   ngOnInit(): void {
     this.publishState.refresh();
-  }
-
-  logoUrl(): string {
-    return this.api.imageUrl('logo');
   }
 
   publishChanges(): void {

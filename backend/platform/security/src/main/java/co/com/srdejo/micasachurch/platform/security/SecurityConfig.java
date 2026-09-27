@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(securityErrorResponder))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/auth/login", "/api/admin/auth/forgot-password",
-                                "/api/admin/auth/reset-password").permitAll()
+                                "/api/admin/auth/reset-password", "/api/admin/auth/reset-token").permitAll()
                         .requestMatchers("/api/events", "/api/services", "/api/networks", "/api/links",
                                 "/api/site-settings", "/api/prayer-requests", "/api/ministries", "/api/site-content",
                                 "/api/images/**").permitAll()

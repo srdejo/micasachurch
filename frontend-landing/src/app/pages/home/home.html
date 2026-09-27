@@ -1,157 +1,137 @@
 <!-- Header -->
-<header class="sticky top-0 z-[60] flex items-center justify-between gap-6 px-5 py-3 md:px-10 bg-cream/94 backdrop-blur-[10px] border-b border-ink/10">
-  <a href="#inicio" class="flex items-center gap-3 text-ink no-underline">
-    @if (!logoImageFailed()) {
-      <img [src]="imageUrl('logo')" (error)="logoImageFailed.set(true)" alt="Mi Casa Church"
-        class="h-[38px] w-[38px] rounded-full object-cover block" />
-    } @else {
-      <span class="h-[38px] w-[38px] rounded-full bg-terracotta text-cream flex items-center justify-center font-serif text-lg">M</span>
-    }
-    <span class="font-serif text-[21px] tracking-tight">Mi Casa Church</span>
+<header class="sticky top-0 z-[60] flex items-center justify-between gap-6 px-5 py-3 md:px-10 bg-tertiary/95 backdrop-blur-[10px] border-b border-secondary/10">
+  <a href="#inicio" class="flex items-center no-underline" aria-label="Mi Casa Church — inicio">
+    <img src="img/brand/logo-horizontal.png" alt="Mi Casa Church" width="600" height="213" class="h-[42px] w-auto block" />
   </a>
 
-  <nav class="hidden min-[981px]:flex items-center gap-[22px] text-[14.5px] font-medium">
-    <a href="#predicas" class="text-ink hover:text-terracotta">Prédicas</a>
-    <a href="#eventos" class="text-ink hover:text-terracotta">Eventos</a>
-    <a href="#redes" class="text-ink hover:text-terracotta">Redes</a>
-    <a routerLink="/devocional" class="text-ink hover:text-terracotta">Devocional</a>
-    <a href="#oracion" class="text-ink hover:text-terracotta">Oración</a>
-    <a href="#siguenos" class="text-ink hover:text-terracotta">Síguenos</a>
-    <a href="#visitar" class="bg-ink text-cream px-[18px] py-2.5 rounded-pill hover:bg-terracotta transition-colors">Planea tu visita</a>
+  <nav class="hidden min-[981px]:flex items-center gap-[22px] text-[14.5px]">
+    <a href="#predicas" class="text-secondary hover:underline decoration-primary decoration-2 underline-offset-[6px]">Prédicas</a>
+    <a href="#eventos" class="text-secondary hover:underline decoration-primary decoration-2 underline-offset-[6px]">Eventos</a>
+    <a href="#redes" class="text-secondary hover:underline decoration-primary decoration-2 underline-offset-[6px]">Redes</a>
+    <a routerLink="/devocional" class="text-secondary hover:underline decoration-primary decoration-2 underline-offset-[6px]">Devocional</a>
+    <a href="#oracion" class="text-secondary hover:underline decoration-primary decoration-2 underline-offset-[6px]">Oración</a>
+    <a href="#siguenos" class="text-secondary hover:underline decoration-primary decoration-2 underline-offset-[6px]">Síguenos</a>
+    <a href="#visitar" class="bg-secondary text-tertiary font-bold px-[18px] py-2.5 rounded-pill hover:bg-primary hover:text-secondary transition-colors">Planea tu visita</a>
   </nav>
 
   <div class="flex min-[981px]:hidden items-center gap-2">
     <a [href]="(linkValue('whatsapp') || 'https://wa.me/573045332589')" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"
-      class="flex items-center justify-center h-[46px] w-[46px] shrink-0 rounded-xl bg-ink text-cream hover:bg-terracotta">
+      class="flex items-center justify-center h-[46px] w-[46px] shrink-0 rounded-xl bg-secondary text-tertiary hover:bg-primary hover:text-secondary">
       <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M12.04 2.2a9.7 9.7 0 0 0-8.3 14.66L2.2 21.8l5.06-1.5A9.7 9.7 0 1 0 12.04 2.2Zm0 1.8a7.9 7.9 0 0 1 0 15.8 7.9 7.9 0 0 1-4.16-1.18l-.42-.26-2.62.78.79-2.56-.27-.43A7.9 7.9 0 0 1 12.04 4Zm-3.1 3.6c-.2 0-.5.07-.72.34-.24.29-.78.87-.78 1.9 0 1.04.72 2.03.82 2.17.1.15 1.42 2.35 3.55 3.2 1.77.7 2.13.6 2.52.56.5-.05 1.53-.63 1.75-1.25.21-.62.21-1.14.15-1.25-.07-.11-.25-.18-.53-.32-.28-.14-1.62-.8-1.87-.89-.25-.09-.43-.13-.61.14-.18.28-.5.9-.62 1.04-.11.14-.23.16-.5.05a5.9 5.9 0 0 1-1.72-1.06 6.5 6.5 0 0 1-1.19-1.48c-.12-.22-.01-.35.11-.49.12-.14.36-.42.44-.56.09-.14.05-.28-.02-.42-.07-.14-.6-1.48-.82-2.02-.17-.4-.34-.4-.5-.4h-.24Z"/></svg>
     </a>
     <button type="button" (click)="toggleMobileMenu()" aria-label="Abrir menú"
-      class="flex items-center justify-center h-[46px] w-[46px] shrink-0 border border-ink/20 rounded-xl bg-transparent flex-col gap-[5px] p-0">
-      <span class="w-5 h-0.5 bg-ink block"></span>
-      <span class="w-5 h-0.5 bg-ink block"></span>
-      <span class="w-5 h-0.5 bg-ink block"></span>
+      class="flex items-center justify-center h-[46px] w-[46px] shrink-0 border border-secondary/20 rounded-xl bg-transparent flex-col gap-[5px] p-0">
+      <span class="w-5 h-0.5 bg-secondary block"></span>
+      <span class="w-5 h-0.5 bg-secondary block"></span>
+      <span class="w-5 h-0.5 bg-secondary block"></span>
     </button>
   </div>
 </header>
 
 @if (mobileMenuOpen()) {
-  <nav class="min-[981px]:hidden sticky top-[63px] z-[55] flex flex-col px-[18px] pt-2 pb-[18px] bg-cream border-b border-ink/[0.12]">
-    <a href="#predicas" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Prédicas</a>
-    <a href="#eventos" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Eventos</a>
-    <a href="#redes" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Redes</a>
-    <a routerLink="/devocional" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Devocional</a>
-    <a href="#oracion" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Oración</a>
-    <a href="#siguenos" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Síguenos</a>
-    <a href="#ofrendas" (click)="closeMobileMenu()" class="text-ink text-[17px] font-medium py-[15px] px-1 border-b border-ink/[0.08]">Ofrendas</a>
-    <a href="#visitar" (click)="closeMobileMenu()" class="mt-3.5 bg-ink text-cream text-center py-4 rounded-pill font-semibold text-base">Planea tu visita</a>
+  <nav class="min-[981px]:hidden sticky top-[71px] z-[55] flex flex-col px-[18px] pt-2 pb-[18px] bg-tertiary border-b border-secondary/[0.12]">
+    <a href="#predicas" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Prédicas</a>
+    <a href="#eventos" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Eventos</a>
+    <a href="#redes" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Redes</a>
+    <a routerLink="/devocional" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Devocional</a>
+    <a href="#oracion" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Oración</a>
+    <a href="#ofrendas" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Ofrendas</a>
+    <a href="#siguenos" (click)="closeMobileMenu()" class="text-secondary text-[17px] py-[15px] px-1 border-b border-secondary/[0.08]">Síguenos</a>
+    <a href="#visitar" (click)="closeMobileMenu()" class="mt-3.5 bg-secondary text-tertiary text-center py-4 rounded-pill font-bold text-base">Planea tu visita</a>
   </nav>
 }
 
 <!-- Hero -->
-<section id="inicio" class="relative grid grid-cols-[1.05fr_0.95fr] max-[980px]:grid-cols-1 items-stretch border-b border-ink/10">
+<section id="inicio" class="relative grid grid-cols-[1.05fr_0.95fr] max-[980px]:grid-cols-1 items-stretch border-b border-secondary/10">
   <div class="flex flex-col justify-center gap-[26px] max-w-[720px] px-10 py-[92px] pl-16
               max-[980px]:px-[22px] max-[980px]:py-11 max-[980px]:pb-[52px]">
-    <span class="text-[12.5px] tracking-[0.18em] uppercase text-ink-subtle font-semibold">Ocaña, Norte de Santander</span>
-    <h1 class="font-serif font-normal leading-[0.98] m-0 tracking-[-0.015em] text-balance text-[clamp(52px,6vw,86px)] max-[980px]:text-[46px]">
-      Mi casa es<br><em class="not-italic italic text-terracotta">tu casa</em>
+    <span class="inline-flex items-center gap-2.5 text-xs tracking-[0.16em] uppercase text-secondary font-bold">
+      <span class="h-[3px] w-6 bg-primary"></span>Ocaña, Norte de Santander
+    </span>
+    <h1 class="leading-[0.92] m-0 text-balance text-[clamp(64px,7.5vw,104px)] max-[980px]:text-[56px]">
+      Mi casa es<br><span class="bg-primary px-2 box-decoration-clone">tu casa</span>
     </h1>
-    <p class="text-lg leading-[1.6] text-ink-soft m-0 max-w-[44ch] text-pretty">
+    <p class="text-[17px] leading-[1.65] text-secondary-soft m-0 max-w-[44ch] text-pretty">
       {{ contentValue('hero_subtitle', 'Un lugar donde solo pasan cosas buenas. Queremos conocerte: ven y visítanos, tal como estás.') }}
     </p>
     <div class="flex flex-wrap gap-3.5 mt-1 max-[980px]:flex-col max-[980px]:items-stretch">
-      <a href="#predicas" class="bg-terracotta text-cream px-7 py-4 rounded-pill font-semibold text-[15px] hover:bg-terracotta-hover
+      <a href="#predicas" class="bg-primary text-secondary px-7 py-4 rounded-pill font-bold text-[15px] hover:bg-primary-hover
         max-[980px]:w-full max-[980px]:text-center">Ver las prédicas</a>
-      <a href="#visitar" class="border border-ink/25 text-ink px-7 py-4 rounded-pill font-semibold text-[15px] hover:border-ink hover:bg-ink/[0.04]
+      <a href="#visitar" class="border border-secondary/25 text-secondary px-7 py-4 rounded-pill font-bold text-[15px] hover:border-secondary hover:bg-secondary/[0.04]
         max-[980px]:w-full max-[980px]:text-center">Planea tu visita</a>
     </div>
-    <div class="grid grid-cols-3 max-[980px]:grid-cols-2 gap-x-7 gap-y-3 max-[980px]:gap-3 justify-start mt-5 pt-6 border-t border-ink/[0.12]">
+    <div class="grid grid-cols-3 max-[980px]:grid-cols-2 gap-x-7 gap-y-3 max-[980px]:gap-3 justify-start mt-5 pt-6 border-t border-secondary/[0.12]">
       @for (s of heroSchedule(); track s.day; let first = $first) {
         <div class="flex flex-col gap-0.5" [class.max-\[980px\]:col-span-2]="first">
-          <span class="font-serif text-2xl">{{ s.day }}</span>
-          <span class="text-sm text-ink-subtle">{{ s.time }}</span>
+          <span class="font-display text-[32px] leading-none">{{ s.day }}</span>
+          <span class="text-sm text-secondary-subtle">{{ s.time }}</span>
         </div>
       } @empty {
         <div class="flex flex-col gap-0.5 max-[980px]:col-span-2">
-          <span class="font-serif text-2xl">Miércoles</span>
-          <span class="text-sm text-ink-subtle">7:00 p.m.</span>
+          <span class="font-display text-[32px] leading-none">Miércoles</span>
+          <span class="text-sm text-secondary-subtle">7:00 p.m.</span>
         </div>
         <div class="flex flex-col gap-0.5">
-          <span class="font-serif text-2xl">Sábado</span>
-          <span class="text-sm text-ink-subtle">7:00 p.m.</span>
+          <span class="font-display text-[32px] leading-none">Sábado</span>
+          <span class="text-sm text-secondary-subtle">7:00 p.m.</span>
         </div>
         <div class="flex flex-col gap-0.5">
-          <span class="font-serif text-2xl">Domingo</span>
-          <span class="text-sm text-ink-subtle">8:30 a.m. y 10:00 a.m.</span>
+          <span class="font-display text-[32px] leading-none">Domingo</span>
+          <span class="text-sm text-secondary-subtle">8:30 a.m. y 10:00 a.m.</span>
         </div>
       }
     </div>
   </div>
-  <div class="relative h-full min-h-[640px] overflow-hidden bg-[#E9E1D3]
+  <div class="relative h-full min-h-[640px] overflow-hidden bg-surface-alt
               max-[980px]:min-h-[300px] max-[980px]:h-[300px]">
     @if (!heroImageFailed()) {
       <img [src]="imageUrl('hero')" (error)="heroImageFailed.set(true)" alt="Congregación de Mi Casa Church"
         class="absolute inset-0 w-full h-full object-cover" />
     } @else {
-      <div class="absolute inset-0 bg-gradient-to-br from-terracotta via-gold to-cream"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-primary via-primary/60 to-tertiary"></div>
     }
   </div>
 </section>
 
 <!-- Live banner -->
 @if (siteSettings().liveBannerVisible) {
-  <button type="button" (click)="openLiveModal()"
-    class="w-full flex flex-wrap items-center justify-center gap-3.5 px-[22px] py-4 bg-terracotta text-cream text-center border-0 cursor-pointer hover:bg-terracotta-hover">
-    <span class="flex items-center gap-[9px] text-[12.5px] tracking-[0.16em] uppercase font-bold">
+  <a [href]="facebookUrl()" target="_blank" rel="noopener"
+    class="w-full flex flex-wrap items-center justify-center gap-3.5 px-[22px] py-4 bg-primary text-secondary text-center no-underline hover:bg-primary-hover">
+    <span class="flex items-center gap-[9px] text-xs tracking-[0.16em] uppercase font-bold">
       <span class="relative flex h-2.5 w-2.5">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cream opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cream"></span>
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-60"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
       </span>
       En vivo
     </span>
-    <span class="text-[16.5px] font-medium">Transmisión todos los días a las 7:00 a.m. por Facebook</span>
-    <span class="text-[15px] font-bold border-b border-cream/60 pb-px">Ver ahora</span>
-  </button>
-}
-
-<!-- Modal En vivo -->
-@if (liveModalOpen()) {
-  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-ink/80 px-4" (click)="closeLiveModal()">
-    <div class="relative w-full max-w-[720px]" (click)="$event.stopPropagation()">
-      <button type="button" (click)="closeLiveModal()" aria-label="Cerrar"
-        class="absolute -top-11 right-0 text-cream text-[15px] font-semibold border-0 bg-transparent cursor-pointer hover:text-gold">Cerrar ✕</button>
-      <div class="relative aspect-video rounded-[18px] overflow-hidden bg-ink">
-        <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2F100064597875305&tabs=videos&small_header=true&adapt_container_width=true&hide_cover=true&show_facepile=false"
-          title="Transmisión en vivo de Mi Casa Church por Facebook"
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          loading="lazy" class="absolute inset-0 w-full h-full border-0"></iframe>
-      </div>
-    </div>
-  </div>
+    <span class="text-[16px]">Transmisión todos los días a las 7:00 a.m. por Facebook</span>
+    <span class="text-[15px] font-bold border-b-2 border-secondary pb-px">Ver ahora</span>
+  </a>
 }
 
 <!-- Prédicas -->
 <section id="predicas" class="px-10 py-24 max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto flex flex-col gap-[38px]">
     <div class="flex flex-wrap items-end justify-between gap-4 max-[980px]:flex-col max-[980px]:items-stretch">
-      <h2 class="font-serif font-normal text-[52px] leading-none m-0 max-[980px]:text-[34px]">Prédicas</h2>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Prédicas</h2>
       <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
-        class="font-semibold text-base border-b border-terracotta pb-0.5 self-start">Ver el canal en YouTube</a>
+        class="font-bold text-[15px] border-b-2 border-primary pb-0.5 self-start">Ver el canal en YouTube</a>
     </div>
     <div class="grid grid-cols-[1.6fr_1fr] max-[980px]:grid-cols-1 gap-[26px] items-start">
-      <div class="relative aspect-video rounded-[18px] overflow-hidden bg-ink">
+      <div class="relative aspect-video rounded-[18px] overflow-hidden bg-secondary">
         <iframe src="https://www.youtube.com/embed/videoseries?list=UUsH7cdrkVZi7tQNZJhAkB1g&rel=0"
           title="Prédicas de Mi Casa Church"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
           allowfullscreen loading="lazy" class="absolute inset-0 w-full h-full border-0"></iframe>
       </div>
-      <div class="flex flex-col gap-4 p-7 bg-section-light border border-ink/[0.14] rounded-[18px]">
-        <span class="font-serif text-[29px] leading-[1.1]">Las últimas prédicas, siempre al día</span>
-        <p class="m-0 text-[16.5px] leading-[1.65] text-ink-muted">El reproductor toma automáticamente los videos más recientes del canal. Usa la lista dentro del reproductor para saltar entre prédicas.</p>
+      <div class="flex flex-col gap-4 p-7 bg-surface-light border border-secondary/[0.14] border-t-4 border-t-primary rounded-[18px]">
+        <h3 class="text-[22px] leading-[1.2] m-0 max-[980px]:text-[20px]">{{ contentValue('predicas_title', 'Las últimas prédicas, siempre al día') }}</h3>
+        <p class="m-0 text-[16px] leading-[1.65] text-secondary-muted">{{ contentValue('predicas_copy', 'El reproductor toma automáticamente los videos más recientes del canal. Usa la lista dentro del reproductor para saltar entre prédicas.') }}</p>
         <div class="flex flex-wrap gap-2.5 mt-0.5">
           <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
-            class="bg-ink text-cream px-[22px] py-[13px] rounded-pill font-semibold text-[14.5px] hover:bg-terracotta">Suscribirse</a>
-          <button type="button" (click)="openLiveModal()"
-            class="border border-ink/25 text-ink px-[22px] py-[13px] rounded-pill font-semibold text-[14.5px] cursor-pointer hover:border-ink">En vivo 7:00 a.m.</button>
+            class="bg-secondary text-tertiary px-[22px] py-[13px] rounded-pill font-bold text-[14.5px] hover:bg-primary hover:text-secondary">Suscribirse</a>
+          <a [href]="facebookUrl()" target="_blank" rel="noopener"
+            class="border border-secondary/25 text-secondary px-[22px] py-[13px] rounded-pill font-bold text-[14.5px] hover:border-secondary">En vivo 7:00 a.m.</a>
         </div>
       </div>
     </div>
@@ -159,32 +139,32 @@
 </section>
 
 <!-- Eventos -->
-<section id="eventos" class="px-10 py-[92px] bg-section-alt max-[980px]:px-[22px] max-[980px]:py-[58px]">
+<section id="eventos" class="px-10 py-[92px] bg-surface-alt max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto flex flex-col gap-[34px]">
-    <h2 class="font-serif font-normal text-[52px] leading-none m-0 max-[980px]:text-[34px]">Próximos eventos</h2>
+    <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Próximos eventos</h2>
     @if (events().length === 0) {
-      <p class="text-center text-ink-muted">Por ahora no hay eventos publicados.</p>
+      <p class="text-center text-secondary-muted">Por ahora no hay eventos publicados.</p>
     } @else {
       <div class="max-[980px]:hidden flex flex-col">
         @for (e of events(); track e.id; let last = $last) {
-          <div class="grid grid-cols-[120px_1fr_auto] gap-[26px] items-center py-6 border-t border-ink/[0.16]"
-               [ngClass]="last ? 'border-b border-ink/[0.16]' : ''">
-            <span class="font-serif text-[30px] leading-none">{{ e.day }} {{ e.month }}</span>
-            <div class="flex flex-col gap-1">
-              <span class="text-xl font-semibold">{{ e.title }}</span>
-              <span class="text-[15px] text-ink-muted">{{ e.detail }}</span>
+          <div class="grid grid-cols-[130px_1fr_auto] gap-[26px] items-center py-6 border-t border-secondary/[0.16]"
+               [ngClass]="last ? 'border-b border-secondary/[0.16]' : ''">
+            <span class="font-display text-[38px] leading-none">{{ e.day }} {{ e.month }}</span>
+            <div class="flex flex-col gap-1 min-w-0">
+              <span class="text-xl font-bold">{{ e.title }}</span>
+              <span class="text-[15px] text-secondary-muted">{{ e.detail }}</span>
             </div>
-            <a href="#visitar" class="font-semibold text-[15px]">Más información</a>
+            <a href="#visitar" class="font-bold text-[15px] border-b-2 border-primary">Más información</a>
           </div>
         }
       </div>
-      <div class="hidden max-[980px]:flex gap-3 overflow-x-auto -mx-[22px] px-[22px] pb-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="hidden max-[980px]:flex gap-3 overflow-x-auto pb-1 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         @for (e of events(); track e.id) {
-          <a href="#visitar" class="shrink-0 w-[220px] snap-start flex flex-col gap-2.5 p-5 rounded-[18px] border border-ink/[0.16] bg-section-light">
-            <span class="font-serif text-[28px] leading-none text-terracotta">{{ e.day }} {{ e.month }}</span>
-            <span class="text-lg font-semibold leading-tight">{{ e.title }}</span>
-            <span class="text-sm text-ink-muted">{{ e.detail }}</span>
-            <span class="mt-auto pt-2 text-sm font-semibold">Más información →</span>
+          <a href="#visitar" class="shrink-0 w-[220px] snap-start flex flex-col gap-2.5 p-5 rounded-[18px] border border-secondary/[0.16] border-t-4 border-t-primary bg-surface-light">
+            <span class="font-display text-[34px] leading-none">{{ e.day }} {{ e.month }}</span>
+            <span class="text-lg font-bold leading-tight">{{ e.title }}</span>
+            <span class="text-sm text-secondary-muted">{{ e.detail }}</span>
+            <span class="mt-auto pt-2 text-sm font-bold">Más información →</span>
           </a>
         }
       </div>
@@ -193,26 +173,24 @@
 </section>
 
 <!-- Redes -->
-<section id="redes" class="px-10 py-[92px] bg-ink text-cream max-[980px]:px-[22px] max-[980px]:py-[58px]">
+<section id="redes" class="px-10 py-[92px] bg-secondary text-tertiary max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto grid grid-cols-2 max-[980px]:grid-cols-1 gap-[60px] max-[980px]:gap-8 items-center">
     <div class="flex flex-col gap-5">
-      <span class="text-[12.5px] tracking-[0.18em] uppercase text-gold font-semibold">Redes</span>
-      <h2 class="font-serif font-normal text-[52px] leading-[1.02] m-0 max-[980px]:text-[34px]">¿Ya estás en una red?</h2>
-      <p class="m-0 text-lg leading-[1.7] text-cream/80 max-w-[46ch]">Las redes son los grupos donde la iglesia se vive entre semana: se comparte la mesa, se lee la Biblia y se ora unos por otros. Cada persona tiene una red según su etapa.</p>
+      <span class="text-xs tracking-[0.16em] uppercase text-primary font-bold">Redes</span>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">¿Ya estás en una red?</h2>
+      <p class="m-0 text-[17px] leading-[1.7] text-tertiary/80 max-w-[46ch]">Las redes son los grupos donde la iglesia se vive entre semana: se comparte la mesa, se lee la Biblia y se ora unos por otros. Cada persona tiene una red según su etapa.</p>
       <div class="flex flex-wrap gap-3.5 mt-1.5 max-[980px]:flex-col max-[980px]:items-stretch">
         <a [href]="(linkValue('whatsapp') || 'https://wa.me/573045332589') + '?text=Hola%2C%20quiero%20entrar%20a%20una%20red'"
           target="_blank" rel="noopener"
-          class="bg-terracotta text-cream px-7 py-4 rounded-pill font-semibold text-[15px] hover:bg-gold hover:text-ink
+          class="bg-primary text-secondary px-7 py-4 rounded-pill font-bold text-[15px] hover:bg-tertiary
           max-[980px]:w-full max-[980px]:text-center">Quiero entrar a una red</a>
-        <a href="#visitar" class="border border-cream/30 text-cream px-7 py-4 rounded-pill font-semibold text-[15px] hover:border-cream
-          max-[980px]:w-full max-[980px]:text-center">Ya estoy en una</a>
       </div>
     </div>
     <div class="grid grid-cols-2 gap-3.5">
       @for (n of networks(); track n.id) {
-        <div class="p-[22px] border border-cream/[0.18] rounded-2xl flex flex-col gap-1.5">
-          <span class="font-serif text-[26px]">{{ n.name }}</span>
-          <span class="text-[15px] text-cream/70">{{ n.description }}</span>
+        <div class="p-[22px] border border-tertiary/[0.18] rounded-2xl flex flex-col gap-1.5 min-w-0">
+          <span class="text-xl font-bold break-words">{{ n.name }}</span>
+          <span class="text-[15px] text-tertiary/70">{{ n.description }}</span>
         </div>
       }
     </div>
@@ -223,76 +201,95 @@
 <section id="devocional" class="px-10 py-[92px] max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto grid grid-cols-2 max-[980px]:grid-cols-1 gap-[60px] max-[980px]:gap-8 items-center">
     <div class="flex flex-col gap-5">
-      <span class="text-[12.5px] tracking-[0.18em] uppercase text-terracotta font-semibold">Devocional diario</span>
-      <h2 class="font-serif font-normal text-[52px] leading-[1.02] m-0 max-[980px]:text-[34px]">Empieza el día con la Palabra</h2>
-      <p class="m-0 text-lg leading-[1.7] text-ink-soft max-w-[44ch]">Cada mañana publicamos la lectura de Nuestro Pan Diario: pasaje, versículo, reflexión, audio y el plan para leer la Biblia en un año.</p>
+      <span class="inline-flex items-center gap-2.5 text-xs tracking-[0.16em] uppercase text-secondary font-bold">
+        <span class="h-[3px] w-6 bg-primary"></span>Devocional diario
+      </span>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Empieza el día con la Palabra</h2>
+      <p class="m-0 text-[17px] leading-[1.7] text-secondary-soft max-w-[44ch]">Cada mañana publicamos la lectura de Nuestro Pan Diario: pasaje, versículo, reflexión, audio y el plan para leer la Biblia en un año.</p>
       <div class="mt-1">
-        <a routerLink="/devocional" class="bg-ink text-cream px-7 py-4 rounded-pill font-semibold text-[15px] hover:bg-terracotta inline-block
+        <a routerLink="/devocional" class="bg-secondary text-tertiary px-7 py-4 rounded-pill font-bold text-[15px] hover:bg-primary hover:text-secondary inline-block
           max-[980px]:w-full max-[980px]:text-center">Leer el devocional de hoy</a>
       </div>
     </div>
     <a routerLink="/devocional"
-      class="flex flex-col gap-4 p-[34px] border border-ink/[0.16] rounded-[20px] bg-section-light text-ink no-underline hover:border-terracotta">
-      <span class="text-[12.5px] tracking-[0.16em] uppercase text-terracotta font-semibold">{{ prettyDate }}</span>
+      class="flex flex-col gap-4 p-[34px] max-[980px]:p-6 border border-secondary/[0.16] rounded-[20px] bg-surface-light text-secondary no-underline hover:border-primary">
+      <span class="text-xs tracking-[0.16em] uppercase text-secondary-subtle font-bold">{{ prettyDate }}</span>
       @if (devotionalLoading()) {
         <div class="flex flex-col gap-3.5">
-          <div class="h-10 w-[78%] bg-ink/[0.08] rounded-lg"></div>
-          <div class="h-3.5 w-full bg-ink/[0.06] rounded-md"></div>
-          <div class="h-3.5 w-[90%] bg-ink/[0.06] rounded-md"></div>
+          <div class="h-10 w-[78%] bg-secondary/[0.08] rounded-lg"></div>
+          <div class="h-3.5 w-full bg-secondary/[0.06] rounded-md"></div>
+          <div class="h-3.5 w-[90%] bg-secondary/[0.06] rounded-md"></div>
         </div>
       } @else if (devotionalError()) {
-        <span class="text-[17px] leading-[1.6] text-ink-muted">Abre la página del devocional para ver la lectura de hoy.</span>
+        <span class="text-[16px] leading-[1.6] text-secondary-muted">Abre la página del devocional para ver la lectura de hoy.</span>
       } @else if (devotional()) {
         <div class="flex flex-col gap-3.5">
-          <span class="font-serif text-[40px] leading-[1.05]">{{ devotional()!.title }}</span>
-          <span class="text-[15px] text-ink-muted">Lectura: {{ devotional()!.passage_reference }}</span>
-          <p class="m-0 font-serif italic text-[22px] leading-[1.45] text-ink-soft text-pretty">{{ devotional()!.verse }}</p>
+          <span class="font-display text-[44px] leading-[1] max-[980px]:text-[36px]">{{ devotional()!.title }}</span>
+          <span class="text-[15px] text-secondary-muted">Lectura: {{ devotional()!.passage_reference }}</span>
+          <p class="m-0 border-l-4 border-primary pl-4 text-[17px] leading-[1.6] text-secondary-soft text-pretty">{{ devotional()!.verse }}</p>
         </div>
       }
-      <span class="font-semibold text-[15.5px] text-terracotta mt-1">Leer completo →</span>
+      <span class="font-bold text-[15px] mt-1 underline decoration-primary decoration-2 underline-offset-4">Leer completo →</span>
     </a>
   </div>
 </section>
 
 <!-- Oración -->
-<section id="oracion" class="px-10 py-[92px] bg-section-alt max-[980px]:px-[22px] max-[980px]:py-[58px]">
+<section id="oracion" class="px-10 py-[92px] bg-surface-alt max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto grid grid-cols-[0.9fr_1.1fr] max-[980px]:grid-cols-1 gap-[60px] max-[980px]:gap-8 items-start">
     <div class="flex flex-col gap-[18px]">
-      <span class="text-[12.5px] tracking-[0.18em] uppercase text-terracotta font-semibold">Petición de oración</span>
-      <h2 class="font-serif font-normal text-[50px] leading-[1.02] m-0 max-[980px]:text-[34px]">Oramos contigo</h2>
-      <p class="m-0 text-lg leading-[1.7] text-ink-soft max-w-[38ch]">Cuéntanos qué estás viviendo. El equipo de oración lee cada mensaje y ora por ti esta semana. Si prefieres, puedes enviarlo sin tu nombre.</p>
+      <span class="inline-flex items-center gap-2.5 text-xs tracking-[0.16em] uppercase text-secondary font-bold">
+        <span class="h-[3px] w-6 bg-primary"></span>Petición de oración
+      </span>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Oramos contigo</h2>
+      <p class="m-0 text-[17px] leading-[1.7] text-secondary-soft max-w-[38ch]">Cuéntanos qué estás viviendo. El equipo de oración lee cada mensaje y ora por ti esta semana. Si prefieres, puedes enviarlo sin tu nombre.</p>
     </div>
 
     @if (prayerSubmitted()) {
-      <div class="p-10 border border-ink/[0.16] rounded-[20px] bg-section-light flex flex-col gap-3">
-        <span class="font-serif text-[32px]">Recibimos tu petición</span>
-        <span class="text-[17px] leading-[1.6] text-ink-soft">Gracias por confiarnos esto. Estaremos orando por ti.</span>
+      <div class="p-10 max-[980px]:p-7 border border-secondary/[0.16] rounded-[20px] bg-surface-light flex flex-col gap-3">
+        <span class="font-display text-[40px] leading-none">Recibimos tu petición</span>
+        <span class="text-[16px] leading-[1.6] text-secondary-soft">Gracias por confiarnos esto. Estaremos orando por ti.</span>
       </div>
     } @else {
-      <form (ngSubmit)="submitPrayerRequest()"
-        class="grid grid-cols-2 max-[980px]:grid-cols-1 gap-4 p-[30px] border border-ink/[0.16] rounded-[20px] bg-section-light">
-        <label class="flex flex-col gap-1.5">
-          <span class="text-[12.5px] tracking-[0.12em] uppercase text-ink-muted font-semibold">Nombre (opcional)</span>
-          <input [(ngModel)]="prayerForm.name" name="name" type="text"
-            class="border border-ink/20 rounded-[10px] px-3.5 py-3 font-sans text-base bg-white text-ink outline-none focus:border-terracotta" />
+      <form (ngSubmit)="submitPrayerRequest()" novalidate
+        class="grid grid-cols-2 max-[980px]:grid-cols-1 gap-4 p-[30px] max-[980px]:p-5 border border-secondary/[0.16] rounded-[20px] bg-surface-light">
+        <label class="flex flex-col gap-1.5 min-w-0">
+          <span class="text-xs tracking-[0.12em] uppercase text-secondary-muted font-bold">Nombre (opcional)</span>
+          <input [(ngModel)]="prayerForm.name" (ngModelChange)="clearPrayerError('name')" name="name" type="text"
+            autocomplete="name" maxlength="80" [attr.aria-invalid]="!!prayerErrors().name"
+            class="border rounded-[10px] px-3.5 py-3 text-base bg-tertiary text-secondary outline-none focus:border-primary"
+            [ngClass]="prayerErrors().name ? 'border-danger' : 'border-secondary/20'" />
+          @if (prayerErrors().name) {
+            <span class="text-danger text-sm">{{ prayerErrors().name }}</span>
+          }
         </label>
-        <label class="flex flex-col gap-1.5">
-          <span class="text-[12.5px] tracking-[0.12em] uppercase text-ink-muted font-semibold">WhatsApp (opcional)</span>
-          <input [(ngModel)]="prayerForm.phone" name="phone" type="tel"
-            class="border border-ink/20 rounded-[10px] px-3.5 py-3 font-sans text-base bg-white text-ink outline-none focus:border-terracotta" />
+        <label class="flex flex-col gap-1.5 min-w-0">
+          <span class="text-xs tracking-[0.12em] uppercase text-secondary-muted font-bold">WhatsApp (opcional)</span>
+          <input [(ngModel)]="prayerForm.phone" (ngModelChange)="clearPrayerError('phone')" name="phone" type="tel"
+            inputmode="tel" autocomplete="tel" maxlength="16" [attr.aria-invalid]="!!prayerErrors().phone"
+            class="border rounded-[10px] px-3.5 py-3 text-base bg-tertiary text-secondary outline-none focus:border-primary"
+            [ngClass]="prayerErrors().phone ? 'border-danger' : 'border-secondary/20'" />
+          @if (prayerErrors().phone) {
+            <span class="text-danger text-sm">{{ prayerErrors().phone }}</span>
+          }
         </label>
         <label class="col-span-2 max-[980px]:col-span-1 flex flex-col gap-1.5">
-          <span class="text-[12.5px] tracking-[0.12em] uppercase text-ink-muted font-semibold">Tu petición</span>
-          <textarea [(ngModel)]="prayerForm.message" name="message" required rows="5"
-            class="border border-ink/20 rounded-[10px] px-3.5 py-3 font-sans text-base bg-white text-ink outline-none focus:border-terracotta resize-y"></textarea>
+          <span class="text-xs tracking-[0.12em] uppercase text-secondary-muted font-bold">Tu petición</span>
+          <textarea [(ngModel)]="prayerForm.message" (ngModelChange)="clearPrayerError('message')" name="message" rows="5"
+            [attr.aria-invalid]="!!prayerErrors().message"
+            class="border rounded-[10px] px-3.5 py-3 text-base bg-tertiary text-secondary outline-none focus:border-primary resize-y"
+            [ngClass]="prayerErrors().message ? 'border-danger' : 'border-secondary/20'"></textarea>
+          @if (prayerErrors().message) {
+            <span class="text-danger text-sm">{{ prayerErrors().message }}</span>
+          }
         </label>
         @if (prayerError()) {
-          <p class="col-span-2 max-[980px]:col-span-1 m-0 text-terracotta text-sm">{{ prayerError() }}</p>
+          <p class="col-span-2 max-[980px]:col-span-1 m-0 text-danger text-sm">{{ prayerError() }}</p>
         }
         <button type="submit" [disabled]="prayerSubmitting()"
           class="col-span-2 max-[980px]:col-span-1 justify-self-start max-[980px]:justify-self-stretch
-                 bg-ink text-cream border-0 font-sans font-semibold text-[15px] px-[30px] py-4 rounded-pill cursor-pointer
-                 disabled:opacity-60 hover:bg-terracotta max-[980px]:text-center">
+                 bg-secondary text-tertiary border-0 font-bold text-[15px] px-[30px] py-4 rounded-pill cursor-pointer
+                 disabled:opacity-60 hover:bg-primary hover:text-secondary max-[980px]:text-center">
           {{ prayerSubmitting() ? 'Enviando...' : 'Enviar petición' }}
         </button>
       </form>
@@ -300,87 +297,42 @@
   </div>
 </section>
 
-<!-- Síguenos -->
-<section id="siguenos" class="px-10 py-[92px] bg-ink text-cream max-[980px]:px-[22px] max-[980px]:py-[58px]">
-  <div class="max-w-[1120px] mx-auto flex flex-col gap-[34px]">
-    <div class="flex flex-wrap items-end justify-between gap-4 max-[980px]:flex-col max-[980px]:items-stretch">
-      <div class="flex flex-col gap-3">
-        <span class="text-[12.5px] tracking-[0.18em] uppercase text-gold font-semibold">Síguenos</span>
-        <h2 class="font-serif font-normal text-[52px] leading-none m-0 max-[980px]:text-[34px]">Mi casa también está en tu teléfono</h2>
-      </div>
-      <p class="m-0 text-[17px] leading-[1.6] text-cream/70 max-w-[34ch]">Predicaciones, momentos de la iglesia y la transmisión diaria de las 7:00 a.m.</p>
-    </div>
-    <div class="grid grid-cols-4 max-[980px]:grid-cols-2 gap-4">
-      <a [href]="linkValue('tiktok') || 'https://www.tiktok.com/@micasachurchocana'" target="_blank" rel="noopener"
-        class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl bg-cream text-ink no-underline min-h-[190px] hover:bg-gold">
-        <span class="text-[12.5px] tracking-[0.16em] uppercase font-bold text-terracotta">TikTok</span>
-        <div class="flex flex-col gap-1">
-          <span class="font-serif text-[27px] leading-[1.1]">&#64;micasachurchocana</span>
-          <span class="text-[15px] font-semibold">Seguir →</span>
-        </div>
-      </a>
-      <a [href]="linkValue('instagram') || 'https://www.instagram.com/micasachurchocana/'" target="_blank" rel="noopener"
-        class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl border border-cream/[0.22] text-cream no-underline min-h-[190px] hover:border-cream hover:bg-cream/[0.06]">
-        <span class="text-[12.5px] tracking-[0.16em] uppercase font-bold text-gold">Instagram</span>
-        <div class="flex flex-col gap-1">
-          <span class="font-serif text-[27px] leading-[1.1]">&#64;micasachurchocana</span>
-          <span class="text-[15px] font-semibold">Seguir →</span>
-        </div>
-      </a>
-      <button type="button" (click)="openLiveModal()"
-        class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl border border-cream/[0.22] text-cream text-left bg-transparent cursor-pointer min-h-[190px] hover:border-cream hover:bg-cream/[0.06]">
-        <span class="text-[12.5px] tracking-[0.16em] uppercase font-bold text-gold">Facebook</span>
-        <div class="flex flex-col gap-1">
-          <span class="font-serif text-[27px] leading-[1.1]">En vivo 7:00 a.m.</span>
-          <span class="text-[15px] font-semibold">Ver ahora →</span>
-        </div>
-      </button>
-      <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
-        class="flex flex-col justify-between gap-[34px] p-[26px] rounded-2xl border border-cream/[0.22] text-cream no-underline min-h-[190px] hover:border-cream hover:bg-cream/[0.06]">
-        <span class="text-[12.5px] tracking-[0.16em] uppercase font-bold text-gold">YouTube</span>
-        <div class="flex flex-col gap-1">
-          <span class="font-serif text-[27px] leading-[1.1]">Prédicas completas</span>
-          <span class="text-[15px] font-semibold">Suscribirse →</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- Nosotros -->
 <section id="nosotros" class="px-10 py-[92px] max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto grid grid-cols-2 max-[980px]:grid-cols-1 gap-[60px] max-[980px]:gap-8 items-center">
-    <div class="relative aspect-[4/5] rounded-[20px] overflow-hidden bg-[#E2D7C3]">
+    <div class="relative aspect-[4/5] rounded-[20px] overflow-hidden bg-surface-alt">
       @if (!quienesSomosImageFailed()) {
         <img [src]="imageUrl('quienes_somos')" (error)="quienesSomosImageFailed.set(true)" alt="Comunidad de Mi Casa Church"
           class="absolute inset-0 w-full h-full object-cover" />
       } @else {
-        <div class="absolute inset-0 bg-gradient-to-tr from-gold via-terracotta to-cream"></div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-primary via-primary/50 to-tertiary"></div>
       }
     </div>
     <div class="flex flex-col gap-5">
-      <span class="text-[12.5px] tracking-[0.18em] uppercase text-terracotta font-semibold">Quiénes somos</span>
-      <h2 class="font-serif font-normal text-[52px] leading-[1.02] m-0 max-[980px]:text-[34px]">Una familia antes que un edificio</h2>
-      <p class="m-0 text-lg leading-[1.7] text-ink-soft text-pretty">
+      <span class="inline-flex items-center gap-2.5 text-xs tracking-[0.16em] uppercase text-secondary font-bold">
+        <span class="h-[3px] w-6 bg-primary"></span>Quiénes somos
+      </span>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">{{ contentValue('quienes_somos_title', 'Una familia antes que un edificio') }}</h2>
+      <p class="m-0 text-[17px] leading-[1.7] text-secondary-soft text-pretty">
         {{ contentValue('quienes_somos_paragraph_1', 'Mi Casa Church nació con una convicción sencilla: que nadie en Ocaña tenga que caminar solo. Nos reunimos para adorar, aprender la Palabra y cuidarnos unos a otros durante la semana.') }}
       </p>
-      <p class="m-0 text-lg leading-[1.7] text-ink-soft text-pretty">
+      <p class="m-0 text-[17px] leading-[1.7] text-secondary-soft text-pretty">
         {{ contentValue('quienes_somos_paragraph_2', 'Si vienes por primera vez, no necesitas prepararte de ninguna forma. Ven, siéntate, escucha. Queremos conocerte.') }}
       </p>
-      <a href="#visitar" class="self-start mt-1.5 border-b border-terracotta font-semibold text-base pb-0.5">Cómo llegar</a>
+      <a [href]="churchMapsUrl" target="_blank" rel="noopener" class="self-start mt-1.5 border-b-2 border-primary font-bold text-base pb-0.5">Cómo llegar</a>
     </div>
   </div>
 </section>
 
 <!-- Ministerios -->
-<section id="ministerios" class="px-10 py-[92px] bg-section-alt max-[980px]:px-[22px] max-[980px]:py-[58px]">
+<section id="ministerios" class="px-10 py-[92px] bg-surface-alt max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto flex flex-col gap-9">
-    <h2 class="font-serif font-normal text-[52px] leading-none m-0 max-[980px]:text-[34px]">Ministerios</h2>
+    <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Ministerios</h2>
     <div class="grid grid-cols-4 max-[980px]:grid-cols-1 gap-[18px]">
       @for (m of ministries(); track m.id) {
-        <div class="flex flex-col gap-2.5 pt-6 px-5 border-t-2 border-ink">
-          <span class="font-serif text-[28px]">{{ m.name }}</span>
-          <span class="text-[15.5px] leading-[1.6] text-ink-muted">{{ m.description }}</span>
+        <div class="flex flex-col gap-2.5 pt-6 px-5 border-t-4 border-primary">
+          <span class="text-[21px] font-bold">{{ m.name }}</span>
+          <span class="text-[15.5px] leading-[1.6] text-secondary-muted">{{ m.description }}</span>
         </div>
       }
     </div>
@@ -389,33 +341,45 @@
 
 <!-- Ofrendas -->
 <section id="ofrendas" class="px-10 py-[88px] max-[980px]:px-[22px] max-[980px]:py-[58px]">
-  <div class="max-w-[1120px] mx-auto grid grid-cols-2 max-[980px]:grid-cols-1 gap-[60px] max-[980px]:gap-8 items-center">
-    <div class="flex flex-col gap-[18px]">
-      <span class="text-[12.5px] tracking-[0.18em] uppercase text-terracotta font-semibold">Ofrendas y diezmos</span>
-      <h2 class="font-serif font-normal text-[50px] leading-[1.02] m-0 max-[980px]:text-[34px]">Sembrar en la casa</h2>
-      <p class="m-0 text-lg leading-[1.7] text-ink-soft max-w-[42ch]">
+  <div class="max-w-[1120px] mx-auto flex flex-col gap-10 max-[980px]:gap-8">
+    <div class="flex flex-col gap-[18px] max-w-[62ch]">
+      <span class="inline-flex items-center gap-2.5 text-xs tracking-[0.16em] uppercase text-secondary font-bold">
+        <span class="h-[3px] w-6 bg-primary"></span>Ofrendas y diezmos
+      </span>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Sembrar en la casa</h2>
+      <p class="m-0 text-[17px] leading-[1.7] text-secondary-soft">
         {{ contentValue('ofrendas_copy', 'Si quieres diezmar, ofrendar o aportar a la obra del Reino puedes realizarlo a través de estas cuentas. Escanea el código o transfiere directamente.') }}
       </p>
-      <p class="m-0 text-[15.5px] leading-[1.65] text-ink-muted max-w-[42ch]">
+      <p class="m-0 text-[15.5px] leading-[1.65] text-secondary-muted">
         En caso de necesitar certificación por donación, envíanos tu soporte a
-        <a href="mailto:churchmicasa@gmail.com" class="underline hover:text-terracotta">churchmicasa&#64;gmail.com</a>.
+        <a href="mailto:churchmicasa@gmail.com" class="underline decoration-primary decoration-2 underline-offset-2 break-words">churchmicasa&#64;gmail.com</a>.
       </p>
     </div>
-    <div class="grid grid-cols-2 max-[520px]:grid-cols-1 gap-[18px]">
-      <div class="flex flex-col gap-3.5 p-5 bg-section-light border border-ink/[0.16] rounded-[20px]">
-        <img src="img/qr-crediservir.jpeg" alt="Código QR para donar por Crediservir" class="w-full rounded-xl block" />
+    <div class="grid grid-cols-[repeat(2,minmax(0,380px))] max-[860px]:grid-cols-1 gap-[18px]">
+      <div class="flex flex-col gap-3.5 p-5 bg-surface-light border border-secondary/[0.16] rounded-[20px] min-w-0">
+        <a href="img/qr-crediservir-code.png" target="_blank" rel="noopener" aria-label="Abrir el código QR de Crediservir en tamaño completo"
+          class="block bg-tertiary rounded-xl">
+          <img src="img/qr-crediservir-code.png" alt="Código QR para donar por Crediservir" width="936" height="936"
+            class="w-full max-w-[340px] mx-auto rounded-xl block [image-rendering:pixelated]" />
+        </a>
+        <span class="text-xs text-secondary-muted text-center">Toca el código para verlo en grande</span>
         <div class="flex flex-col gap-0.5">
-          <span class="text-[12.5px] tracking-[0.14em] uppercase text-ink-muted font-semibold">Crediservir</span>
-          <span class="font-serif text-[26px]">2090000303</span>
-          <span class="text-[14.5px] text-ink-muted">NIT 901820827-0</span>
+          <span class="text-xs tracking-[0.14em] uppercase text-secondary-muted font-bold">Crediservir</span>
+          <span class="text-[22px] font-bold">2090000303</span>
+          <span class="text-[14.5px] text-secondary-muted">NIT 901820827-0</span>
         </div>
       </div>
-      <div class="flex flex-col gap-3.5 p-5 bg-section-light border border-ink/[0.16] rounded-[20px]">
-        <img src="img/qr-bancolombia.jpeg" alt="Código QR para donar por Bancolombia" class="w-full rounded-xl block" />
+      <div class="flex flex-col gap-3.5 p-5 bg-surface-light border border-secondary/[0.16] rounded-[20px] min-w-0">
+        <a href="img/qr-bancolombia-code.png" target="_blank" rel="noopener" aria-label="Abrir el código QR de Bancolombia en tamaño completo"
+          class="block bg-tertiary rounded-xl">
+          <img src="img/qr-bancolombia-code.png" alt="Código QR para donar por Bancolombia" width="936" height="936"
+            class="w-full max-w-[340px] mx-auto rounded-xl block [image-rendering:pixelated]" />
+        </a>
+        <span class="text-xs text-secondary-muted text-center">Toca el código para verlo en grande</span>
         <div class="flex flex-col gap-0.5">
-          <span class="text-[12.5px] tracking-[0.14em] uppercase text-ink-muted font-semibold">Bancolombia ahorros</span>
-          <span class="font-serif text-[26px]">31800003953</span>
-          <span class="text-[14.5px] text-ink-muted">Llave Bre-B 0091740804 · NIT 901820827-0</span>
+          <span class="text-xs tracking-[0.14em] uppercase text-secondary-muted font-bold">Bancolombia ahorros</span>
+          <span class="text-[22px] font-bold">31800003953</span>
+          <span class="text-[14.5px] text-secondary-muted">Llave Bre-B 0091740804 · NIT 901820827-0</span>
         </div>
       </div>
     </div>
@@ -423,37 +387,36 @@
 </section>
 
 <!-- Visitar -->
-<section id="visitar" class="px-10 py-[92px] bg-ink text-cream max-[980px]:px-[22px] max-[980px]:py-[58px]">
+<section id="visitar" class="px-10 py-[92px] bg-secondary text-tertiary max-[980px]:px-[22px] max-[980px]:py-[58px]">
   <div class="max-w-[1120px] mx-auto grid grid-cols-2 max-[980px]:grid-cols-1 gap-[60px] max-[980px]:gap-8 items-center">
     <div class="flex flex-col gap-5">
-      <span class="text-[12.5px] tracking-[0.18em] uppercase text-gold font-semibold">Planea tu visita</span>
-      <h2 class="font-serif font-normal text-[54px] leading-[1.02] m-0 max-[980px]:text-[34px]">Te esperamos esta semana</h2>
-      <p class="m-0 text-lg leading-[1.7] text-cream/75 max-w-[44ch]">Escríbenos por WhatsApp si quieres que alguien te reciba en la puerta o si necesitas oración.</p>
+      <span class="text-xs tracking-[0.16em] uppercase text-primary font-bold">Planea tu visita</span>
+      <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Te esperamos esta semana</h2>
+      <p class="m-0 text-[17px] leading-[1.7] text-tertiary/75 max-w-[44ch]">Escríbenos por WhatsApp si quieres que alguien te reciba en la puerta o si necesitas oración.</p>
       <div id="contacto" class="flex flex-wrap gap-3.5 mt-1.5 max-[980px]:flex-col max-[980px]:items-stretch">
         <a [href]="linkValue('whatsapp') || 'https://wa.me/573045332589'" target="_blank" rel="noopener"
-          class="bg-terracotta text-cream px-7 py-4 rounded-pill font-semibold text-[15px] hover:bg-gold hover:text-ink
+          class="bg-primary text-secondary px-7 py-4 rounded-pill font-bold text-[15px] hover:bg-tertiary
           max-[980px]:w-full max-[980px]:text-center">Escribir por WhatsApp</a>
       </div>
     </div>
-    <div class="flex flex-col gap-[18px] p-[30px] border border-cream/[0.18] rounded-[20px]">
+    <div class="flex flex-col gap-[18px] p-[30px] max-[980px]:p-5 border border-tertiary/[0.18] rounded-[20px] min-w-0">
       <div class="flex flex-col gap-1">
-        <span class="text-[12.5px] tracking-[0.14em] uppercase text-cream/50 font-semibold">Dirección</span>
-        <span class="font-serif text-[26px]">Cl. 7A # 37-8</span>
-        <span class="text-base text-cream/70">Ocaña, Norte de Santander</span>
-        <a href="https://www.google.com/maps/place/Cl.+7A+%23+37-8,+Oca%C3%B1a,+Norte+de+Santander/@8.2618302,-73.3598166,21z"
-          target="_blank" rel="noopener" class="text-[15px] font-semibold text-gold mt-1">Cómo llegar en Google Maps</a>
+        <span class="text-xs tracking-[0.14em] uppercase text-tertiary/50 font-bold">Dirección</span>
+        <span class="text-[22px] font-bold">Cl. 7A # 37-8</span>
+        <span class="text-base text-tertiary/70">Ocaña, Norte de Santander</span>
+        <a [href]="churchMapsUrl" target="_blank" rel="noopener" class="text-[15px] font-bold text-primary mt-1">Cómo llegar en Google Maps</a>
       </div>
       <div class="flex flex-col gap-1">
-        <span class="text-[12.5px] tracking-[0.14em] uppercase text-cream/50 font-semibold">Iglesia para niños</span>
-        <span class="font-serif text-[22px]">A una cuadra del templo</span>
+        <span class="text-xs tracking-[0.14em] uppercase text-tertiary/50 font-bold">Iglesia para niños</span>
+        <span class="text-[19px] font-bold">A una cuadra del templo</span>
         <a href="https://www.google.com/maps/place/IGLESIA+PARA+NI%C3%91OS/@8.2615687,-73.3597182,20z"
-          target="_blank" rel="noopener" class="text-[15px] font-semibold text-gold mt-1">Ver ubicación de niños</a>
+          target="_blank" rel="noopener" class="text-[15px] font-bold text-primary mt-1">Ver ubicación de niños</a>
       </div>
       <div class="flex flex-col gap-1">
-        <span class="text-[12.5px] tracking-[0.14em] uppercase text-cream/50 font-semibold">Servicios</span>
-        <span class="text-[17px] leading-[1.6] text-cream/85">Miércoles 7:00 p.m.<br>Sábado 7:00 p.m.<br>Domingo 8:30 a.m. y 10:00 a.m.</span>
+        <span class="text-xs tracking-[0.14em] uppercase text-tertiary/50 font-bold">Servicios</span>
+        <span class="text-[16px] leading-[1.6] text-tertiary/85">Miércoles 7:00 p.m.<br>Sábado 7:00 p.m.<br>Domingo 8:30 a.m. y 10:00 a.m.</span>
       </div>
-      <div class="relative h-[220px] rounded-2xl overflow-hidden bg-cream/[0.08] mt-1">
+      <div class="relative h-[220px] rounded-2xl overflow-hidden bg-tertiary/[0.08] mt-1">
         <iframe src="https://maps.google.com/maps?q=8.2618302,-73.3598166&z=19&output=embed"
           title="Ubicación de Mi Casa Church en Ocaña" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
           class="absolute inset-0 w-full h-full border-0" style="filter: grayscale(0.25) contrast(1.05);"></iframe>
@@ -462,20 +425,70 @@
   </div>
 </section>
 
+<!-- Síguenos -->
+<section id="siguenos" class="px-10 py-[92px] bg-secondary text-tertiary border-t border-tertiary/[0.12] max-[980px]:px-[22px] max-[980px]:py-[58px]">
+  <div class="max-w-[1120px] mx-auto flex flex-col gap-[34px]">
+    <div class="flex flex-wrap items-end justify-between gap-4 max-[980px]:flex-col max-[980px]:items-stretch">
+      <div class="flex flex-col gap-3">
+        <span class="text-xs tracking-[0.16em] uppercase text-primary font-bold">Síguenos</span>
+        <h2 class="text-[60px] leading-[0.95] m-0 max-[980px]:text-[42px]">Mi casa también está en tu teléfono</h2>
+      </div>
+      <p class="m-0 text-[16px] leading-[1.6] text-tertiary/70 max-w-[34ch]">Predicaciones, momentos de la iglesia y la transmisión diaria de las 7:00 a.m.</p>
+    </div>
+    <div class="grid grid-cols-4 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1 gap-4">
+      <a [href]="linkValue('tiktok') || 'https://www.tiktok.com/@micasachurchocana'" target="_blank" rel="noopener"
+        class="flex flex-col justify-between gap-[34px] max-[520px]:gap-5 p-[26px] max-[520px]:p-5 rounded-2xl bg-tertiary text-secondary no-underline min-h-[190px] max-[520px]:min-h-0 min-w-0 hover:bg-primary">
+        <span class="text-xs tracking-[0.16em] uppercase font-bold">TikTok</span>
+        <div class="flex flex-col gap-1 min-w-0">
+          <span class="text-[17px] font-bold leading-[1.25] [overflow-wrap:anywhere]">&#64;micasachurchocana</span>
+          <span class="text-[15px]">Seguir →</span>
+        </div>
+      </a>
+      <a [href]="linkValue('instagram') || 'https://www.instagram.com/micasachurchocana/'" target="_blank" rel="noopener"
+        class="flex flex-col justify-between gap-[34px] max-[520px]:gap-5 p-[26px] max-[520px]:p-5 rounded-2xl border border-tertiary/[0.22] text-tertiary no-underline min-h-[190px] max-[520px]:min-h-0 min-w-0 hover:border-tertiary hover:bg-tertiary/[0.06]">
+        <span class="text-xs tracking-[0.16em] uppercase font-bold text-primary">Instagram</span>
+        <div class="flex flex-col gap-1 min-w-0">
+          <span class="text-[17px] font-bold leading-[1.25] [overflow-wrap:anywhere]">&#64;micasachurchocana</span>
+          <span class="text-[15px]">Seguir →</span>
+        </div>
+      </a>
+      <a [href]="facebookUrl()" target="_blank" rel="noopener"
+        class="flex flex-col justify-between gap-[34px] max-[520px]:gap-5 p-[26px] max-[520px]:p-5 rounded-2xl border border-tertiary/[0.22] text-tertiary no-underline min-h-[190px] max-[520px]:min-h-0 min-w-0 hover:border-tertiary hover:bg-tertiary/[0.06]">
+        <span class="text-xs tracking-[0.16em] uppercase font-bold text-primary">Facebook</span>
+        <div class="flex flex-col gap-1 min-w-0">
+          <span class="text-[17px] font-bold leading-[1.25]">En vivo 7:00 a.m.</span>
+          <span class="text-[15px]">Ver ahora →</span>
+        </div>
+      </a>
+      <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
+        class="flex flex-col justify-between gap-[34px] max-[520px]:gap-5 p-[26px] max-[520px]:p-5 rounded-2xl border border-tertiary/[0.22] text-tertiary no-underline min-h-[190px] max-[520px]:min-h-0 min-w-0 hover:border-tertiary hover:bg-tertiary/[0.06]">
+        <span class="text-xs tracking-[0.16em] uppercase font-bold text-primary">YouTube</span>
+        <div class="flex flex-col gap-1 min-w-0">
+          <span class="text-[17px] font-bold leading-[1.25]">Prédicas completas</span>
+          <span class="text-[15px]">Suscribirse →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- Footer -->
-<footer class="px-10 pt-[34px] pb-11 flex flex-wrap items-center justify-between gap-4 text-sm text-ink-muted
-               max-[980px]:px-[18px] max-[980px]:flex-col max-[980px]:items-start max-[980px]:pb-28">
-  <span>Mi Casa Church · Ocaña, Colombia</span>
-  <span>Devocional cortesía de <a href="https://nuestropandiario.org" target="_blank" rel="noopener" class="hover:text-terracotta">Nuestro Pan Diario</a> · <a href="https://admin.micasachurch.co" class="hover:text-terracotta">Administrar sitio</a></span>
+<footer class="px-10 pt-[34px] pb-11 bg-secondary text-tertiary/60 border-t border-tertiary/[0.12] flex flex-wrap items-center justify-between gap-4 text-sm
+               max-[980px]:px-[22px] max-[980px]:flex-col max-[980px]:items-start max-[980px]:pb-28">
+  <div class="flex items-center gap-4">
+    <img src="img/brand/logo-horizontal-light.png" alt="Mi Casa Church" width="600" height="213" class="h-9 w-auto block" loading="lazy" />
+    <span>Ocaña, Colombia</span>
+  </div>
+  <span>Devocional cortesía de <a href="https://nuestropandiario.org" target="_blank" rel="noopener" class="hover:text-primary">Nuestro Pan Diario</a> · <a href="https://admin.micasachurch.co" class="hover:text-primary">Administrar sitio</a></span>
 </footer>
 
 <!-- Barra fija inferior (solo móvil) -->
-<div class="hidden max-[980px]:flex fixed bottom-0 inset-x-0 z-[70] gap-2.5 px-3.5 bg-cream/96 backdrop-blur-[10px] border-t border-ink/[0.12]"
+<div class="hidden max-[980px]:flex fixed bottom-0 inset-x-0 z-[70] gap-2.5 px-3.5 bg-tertiary/95 backdrop-blur-[10px] border-t border-secondary/[0.12]"
      style="padding-top: 10px; padding-bottom: calc(12px + env(safe-area-inset-bottom));">
-  <button type="button" (click)="openLiveModal()"
-    class="flex-1 flex items-center justify-center gap-2 min-h-[52px] rounded-pill bg-terracotta text-cream font-semibold text-[15.5px] border-0 cursor-pointer hover:bg-terracotta-hover">
-    <span class="h-2 w-2 rounded-full bg-cream"></span>En vivo
-  </button>
+  <a [href]="facebookUrl()" target="_blank" rel="noopener"
+    class="flex-1 flex items-center justify-center gap-2 min-h-[52px] rounded-pill bg-primary text-secondary font-bold text-[15.5px] hover:bg-primary-hover">
+    <span class="h-2 w-2 rounded-full bg-secondary"></span>En vivo
+  </a>
   <a [href]="linkValue('whatsapp') || 'https://wa.me/573045332589'" target="_blank" rel="noopener"
-    class="flex-1 flex items-center justify-center min-h-[52px] rounded-pill bg-ink text-cream font-semibold text-[15.5px] hover:bg-ink/90">WhatsApp</a>
+    class="flex-1 flex items-center justify-center min-h-[52px] rounded-pill bg-secondary text-tertiary font-bold text-[15.5px] hover:bg-secondary/90">WhatsApp</a>
 </div>

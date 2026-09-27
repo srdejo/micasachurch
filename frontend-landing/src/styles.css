@@ -1,8 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @config '../tailwind.config.js';
 
+@font-face {
+  font-family: 'League Gothic';
+  src: url('/fonts/LeagueGothic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+ * Colores de marca. El landing los sobrescribe en tiempo de ejecución con los que guarda el admin
+ * (ver BrandThemeService); aquí quedan los valores por defecto que usa el HTML prerenderizado.
+ * Se llaman --brand-* y no --color-* para no chocar con las variables que Tailwind genera del config.
+ */
 :root {
+  --brand-primary: #f89e1b;
+  --brand-secondary: #000000;
+  --brand-tertiary: #ffffff;
   --radius-card: 20px;
   --space-section: 6rem;
 }
@@ -10,12 +49,19 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 76px;
+  overflow-x: clip;
 }
 
 body {
-  @apply bg-cream text-ink font-sans;
+  @apply bg-tertiary text-secondary font-sans;
+  overflow-x: clip;
 }
 
-h1, h2, h3, .font-display {
-  @apply font-serif;
+h1, h2, .font-display {
+  @apply font-display font-normal;
+  letter-spacing: 0.01em;
+}
+
+h3 {
+  @apply font-sans font-bold;
 }

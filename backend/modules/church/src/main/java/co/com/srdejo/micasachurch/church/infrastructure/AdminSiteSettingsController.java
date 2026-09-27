@@ -28,9 +28,11 @@ public class AdminSiteSettingsController {
     @PatchMapping
     @Transactional
     public PublicController.SiteSettingsResponse update(@Valid @RequestBody SiteSettingsRequest request) {
-        return PublicController.toResponse(siteSettingsService.update(request.liveBannerVisible()));
+        return PublicController.toResponse(siteSettingsService.update(request.liveBannerVisible(), request.primaryColor(),
+                request.secondaryColor(), request.tertiaryColor()));
     }
 
-    public record SiteSettingsRequest(boolean liveBannerVisible) {
+    public record SiteSettingsRequest(Boolean liveBannerVisible, String primaryColor, String secondaryColor,
+                                      String tertiaryColor) {
     }
 }

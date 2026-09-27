@@ -15,9 +15,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -67,6 +69,12 @@ public class AdminAuthController {
         forgotPasswordUseCase.requestReset(request.username());
     }
 
+    @GetMapping("/api/admin/auth/reset-token")
+    @Transactional(readOnly = true)
+    public ResetTokenResponse resetToken(@RequestParam String token) {
+        return new ResetTokenResponse(resetPasswordUseCase.usernameForToken(token));
+    }
+
     @PostMapping("/api/admin/auth/reset-password")
     @Transactional
     public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
@@ -86,6 +94,9 @@ public class AdminAuthController {
     }
 
     public record ForgotPasswordRequest(@NotBlank String username) {
+    }
+
+    public record ResetTokenResponse(String username) {
     }
 
     public record ResetPasswordRequest(@NotBlank String token, @NotBlank @Size(min = 8) String newPassword) {

@@ -98,3 +98,49 @@ del backend y `infra/deploy.ps1 -Projects micasachurch` desde la máquina de Dan
 usuario `admin` (el backend desplegado aún no tiene la protección de auto-borrado). Se recreó por
 invitación a srdejo@gmail.com; la clave hubo que definirla de nuevo.
 
+
+## Bugs de QA y marca visual (2026-09-26/27)
+
+Cambio OpenSpec `openspec/changes/bugs-qa-y-marca-visual/` (15 hallazgos de `bugs-encontrados-pagina-web.md` +
+tipografías/paleta/logos oficiales). Detalle por tarea en su `tasks.md`; decisiones en `DECISIONS.md` (2026-09-27).
+**Nada de esto está en producción**: falta build y `infra/deploy.ps1 -Projects micasachurch` desde la máquina de Daniel.
+
+- **Backend** — migración `V9__brand_colors_and_content_sections.sql` (colores en `site_settings`,
+  `section`/`display_order` en `site_contents`, textos de Prédicas y título de Quiénes somos editables,
+  enlace `facebook` → `https://www.facebook.com/micasachurchocana`); `GET /api/admin/auth/reset-token`;
+  bloque "Tu usuario para ingresar" en el correo de invitación; validación de nombre/WhatsApp/petición.
+  `./gradlew build` en verde; endpoints verificados con `curl` contra el Postgres de Docker (`:5433`).
+- **frontend-landing** — League Gothic + Montserrat autoalojadas, paleta `primary/secondary/tertiary` sobre
+  variables `--brand-*` (colores del admin aplicados en el navegador), logos HD optimizados en `public/img/brand`,
+  QR recortados (`qr-*-code.png`, decodificados con `jsqr`), "En vivo" como enlace a Facebook, sin "Ya estoy
+  en una", "Cómo llegar" a Google Maps, Síguenos al final, validación del formulario de oración, "Volver al
+  inicio" en `/devocional`, sin desborde horizontal a 360/375 px. `ng build` y `ng test` (10/10) en verde.
+- **frontend-admin** — misma tipografía, paleta fija, isotipo/logotipo; restablecer clave muestra el usuario,
+  "Mostrar claves" y compara los valores reales; login prellenado con `?usuario=`; confirmación de clave en
+  Cuenta; Contenido agrupado por sección; editor de colores en el Panel. `ng build` en verde.
+- **Causa del bug 1 (cambio de clave)**: los navegadores no permiten copiar desde un campo de clave, así que
+  "copiar y pegar" la clave pegaba otra cosa y el aviso "Las claves no coinciden" era correcto; el formulario
+  nunca enviaba en ese caso. Se agregó "Mostrar claves" para que se vea lo que quedó escrito.
+- **Tests del admin con Node 25**: `ng test` falla en `auth.service.spec.ts` (`localStorage.clear is not a
+  function`) porque Node 25 expone un `localStorage` global que tapa el de jsdom. No es de este cambio: con
+  Node 24 LTS (`nvm`) pasan los 13 tests.
+- **Pendiente de Daniel**: escanear los QR con la app de cada banco desde la pantalla (se verificó que se
+  decodifican, no con la app); el envío real del correo de invitación (en local `contact` solo es accesible
+  dentro de Docker; se verificó la plantilla renderizada).
+
+Recorrido de `bugs-encontrados-pagina-web.md` en local (landing `:4200`, admin `:4300`, backend `:8088`; escritorio 1440 px
+y móvil simulado a 360/375 px):
+
+| # | Resultado |
+|---|---|
+| 1 | Causa encontrada (no se puede copiar desde un campo de clave). "Mostrar claves" + error que se limpia al editar; con claves distintas no se envía nada. Verificado en restablecer y en Cuenta. |
+| 2 | La página de invitación muestra "Tu usuario es: …" y el login llega prellenado; el correo trae el usuario destacado. Falta ver un correo real. |
+| 3 | Título y texto de Prédicas editables en Contenido → grupo "Prédicas"; editado, publicado y visto en el landing. |
+| 4, 5, 10 | Sin modal: todos los "En vivo" abren `facebook.com/micasachurchocana` en pestaña nueva; la posición de la página no cambia. |
+| 6 | "Ya estoy en una" eliminado. |
+| 7 | QR recortados, con margen y mostrados a 338 px; ambos se decodifican. Falta escanearlos con la app de cada banco. |
+| 8 | "Cómo llegar" abre Google Maps; el título de Quiénes somos es editable en Contenido. |
+| 9 | Síguenos es la última sección antes del footer. |
+| 11, 12 | Petición obligatoria, nombre solo letras, WhatsApp solo números; mensajes por campo, también validado en el backend. |
+| 13 | "Volver al inicio" visible sin scroll en `/devocional`. |
+| 14, 15 | Ningún elemento fuera del viewport ni de su tarjeta a 360/375 px; `overflow-x: clip` como red de seguridad. |

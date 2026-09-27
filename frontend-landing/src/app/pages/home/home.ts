@@ -14,6 +14,19 @@ import {
 } from '../../core/church-api.service';
 import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
 
+const DEFAULT_FACEBOOK_URL = 'https://www.facebook.com/micasachurchocana';
+const CHURCH_MAPS_URL =
+  'https://www.google.com/maps/place/Cl.+7A+%23+37-8,+Oca%C3%B1a,+Norte+de+Santander/@8.2618302,-73.3598166,21z';
+// Las mismas reglas que valida el backend en PrayerRequestService.
+const NAME_PATTERN = /^[\p{L} ]{1,80}$/u;
+const PHONE_PATTERN = /^\+?\d{7,15}$/;
+
+interface PrayerErrors {
+  name?: string;
+  phone?: string;
+  message?: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -58,16 +71,16 @@ export class Home implements OnInit {
 
   readonly heroImageFailed = signal(false);
   readonly quienesSomosImageFailed = signal(false);
-  readonly logoImageFailed = signal(false);
 
   readonly prayerForm = { name: '', phone: '', message: '' };
+  readonly prayerErrors = signal<PrayerErrors>({});
   readonly prayerSubmitted = signal(false);
   readonly prayerSubmitting = signal(false);
   readonly prayerError = signal<string | null>(null);
 
   readonly mobileMenuOpen = signal(false);
-  readonly liveModalOpen = signal(false);
   readonly prettyDate = this.formatPrettyDate(new Date());
+  readonly churchMapsUrl = CHURCH_MAPS_URL;
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen.update((open) => !open);
@@ -77,12 +90,8 @@ export class Home implements OnInit {
     this.mobileMenuOpen.set(false);
   }
 
-  openLiveModal(): void {
-    this.liveModalOpen.set(true);
-  }
-
-  closeLiveModal(): void {
-    this.liveModalOpen.set(false);
+  facebookUrl(): string {
+    return this.linkValue('facebook') || DEFAULT_FACEBOOK_URL;
   }
 
   private formatPrettyDate(date: Date): string {
@@ -141,17 +150,41 @@ export class Home implements OnInit {
     return this.links().find((l) => l.key === key)?.value ?? '';
   }
 
-  submitPrayerRequest(): void {
+  clearPrayerError(field: keyof PrayerErrors): void {
+    if (this.prayerErrors()[field]) {
+      this.prayerErrors.update((errors) => ({ ...errors, [field]: undefined }));
+    }
+  }
+
+  private validatePrayerForm(): PrayerErrors {
+    const errors: PrayerErrors = {};
+    const name = this.prayerForm.name.trim();
+    const phone = this.prayerForm.phone.trim();
     if (!this.prayerForm.message.trim()) {
+      errors.message = 'Escribe tu petición antes de enviarla.';
+    }
+    if (name && !NAME_PATTERN.test(name)) {
+      errors.name = 'El nombre solo puede tener letras y espacios.';
+    }
+    if (phone && !PHONE_PATTERN.test(phone)) {
+      errors.phone = 'Escribe solo números (7 a 15 dígitos, puedes empezar con +).';
+    }
+    return errors;
+  }
+
+  submitPrayerRequest(): void {
+    const errors = this.validatePrayerForm();
+    this.prayerErrors.set(errors);
+    if (Object.keys(errors).length > 0) {
       return;
     }
     this.prayerSubmitting.set(true);
     this.prayerError.set(null);
     this.api
       .submitPrayerRequest({
-        name: this.prayerForm.name || undefined,
-        phone: this.prayerForm.phone || undefined,
-        message: this.prayerForm.message,
+        name: this.prayerForm.name.trim() || undefined,
+        phone: this.prayerForm.phone.trim() || undefined,
+        message: this.prayerForm.message.trim(),
       })
       .subscribe({
         next: () => {

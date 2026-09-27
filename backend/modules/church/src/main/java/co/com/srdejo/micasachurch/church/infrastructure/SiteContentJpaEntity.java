@@ -24,6 +24,12 @@ public class SiteContentJpaEntity {
     @Column(nullable = false)
     private String label;
 
+    @Column(nullable = false, length = 32)
+    private String section;
+
+    @Column(name = "display_order", nullable = false)
+    private int displayOrder;
+
     @Column(nullable = false, columnDefinition = "text")
     private String value;
 
@@ -36,10 +42,13 @@ public class SiteContentJpaEntity {
     protected SiteContentJpaEntity() {
     }
 
-    public SiteContentJpaEntity(UUID id, String key, String label, String value, String draftValue, boolean hasDraft) {
+    public SiteContentJpaEntity(UUID id, String key, String label, String section, int displayOrder, String value,
+                               String draftValue, boolean hasDraft) {
         this.id = id;
         this.key = key;
         this.label = label;
+        this.section = section;
+        this.displayOrder = displayOrder;
         this.value = value;
         this.draftValue = draftValue;
         this.hasDraft = hasDraft;
@@ -55,6 +64,14 @@ public class SiteContentJpaEntity {
 
     public String getLabel() {
         return label;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
     }
 
     public String getValue() {

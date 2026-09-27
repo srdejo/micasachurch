@@ -17,12 +17,25 @@ public class SiteSettingsJpaEntity {
     @Column(name = "live_banner_visible", nullable = false)
     private boolean liveBannerVisible;
 
+    @Column(name = "primary_color", nullable = false, length = 7)
+    private String primaryColor;
+
+    @Column(name = "secondary_color", nullable = false, length = 7)
+    private String secondaryColor;
+
+    @Column(name = "tertiary_color", nullable = false, length = 7)
+    private String tertiaryColor;
+
     protected SiteSettingsJpaEntity() {
     }
 
-    public SiteSettingsJpaEntity(UUID id, boolean liveBannerVisible) {
+    public SiteSettingsJpaEntity(UUID id, boolean liveBannerVisible, String primaryColor, String secondaryColor,
+                                 String tertiaryColor) {
         this.id = id;
         this.liveBannerVisible = liveBannerVisible;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        this.tertiaryColor = tertiaryColor;
     }
 
     public UUID getId() {
@@ -31,5 +44,17 @@ public class SiteSettingsJpaEntity {
 
     public boolean isLiveBannerVisible() {
         return liveBannerVisible;
+    }
+
+    public String getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public String getSecondaryColor() {
+        return secondaryColor;
+    }
+
+    public String getTertiaryColor() {
+        return tertiaryColor;
     }
 }

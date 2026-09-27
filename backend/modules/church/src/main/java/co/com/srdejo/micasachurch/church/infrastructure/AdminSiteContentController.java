@@ -37,12 +37,14 @@ public class AdminSiteContentController {
 
     private static AdminSiteContentResponse toAdminResponse(SiteContent siteContent) {
         return new AdminSiteContentResponse(siteContent.getId(), siteContent.getKey(), siteContent.getLabel(),
+                siteContent.getSection(), siteContent.getDisplayOrder(),
                 siteContent.hasDraft() ? siteContent.getDraftValue() : siteContent.getValue(), siteContent.hasDraft());
     }
 
     public record SiteContentRequest(String value) {
     }
 
-    public record AdminSiteContentResponse(UUID id, String key, String label, String value, boolean hasDraft) {
+    public record AdminSiteContentResponse(UUID id, String key, String label, String section, int displayOrder,
+                                          String value, boolean hasDraft) {
     }
 }

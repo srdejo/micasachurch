@@ -15,7 +15,7 @@ export class Schedules implements OnInit {
   private readonly api = inject(AdminApiService);
 
   readonly schedules = signal<ServiceScheduleItem[]>([]);
-  readonly siteSettings = signal<SiteSettings>({ liveBannerVisible: true });
+  readonly siteSettings = signal<Pick<SiteSettings, 'liveBannerVisible'>>({ liveBannerVisible: true });
 
   readonly savingId = signal<string | null>(null);
   readonly savedId = signal<string | null>(null);
@@ -126,6 +126,6 @@ export class Schedules implements OnInit {
 
   toggleBanner(): void {
     const next = { liveBannerVisible: !this.siteSettings().liveBannerVisible };
-    this.api.updateSiteSettings(next).subscribe(() => this.siteSettings.set(next));
+    this.api.updateSiteSettings(next).subscribe((saved) => this.siteSettings.set(saved));
   }
 }

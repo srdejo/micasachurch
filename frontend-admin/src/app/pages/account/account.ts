@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { AdminApiService, AdminUserItem } from '../../core/admin-api.service';
 import { AuthService } from '../../core/auth.service';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
@@ -20,8 +20,7 @@ export class Account implements OnInit {
   /** Para no ofrecer "Eliminar" sobre uno mismo: borrarse deja la sesion viva pero sin usuario. */
   readonly currentUsername = this.auth.username;
 
-  readonly currentPassword = signal('');
-  readonly newPassword = signal('');
+  readonly showPasswords = signal(false);
   readonly passwordError = signal<string | null>(null);
   readonly passwordSuccess = signal(false);
   readonly changingPassword = signal(false);
@@ -55,18 +54,37 @@ export class Account implements OnInit {
     });
   }
 
-  changePassword(): void {
+  clearPasswordError(): void {
+    this.passwordError.set(null);
+  }
+
+  /** Misma validación que al restablecer la clave: compara los valores reales de los campos al enviar. */
+  changePassword(form: NgForm): void {
     this.passwordError.set(null);
     this.passwordSuccess.set(false);
+    const currentPassword: string = form.value.currentPassword ?? '';
+    const newPassword: string = form.value.newPassword ?? '';
+    const confirmPassword: string = form.value.confirmPassword ?? '';
+    if (!currentPassword) {
+      this.passwordError.set('Escribe tu clave actual.');
+      return;
+    }
+    if (newPassword.length < 8) {
+      this.passwordError.set('La clave nueva debe tener al menos 8 caracteres.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      this.passwordError.set('Las claves no coinciden.');
+      return;
+    }
     this.changingPassword.set(true);
     this.api
-      .changePassword({ currentPassword: this.currentPassword(), newPassword: this.newPassword() })
+      .changePassword({ currentPassword, newPassword })
       .subscribe({
         next: () => {
           this.changingPassword.set(false);
+          form.resetForm();
           this.passwordSuccess.set(true);
-          this.currentPassword.set('');
-          this.newPassword.set('');
         },
         error: (err: HttpErrorResponse) => {
           this.changingPassword.set(false);

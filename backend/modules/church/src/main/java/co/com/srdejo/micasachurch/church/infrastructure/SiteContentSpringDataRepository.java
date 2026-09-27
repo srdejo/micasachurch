@@ -7,5 +7,7 @@ import java.util.UUID;
 
 public interface SiteContentSpringDataRepository extends JpaRepository<SiteContentJpaEntity, UUID> {
 
+    List<SiteContentJpaEntity> findAllByOrderBySectionAscDisplayOrderAsc();
+
     List<SiteContentJpaEntity> findByHasDraftTrue();
 }

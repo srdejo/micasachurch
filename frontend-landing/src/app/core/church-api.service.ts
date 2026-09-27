@@ -39,6 +39,9 @@ export interface LinkEntryItem {
 
 export interface SiteSettings {
   liveBannerVisible: boolean;
+  primaryColor?: string;
+  secondaryColor?: string;
+  tertiaryColor?: string;
 }
 
 export interface PrayerRequestSubmission {
@@ -58,6 +61,7 @@ export interface SiteContentItem {
   id: string;
   key: string;
   label: string;
+  section: string;
   value: string;
 }
 

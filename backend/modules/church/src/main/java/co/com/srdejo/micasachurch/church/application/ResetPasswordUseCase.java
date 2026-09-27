@@ -5,6 +5,7 @@ import co.com.srdejo.micasachurch.church.domain.AdminUserRepository;
 import co.com.srdejo.micasachurch.church.domain.PasswordResetToken;
 import co.com.srdejo.micasachurch.church.domain.PasswordResetTokenRepository;
 import co.com.srdejo.micasachurch.platform.webcommon.BusinessRuleException;
+import co.com.srdejo.micasachurch.platform.webcommon.NotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class ResetPasswordUseCase {
@@ -19,6 +20,18 @@ public class ResetPasswordUseCase {
         this.adminUserRepository = adminUserRepository;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    /**
+     * Lets the invite/reset page tell the person which username they will log in with; the token is
+     * a single-use secret, so whoever holds it already controls that account.
+     */
+    public String usernameForToken(String token) {
+        return passwordResetTokenRepository.findByToken(token)
+                .filter(PasswordResetToken::isUsable)
+                .flatMap(resetToken -> adminUserRepository.findById(resetToken.getAdminUserId()))
+                .map(AdminUser::getUsername)
+                .orElseThrow(() -> new NotFoundException("auth.reset_token_invalid"));
     }
 
     public void resetPassword(String token, String newPassword) {

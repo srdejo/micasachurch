@@ -16,11 +16,7 @@ export class ForgotPassword {
   readonly username = signal('');
   readonly loading = signal(false);
   readonly sent = signal(false);
-  readonly logoFailed = signal(false);
 
-  logoUrl(): string {
-    return this.api.imageUrl('logo');
-  }
 
   submit(): void {
     if (!this.username()) {

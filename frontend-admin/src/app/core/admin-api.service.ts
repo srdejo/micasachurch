@@ -48,6 +48,9 @@ export interface LinkEntryItem {
 
 export interface SiteSettings {
   liveBannerVisible: boolean;
+  primaryColor: string;
+  secondaryColor: string;
+  tertiaryColor: string;
 }
 
 export interface AdminUserItem {
@@ -60,6 +63,8 @@ export interface SiteContentItem {
   id: string;
   key: string;
   label: string;
+  section: string;
+  displayOrder: number;
   value: string;
   hasDraft: boolean;
 }
@@ -151,7 +156,7 @@ export class AdminApiService {
     return this.http.get<SiteSettings>(`${this.baseUrl}/site-settings`);
   }
 
-  updateSiteSettings(payload: SiteSettings) {
+  updateSiteSettings(payload: Partial<SiteSettings>) {
     return this.http.patch<SiteSettings>(`${this.baseUrl}/site-settings`, payload);
   }
 
@@ -165,6 +170,10 @@ export class AdminApiService {
 
   forgotPassword(payload: { username: string }) {
     return this.http.post<void>(`${this.baseUrl}/auth/forgot-password`, payload);
+  }
+
+  resetTokenInfo(token: string) {
+    return this.http.get<{ username: string }>(`${this.baseUrl}/auth/reset-token`, { params: { token } });
   }
 
   resetPassword(payload: { token: string; newPassword: string }) {

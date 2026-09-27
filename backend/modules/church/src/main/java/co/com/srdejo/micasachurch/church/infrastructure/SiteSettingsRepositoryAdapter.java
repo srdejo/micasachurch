@@ -23,11 +23,13 @@ public class SiteSettingsRepositoryAdapter implements SiteSettingsRepository {
 
     @Override
     public SiteSettings save(SiteSettings siteSettings) {
-        SiteSettingsJpaEntity entity = new SiteSettingsJpaEntity(siteSettings.getId(), siteSettings.isLiveBannerVisible());
+        SiteSettingsJpaEntity entity = new SiteSettingsJpaEntity(siteSettings.getId(), siteSettings.isLiveBannerVisible(),
+                siteSettings.getPrimaryColor(), siteSettings.getSecondaryColor(), siteSettings.getTertiaryColor());
         return toDomain(springDataRepository.save(entity));
     }
 
     private SiteSettings toDomain(SiteSettingsJpaEntity entity) {
-        return new SiteSettings(entity.getId(), entity.isLiveBannerVisible());
+        return new SiteSettings(entity.getId(), entity.isLiveBannerVisible(), entity.getPrimaryColor(),
+                entity.getSecondaryColor(), entity.getTertiaryColor());
     }
 }

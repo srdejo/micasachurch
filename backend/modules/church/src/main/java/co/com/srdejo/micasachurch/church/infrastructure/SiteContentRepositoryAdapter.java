@@ -19,7 +19,7 @@ public class SiteContentRepositoryAdapter implements SiteContentRepository {
 
     @Override
     public List<SiteContent> findAll() {
-        return springDataRepository.findAll().stream().map(this::toDomain).toList();
+        return springDataRepository.findAllByOrderBySectionAscDisplayOrderAsc().stream().map(this::toDomain).toList();
     }
 
     @Override
@@ -35,12 +35,13 @@ public class SiteContentRepositoryAdapter implements SiteContentRepository {
     @Override
     public SiteContent save(SiteContent siteContent) {
         SiteContentJpaEntity entity = new SiteContentJpaEntity(siteContent.getId(), siteContent.getKey(),
-                siteContent.getLabel(), siteContent.getValue(), siteContent.getDraftValue(), siteContent.hasDraft());
+                siteContent.getLabel(), siteContent.getSection(), siteContent.getDisplayOrder(), siteContent.getValue(),
+                siteContent.getDraftValue(), siteContent.hasDraft());
         return toDomain(springDataRepository.save(entity));
     }
 
     private SiteContent toDomain(SiteContentJpaEntity entity) {
-        return new SiteContent(entity.getId(), entity.getKey(), entity.getLabel(), entity.getValue(), entity.getDraftValue(),
-                entity.isHasDraft());
+        return new SiteContent(entity.getId(), entity.getKey(), entity.getLabel(), entity.getSection(),
+                entity.getDisplayOrder(), entity.getValue(), entity.getDraftValue(), entity.isHasDraft());
     }
 }

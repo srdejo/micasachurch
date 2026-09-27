@@ -3,26 +3,28 @@ module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
+      // El panel usa la paleta de marca fija; los colores editables solo se aplican al landing.
       colors: {
-        surface: '#F1EDE5',
-        card: '#FBF8F2',
-        sidebar: '#16130F',
-        cream: '#F6F1E8',
-        ink: {
-          DEFAULT: '#16130F',
-          soft: '#40382D',
-          muted: '#6B5C47',
-          subtle: '#7A6A55',
+        surface: '#f4f4f4',
+        card: '#ffffff',
+        sidebar: '#000000',
+        primary: {
+          DEFAULT: '#f89e1b',
+          hover: '#e08a0c',
+          // Naranja oscurecido para texto sobre fondo claro: el de marca no alcanza contraste legible.
+          strong: '#9c5800',
         },
-        terracotta: {
-          DEFAULT: '#B0492B',
-          hover: '#8A3720',
+        secondary: {
+          DEFAULT: '#000000',
+          soft: '#333333',
+          muted: '#5c5c5c',
+          subtle: '#6b6b6b',
         },
-        gold: '#D9A257',
+        tertiary: '#ffffff',
       },
       fontFamily: {
-        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-        sans: ['Karla', 'system-ui', 'sans-serif'],
+        display: ['"League Gothic"', 'Impact', '"Arial Narrow"', 'sans-serif'],
+        sans: ['Montserrat', 'Poppins', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         card: '16px',
