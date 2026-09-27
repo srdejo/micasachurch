@@ -32,7 +32,7 @@ Sitio web de una iglesia (Mi Casa Church, Ocaña, Colombia). Proyecto **delibera
 - Tailwind CSS v4 (plugin PostCSS `@tailwindcss/postcss`).
 
 **Infraestructura**
-- Sin Docker. Postgres nativo compartido (proyecto `infra/` del workspace), despliegue con systemd + nginx, mismo patrón que `hotel`/`distriapp`. Aún no desplegado en producción — ver `docs/DEPLOYMENT.md`.
+- Sin Docker propio. Infraestructura compartida en `infra/` del workspace (local: Docker con URLs `*.test`; VPS: Postgres nativo + systemd + nginx) — ver `infra/CLAUDE.md`, mismo patrón que `hotel`/`distriapp`. Aún no desplegado en producción — ver `docs/DEPLOYMENT.md`.
 
 ## Principios de arquitectura
 

@@ -1,5 +1,7 @@
 # DEPLOYMENT.md
 
+Config del VPS versionada en la raíz del workspace: `../infra/vps/micasachurch/` (`micasachurch.service` y los vhosts de `nginx/`, incluidos los de `nolost.micasachurch.co`).
+
 **Estado: desplegado en producción y verificado (2026-08-31).** Fases A, B y C (abajo) ejecutadas — `micasachurch.co`/`api.micasachurch.co`/`admin.micasachurch.co` sirven el proyecto nuevo, `nolost.micasachurch.co`/`nolost-api.micasachurch.co` sirven `nolost` sin cambios. Este documento queda como referencia del runbook usado y para el próximo deploy (`infra/deploy.ps1 -Projects micasachurch`, que ya funciona para backend + `frontend-landing`; `frontend-admin` sigue siendo subida manual, ver `docs/DECISIONS.md`).
 
 **Orden que se siguió** (no cambiarlo si se repite en otro entorno): primero migrar `nolost` a sus subdominios propios (Fase A), después liberar `micasachurch.co` (Fase B), recién ahí aprovisionar `micasachurch` (Fase C — en la práctica, Fase C se hizo antes que A/B porque no dependía de ellas, solo el corte del dominio raíz sí respetó el orden A→B).
@@ -102,7 +104,7 @@ Mismo patrón de subdominios separados que `hotel`/`consulting` (no un solo domi
 
 ## Puerto
 
-Backend reservado en `127.0.0.1:8088` (loopback, nginx haría proxy). Ver `PORTS.md` raíz del workspace.
+Backend reservado en `127.0.0.1:8088` (loopback, nginx haría proxy). Ver `infra/PORTS.md` del workspace.
 
 DNS ya resuelto (ver arriba). Pendiente todo lo del servidor:
 
@@ -113,7 +115,7 @@ DNS ya resuelto (ver arriba). Pendiente todo lo del servidor:
    GRANT ALL PRIVILEGES ON DATABASE micasachurch TO micasachurch;
    ALTER DATABASE micasachurch OWNER TO micasachurch;
    ```
-   (Agregar también a `infra/postgres/init-databases.ps1` del workspace para que quede documentado junto a `hotel`/`distriapp`/etc.)
+   (Agregar también a `infra/postgres/init/01-databases.sql` del workspace para que quede documentado junto a `hotel`/`distriapp`/etc.)
 
 2. nginx: vhosts + certificados SSL (Certbot) para `micasachurch.co`, `api.micasachurch.co` y `admin.micasachurch.co`. Mismo patrón que `hotel`/`api-hotel` (`/etc/nginx/sites-available/hotel.srdejo.com.co` y `api-hotel.srdejo.com.co`, revisados en esta sesión):
 
