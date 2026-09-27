@@ -51,6 +51,18 @@
                 }
               ]
             },
+            "local": {
+              "outputMode": "static",
+              "prerender": false,
+              "optimization": true,
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
