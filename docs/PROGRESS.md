@@ -208,3 +208,8 @@ Cambio OpenSpec `openspec/changes/leer-biblia-en-un-ano/`. **No está en producc
 - `ng test` (71) y `ng build` en verde. Verificado en local contra la API real: abrir Isaías 5–6 (dos capítulos) y Efesios 1,
   cambiar pestaña y versión, atribución, versión recordada tras recargar, RVES descartada, Escape devuelve el foco, foco atrapado
   con Tab, 360 px sin scroll horizontal y con scroll interno, "Reintentar" con la red a YouVersion bloqueada.
+- **Desplegado 2026-09-28** (commit `69a2536`): `frontend-landing` y `frontend-admin` al VPS con `infra/deploy.ps1 -Projects micasachurch -Action Frontend`
+  (backend sin cambios, no se reinició) y en local con `infra/local-deploy.ps1`. Verificado en `https://micasachurch.co/devocional`: el lector abre
+  Isaías 5–6 en LBLA con su atribución y el selector muestra las 7 versiones legibles. `deploy.ps1` debe correrse desde PowerShell:
+  lanzado desde Git Bash toma el `scp` de Git, que no expande el `*` de rutas de Windows (falla antes de tocar el servidor).
+- Cambio archivado en `openspec/changes/archive/2026-09-28-leer-biblia-en-un-ano/`; specs `bible-reader` (nuevo) y `public-landing` sincronizados.
