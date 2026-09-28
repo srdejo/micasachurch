@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { AnalyticsService } from '../../core/analytics.service';
 import { BibleApiService } from '../../core/bible-api.service';
 
 import { DevotionalEntry } from '../../core/devotional-api.service';
@@ -25,8 +26,16 @@ function fakeBibleApi(isEnabled = true) {
   };
 }
 
+const analytics = { track: vi.fn() };
+
 function render(value: DevotionalEntry, bibleApi = fakeBibleApi()) {
-  TestBed.configureTestingModule({ providers: [{ provide: BibleApiService, useValue: bibleApi }] });
+  analytics.track.mockClear();
+  TestBed.configureTestingModule({
+    providers: [
+      { provide: BibleApiService, useValue: bibleApi },
+      { provide: AnalyticsService, useValue: analytics },
+    ],
+  });
   const fixture = TestBed.createComponent(DevotionalArticle);
   fixture.componentRef.setInput('entry', value);
   fixture.detectChanges();
@@ -73,6 +82,7 @@ describe('DevotionalArticle', () => {
     expect(bibleApi.getPassage).not.toHaveBeenCalled();
 
     buttons[1].click();
+    expect(analytics.track).toHaveBeenCalledWith('biblia_en_un_ano', { referencia: 'Gálatas 6' });
     TestBed.tick();
     await new Promise((resolve) => setTimeout(resolve));
 

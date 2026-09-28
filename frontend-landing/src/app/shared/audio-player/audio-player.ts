@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, computed, input, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, signal, viewChild } from '@angular/core';
+import { AnalyticsService } from '../../core/analytics.service';
 
 const SPEEDS = [1, 1.25, 1.5];
 
@@ -19,9 +20,13 @@ function formatSeconds(seconds: number): string {
   templateUrl: './audio-player.html',
 })
 export class AudioPlayer {
+  private readonly analytics = inject(AnalyticsService);
+
   readonly src = input.required<string>();
   /** `dark` sobre el fondo tinta de /devocional, `light` sobre la tarjeta clara del home. */
   readonly variant = input<'dark' | 'light'>('dark');
+  /** Where the player lives, reported with the `devocional_audio` event. */
+  readonly page = input<'inicio' | 'devocional' | undefined>(undefined);
 
   readonly playing = signal(false);
   readonly current = signal(0);
@@ -31,6 +36,8 @@ export class AudioPlayer {
 
   readonly progress = computed(() => (this.duration() > 0 ? (this.current() / this.duration()) * 100 : 0));
   readonly timeLabel = computed(() => `${formatSeconds(this.current())} / ${formatSeconds(this.duration())}`);
+
+  private trackedSrc: string | null = null;
 
   private readonly audio = viewChild<ElementRef<HTMLAudioElement>>('audio');
 
@@ -69,6 +76,16 @@ export class AudioPlayer {
 
   rateLabel(): string {
     return `${this.rate()}×`;
+  }
+
+  onPlay(): void {
+    this.playing.set(true);
+    const page = this.page();
+    // Counts the first play of each reading; resuming after a pause is the same listen.
+    if (page && this.trackedSrc !== this.src()) {
+      this.trackedSrc = this.src();
+      this.analytics.track('devocional_audio', { pagina: page });
+    }
   }
 
   onLoadedMetadata(): void {

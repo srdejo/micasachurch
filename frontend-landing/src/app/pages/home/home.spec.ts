@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideRouter } from '@angular/router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { AnalyticsService } from '../../core/analytics.service';
 import { DevotionalEntry } from '../../core/devotional-api.service';
 import { Home } from './home';
 
@@ -24,11 +25,23 @@ interface Options {
   entry?: DevotionalEntry;
 }
 
+const analytics = { track: vi.fn() };
+let home: Home;
+
 async function setup({ at, liveBannerVisible = true, entry = devotional }: Options) {
+  analytics.track.mockClear();
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date(`${at}-05:00`));
-  TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])] });
+  TestBed.configureTestingModule({
+    providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
+      provideRouter([]),
+      { provide: AnalyticsService, useValue: analytics },
+    ],
+  });
   const fixture = TestBed.createComponent(Home);
+  home = fixture.componentInstance;
   const http = TestBed.inject(HttpTestingController);
   fixture.detectChanges();
 
@@ -106,5 +119,57 @@ describe('Home', () => {
     const el = await setup({ at: '2026-09-30T15:00:00', entry: { ...devotional, audio_url: undefined } });
 
     expect(el.querySelector('[data-testid="devotional-card"] app-audio-player')).toBeNull();
+  });
+
+  it('cada control importante envía su evento sin impedir que el enlace se abra', async () => {
+    const el = await setup({ at: '2026-09-30T07:10:00' });
+    el.querySelector<HTMLButtonElement>('button[aria-label="Abrir menú"]')!.click();
+    TestBed.tick();
+
+    const tracked = [...el.querySelectorAll<HTMLAnchorElement>('a[apptrackclick]')];
+    const opened = tracked.map((link) => {
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      link.dispatchEvent(event);
+      return event.defaultPrevented;
+    });
+
+    expect(opened.every((prevented) => !prevented)).toBe(true);
+    const calls = analytics.track.mock.calls.map(([name, params]) => (params ? `${name}:${Object.values(params).join()}` : name));
+    expect(new Set(calls)).toEqual(
+      new Set([
+        'en_vivo:header', 'en_vivo:franja', 'en_vivo:menu', 'en_vivo:tarjeta_movil', 'en_vivo:barra_movil',
+        'whatsapp:header', 'whatsapp:menu', 'whatsapp:redes', 'whatsapp:visitar',
+        'como_llegar',
+        'red_social:youtube', 'red_social:tiktok', 'red_social:instagram', 'red_social:facebook',
+      ]),
+    );
+  });
+
+  describe('petición de oración', () => {
+    async function submit(message: string, status?: number) {
+      await setup({ at: '2026-09-30T15:00:00' });
+      Object.assign(home.prayerForm, { name: 'María José', phone: '+573001234567', message });
+      home.submitPrayerRequest();
+      const http = TestBed.inject(HttpTestingController);
+      const req = http.match((r) => r.url.endsWith('/prayer-requests'))[0];
+      if (req && status === 200) req.flush({ id: '1' });
+      if (req && status === 500) req.flush({}, { status: 500, statusText: 'Error' });
+    }
+
+    it('un envío exitoso cuenta el evento sin datos del visitante', async () => {
+      await submit('Oren por mi familia', 200);
+
+      expect(analytics.track).toHaveBeenCalledWith('peticion_oracion');
+      expect(JSON.stringify(analytics.track.mock.calls)).not.toMatch(/María|573001234567|familia/);
+    });
+
+    it('una petición vacía o un error del servidor no cuentan', async () => {
+      await submit('   ');
+      expect(analytics.track).not.toHaveBeenCalledWith('peticion_oracion');
+      TestBed.resetTestingModule();
+
+      await submit('Oren por mi familia', 500);
+      expect(analytics.track).not.toHaveBeenCalledWith('peticion_oracion');
+    });
   });
 });

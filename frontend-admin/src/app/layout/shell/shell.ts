@@ -18,6 +18,7 @@ export class Shell implements OnInit {
 
   readonly navItems = [
     { path: 'panel', label: 'Panel' },
+    { path: 'estadisticas', label: 'Estadísticas' },
     { path: 'eventos', label: 'Eventos' },
     { path: 'oracion', label: 'Peticiones de oración' },
     { path: 'redes', label: 'Redes' },

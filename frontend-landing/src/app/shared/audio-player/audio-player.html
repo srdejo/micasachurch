@@ -1,6 +1,6 @@
 <audio #audio [src]="src()" preload="metadata" class="hidden"
   (loadedmetadata)="onLoadedMetadata()" (durationchange)="onLoadedMetadata()" (timeupdate)="onTimeUpdate()"
-  (play)="playing.set(true)" (pause)="playing.set(false)" (ended)="onEnded()" (error)="failed.set(true)"></audio>
+  (play)="onPlay()" (pause)="playing.set(false)" (ended)="onEnded()" (error)="failed.set(true)"></audio>
 
 @if (!failed()) {
   @let dark = variant() === 'dark';

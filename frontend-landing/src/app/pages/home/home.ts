@@ -14,11 +14,13 @@ import {
   SiteContentItem,
   SiteSettings,
 } from '../../core/church-api.service';
+import { AnalyticsService } from '../../core/analytics.service';
 import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
 import { ChurchClock, LiveStatus, churchClock, computeLiveStatus } from '../../core/live-status';
 import { HeroCarousel } from '../../shared/hero-carousel/hero-carousel';
 import { AudioPlayer } from '../../shared/audio-player/audio-player';
 import { ScheduleModal } from '../../shared/schedule-modal/schedule-modal';
+import { TrackClick } from '../../shared/track-click/track-click';
 
 const DEFAULT_FACEBOOK_URL = 'https://www.facebook.com/micasachurchocana';
 const DEFAULT_WHATSAPP_URL = 'https://wa.me/573045332589';
@@ -44,12 +46,13 @@ interface DaySchedule {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HeroCarousel, ScheduleModal, AudioPlayer],
+  imports: [CommonModule, FormsModule, RouterLink, HeroCarousel, ScheduleModal, AudioPlayer, TrackClick],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
   private readonly api = inject(ChurchApiService);
   private readonly devotionalApi = inject(DevotionalApiService);
+  private readonly analytics = inject(AnalyticsService);
 
   readonly events = signal<EventItem[]>([]);
   readonly services = signal<ServiceScheduleItem[]>([]);
@@ -238,6 +241,7 @@ export class Home implements OnInit {
       })
       .subscribe({
         next: () => {
+          this.analytics.track('peticion_oracion');
           this.prayerSubmitted.set(true);
           this.prayerSubmitting.set(false);
         },

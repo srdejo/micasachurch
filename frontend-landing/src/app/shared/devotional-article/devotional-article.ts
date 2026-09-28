@@ -5,11 +5,12 @@ import { parseBibleReferences } from '../../core/bible-reference';
 import { DevotionalEntry } from '../../core/devotional-api.service';
 import { AudioPlayer } from '../audio-player/audio-player';
 import { BibleReader } from '../bible-reader/bible-reader';
+import { TrackClick } from '../track-click/track-click';
 
 @Component({
   selector: 'app-devotional-article',
   standalone: true,
-  imports: [CommonModule, AudioPlayer, BibleReader],
+  imports: [CommonModule, AudioPlayer, BibleReader, TrackClick],
   templateUrl: './devotional-article.html',
 })
 export class DevotionalArticle {

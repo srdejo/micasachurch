@@ -11,7 +11,7 @@
     </div>
 
     @if (status()?.live; as live) {
-      <a [href]="live.url" target="_blank" rel="noopener"
+      <a [href]="live.url" appTrackClick="en_vivo" [trackParams]="{ origen: 'horarios' }" target="_blank" rel="noopener"
         class="flex items-center justify-between gap-3.5 px-[26px] py-4 bg-accent text-ink no-underline">
         <span class="flex items-center gap-2.5 font-bold text-[15px]"><span class="live-dot"></span>En vivo ahora · {{ live.title }}</span>
         <span class="text-xs font-black tracking-[0.12em] uppercase">Ver →</span>
@@ -56,9 +56,9 @@
         <span class="text-[13px] text-muted">Transmisiones en vivo por Facebook</span>
       </div>
       <div class="flex flex-wrap gap-2.5">
-        <a [href]="mapsUrl()" target="_blank" rel="noopener"
+        <a [href]="mapsUrl()" appTrackClick="como_llegar" target="_blank" rel="noopener"
           class="border border-ink/25 text-ink px-[18px] py-[13px] rounded-[10px] font-bold text-xs tracking-[0.1em] uppercase hover:border-ink">Cómo llegar</a>
-        <a [href]="whatsappUrl()" target="_blank" rel="noopener"
+        <a [href]="whatsappUrl()" appTrackClick="whatsapp" [trackParams]="{ origen: 'horarios' }" target="_blank" rel="noopener"
           class="bg-ink text-paper px-[18px] py-[13px] rounded-[10px] font-bold text-xs tracking-[0.1em] uppercase hover:bg-accent hover:text-ink">WhatsApp</a>
       </div>
     </div>

@@ -17,14 +17,14 @@
     <button type="button" (click)="openSchedule()"
       class="bg-transparent border-0 p-0 text-paper font-sans font-bold text-[12.5px] tracking-[0.1em] uppercase cursor-pointer hover:text-accent">Horarios</button>
     @if (live(); as current) {
-      <a [href]="current.url" target="_blank" rel="noopener"
+      <a [href]="current.url" appTrackClick="en_vivo" [trackParams]="{ origen: 'header' }" target="_blank" rel="noopener"
         class="flex items-center gap-2 text-ink bg-accent px-[13px] py-2 rounded-lg"><span class="live-dot"></span>En vivo</a>
     }
     <a href="#visitar" class="bg-paper text-ink px-[18px] py-3 rounded-[10px] hover:bg-accent">Planea tu visita</a>
   </nav>
 
   <div class="hidden max-[980px]:flex items-center gap-2">
-    <a [href]="whatsappUrl()" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"
+    <a [href]="whatsappUrl()" appTrackClick="whatsapp" [trackParams]="{ origen: 'header' }" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"
       class="flex items-center justify-center w-[46px] h-[46px] rounded-[14px] bg-ink text-paper hover:bg-accent-deep">
       <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M12.04 2.2a9.7 9.7 0 0 0-8.3 14.66L2.2 21.8l5.06-1.5A9.7 9.7 0 1 0 12.04 2.2Zm0 1.8a7.9 7.9 0 0 1 0 15.8 7.9 7.9 0 0 1-4.16-1.18l-.42-.26-2.62.78.79-2.56-.27-.43A7.9 7.9 0 0 1 12.04 4Zm-3.1 3.6c-.2 0-.5.07-.72.34-.24.29-.78.87-.78 1.9 0 1.04.72 2.03.82 2.17.1.15 1.42 2.35 3.55 3.2 1.77.7 2.13.6 2.52.56.5-.05 1.53-.63 1.75-1.25.21-.62.21-1.14.15-1.25-.07-.11-.25-.18-.53-.32-.28-.14-1.62-.8-1.87-.89-.25-.09-.43-.13-.61.14-.18.28-.5.9-.62 1.04-.11.14-.23.16-.5.05a5.9 5.9 0 0 1-1.72-1.06 6.5 6.5 0 0 1-1.19-1.48c-.12-.22-.01-.35.11-.49.12-.14.36-.42.44-.56.09-.14.05-.28-.02-.42-.07-.14-.6-1.48-.82-2.02-.17-.4-.34-.4-.5-.4h-.24Z"/></svg>
     </a>
@@ -48,13 +48,13 @@
         class="flex items-center justify-between min-h-[54px] text-ink text-lg border-b border-ink/[0.08]">{{ item.label }}<span class="text-accent-deep">→</span></a>
     }
     <a routerLink="/devocional" class="flex items-center justify-between min-h-[54px] text-ink text-lg border-b border-ink/[0.08]">Devocional<span class="text-accent-deep">→</span></a>
-    <a [href]="churchMapsUrl" target="_blank" rel="noopener" class="flex items-center justify-between min-h-[54px] text-ink text-lg border-b border-ink/[0.08]">Cómo llegar<span class="text-accent-deep">→</span></a>
+    <a [href]="churchMapsUrl" appTrackClick="como_llegar" target="_blank" rel="noopener" class="flex items-center justify-between min-h-[54px] text-ink text-lg border-b border-ink/[0.08]">Cómo llegar<span class="text-accent-deep">→</span></a>
     <button type="button" (click)="openSchedule()"
       class="mt-4 min-h-[54px] rounded-full border border-ink/25 bg-transparent text-ink font-sans font-bold text-base cursor-pointer">Ver horarios</button>
-    <a [href]="liveUrl()" target="_blank" rel="noopener"
+    <a [href]="liveUrl()" appTrackClick="en_vivo" [trackParams]="{ origen: 'menu' }" target="_blank" rel="noopener"
       class="flex items-center justify-center gap-[9px] mt-2.5 min-h-[54px] rounded-full bg-accent text-ink font-bold text-base">
       <span class="w-2 h-2 rounded-full bg-paper"></span>Ver en vivo · {{ dailyDevotionalTime() }}</a>
-    <a [href]="whatsappUrl()" target="_blank" rel="noopener"
+    <a [href]="whatsappUrl()" appTrackClick="whatsapp" [trackParams]="{ origen: 'menu' }" target="_blank" rel="noopener"
       class="flex items-center justify-center mt-2.5 min-h-[54px] rounded-full bg-ink text-paper font-bold text-base">Escribir por WhatsApp</a>
   </nav>
 }
@@ -62,7 +62,7 @@
 <!-- Franja en vivo / próxima transmisión -->
 @if (siteSettings().liveBannerVisible) {
   @if (live(); as current) {
-    <a [href]="current.url" target="_blank" rel="noopener"
+    <a [href]="current.url" appTrackClick="en_vivo" [trackParams]="{ origen: 'franja' }" target="_blank" rel="noopener"
       class="flex flex-wrap items-center justify-center gap-x-[18px] gap-y-3 px-[22px] py-[15px] bg-accent text-ink text-center no-underline">
       <span class="flex items-center gap-2.5 text-[12.5px] tracking-[0.16em] uppercase font-black"><span class="live-dot"></span>En vivo ahora</span>
       <span class="text-base font-bold">{{ current.title }}</span>
@@ -102,7 +102,7 @@
 
 <!-- En vivo y horarios (móvil) -->
 <div class="hidden max-[980px]:block bg-ink text-paper px-[18px] pt-[18px] pb-[22px]">
-  <a [href]="liveUrl()" target="_blank" rel="noopener" class="flex items-center gap-3.5 px-[18px] py-4 rounded-[18px] bg-accent text-ink">
+  <a [href]="liveUrl()" appTrackClick="en_vivo" [trackParams]="{ origen: 'tarjeta_movil' }" target="_blank" rel="noopener" class="flex items-center gap-3.5 px-[18px] py-4 rounded-[18px] bg-accent text-ink">
     @if (live()) {
       <span class="live-dot"></span>
     } @else {
@@ -134,7 +134,7 @@
         <span class="kicker text-accent-deep">YouTube</span>
         <h2 class="section-title">Prédicas</h2>
       </div>
-      <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
+      <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" appTrackClick="red_social" [trackParams]="{ red: 'youtube' }" target="_blank" rel="noopener"
         class="link-underline">Ver el canal en YouTube</a>
     </div>
     <div class="grid grid-cols-[1.6fr_1fr] max-[980px]:grid-cols-1 gap-[26px] items-start">
@@ -148,7 +148,7 @@
         <span class="font-display font-extrabold uppercase text-[44px] leading-[0.95] max-[640px]:text-[36px]">{{ contentValue('predicas_title', 'Las últimas prédicas, siempre al día') }}</span>
         <p class="m-0 text-[15.5px] leading-[1.7] text-paper/75">{{ contentValue('predicas_copy', 'El reproductor toma automáticamente los videos más recientes del canal. Usa la lista dentro del reproductor para saltar entre prédicas.') }}</p>
         <div class="flex flex-wrap gap-2.5 mt-1">
-          <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
+          <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" appTrackClick="red_social" [trackParams]="{ red: 'youtube' }" target="_blank" rel="noopener"
             class="btn bg-accent text-ink hover:bg-paper">Suscribirse</a>
         </div>
       </div>
@@ -199,7 +199,7 @@
       <h2 class="section-title">¿Ya estás en una red?</h2>
       <p class="m-0 text-[16.5px] leading-[1.75] text-paper/75 max-w-[46ch]">Las redes son los grupos donde la iglesia se vive entre semana: se comparte la mesa, se lee la Biblia y se ora unos por otros. Cada persona tiene una red según su etapa.</p>
       <div class="flex flex-wrap gap-3 mt-1.5">
-        <a [href]="whatsappUrl() + '?text=Hola%2C%20quiero%20entrar%20a%20una%20red'" target="_blank" rel="noopener"
+        <a [href]="whatsappUrl() + '?text=Hola%2C%20quiero%20entrar%20a%20una%20red'" appTrackClick="whatsapp" [trackParams]="{ origen: 'redes' }" target="_blank" rel="noopener"
           class="btn bg-accent text-ink hover:bg-paper">Quiero entrar a una red</a>
       </div>
     </div>
@@ -242,7 +242,7 @@
             class="font-display font-black uppercase text-[56px] leading-[0.92] max-[640px]:text-[45px] text-ink hover:text-accent-deep">{{ devotional()!.title }}</a>
           <span class="text-[14.5px] text-body font-bold">Lectura: {{ devotional()!.passage_reference }}</span>
           @if (devotional()!.audio_url; as audioUrl) {
-            <app-audio-player [src]="audioUrl" variant="light" />
+            <app-audio-player [src]="audioUrl" variant="light" page="inicio" />
           }
           <p class="m-0 italic text-[17px] leading-[1.65] text-ink-4 text-pretty">{{ devotional()!.verse }}</p>
         </div>
@@ -329,7 +329,7 @@
       <p class="m-0 text-[16.5px] leading-[1.75] text-body text-pretty">
         {{ contentValue('quienes_somos_paragraph_2', 'Si vienes por primera vez, no necesitas prepararte de ninguna forma. Ven, siéntate, escucha. Queremos conocerte.') }}
       </p>
-      <a [href]="churchMapsUrl" target="_blank" rel="noopener" class="link-underline mt-1.5">Cómo llegar</a>
+      <a [href]="churchMapsUrl" appTrackClick="como_llegar" target="_blank" rel="noopener" class="link-underline mt-1.5">Cómo llegar</a>
     </div>
   </div>
 </section>
@@ -402,7 +402,7 @@
       <h2 class="section-title min-[981px]:text-[100px] min-[981px]:leading-[0.86]"><span class="font-light">Te esperamos</span> esta semana</h2>
       <p class="m-0 text-[16.5px] leading-[1.75] text-paper/75 max-w-[44ch]">Escríbenos por WhatsApp si quieres que alguien te reciba en la puerta o si necesitas oración.</p>
       <div id="contacto" class="flex flex-wrap gap-3 mt-1.5">
-        <a [href]="whatsappUrl()" target="_blank" rel="noopener" class="btn bg-accent text-ink hover:bg-paper">Escribir por WhatsApp</a>
+        <a [href]="whatsappUrl()" appTrackClick="whatsapp" [trackParams]="{ origen: 'visitar' }" target="_blank" rel="noopener" class="btn bg-accent text-ink hover:bg-paper">Escribir por WhatsApp</a>
         <button type="button" (click)="openSchedule()" class="btn bg-transparent text-paper border border-paper/35 hover:border-paper">Ver horarios</button>
       </div>
     </div>
@@ -411,13 +411,13 @@
         <span class="text-[11.5px] tracking-[0.16em] uppercase text-paper/55 font-bold">Dirección</span>
         <span class="font-display font-black uppercase text-[42px] leading-none">Cl. 7A # 37-8</span>
         <span class="text-[15px] text-paper/70">Ocaña, Norte de Santander</span>
-        <a [href]="churchMapsUrl" target="_blank" rel="noopener" class="text-[12.5px] font-bold tracking-[0.1em] uppercase text-accent mt-1.5">Cómo llegar en Google Maps</a>
+        <a [href]="churchMapsUrl" appTrackClick="como_llegar" target="_blank" rel="noopener" class="text-[12.5px] font-bold tracking-[0.1em] uppercase text-accent mt-1.5">Cómo llegar en Google Maps</a>
       </div>
       <div class="flex flex-col gap-[5px]">
         <span class="text-[11.5px] tracking-[0.16em] uppercase text-paper/55 font-bold">Iglesia para niños</span>
         <span class="font-display font-extrabold uppercase text-[32px] leading-none">A una cuadra del templo</span>
         <a href="https://www.google.com/maps/place/IGLESIA+PARA+NI%C3%91OS/@8.2615687,-73.3597182,20z"
-          target="_blank" rel="noopener" class="text-[12.5px] font-bold tracking-[0.1em] uppercase text-accent mt-1.5">Ver ubicación de niños</a>
+          appTrackClick="como_llegar" target="_blank" rel="noopener" class="text-[12.5px] font-bold tracking-[0.1em] uppercase text-accent mt-1.5">Ver ubicación de niños</a>
       </div>
       <div class="relative h-[220px] rounded-xl overflow-hidden bg-paper/[0.08]">
         <iframe src="https://maps.google.com/maps?q=8.2618302,-73.3598166&z=19&output=embed"
@@ -439,7 +439,7 @@
       <p class="m-0 text-base leading-[1.65] text-paper/70 max-w-[34ch]">Predicaciones, momentos de la iglesia y la transmisión diaria de las {{ dailyDevotionalTime() }}</p>
     </div>
     <div class="grid grid-cols-4 max-[980px]:grid-cols-2 gap-3.5 max-[640px]:gap-2.5">
-      <a [href]="linkValue('tiktok') || 'https://www.tiktok.com/@micasachurchocana'" target="_blank" rel="noopener"
+      <a [href]="linkValue('tiktok') || 'https://www.tiktok.com/@micasachurchocana'" appTrackClick="red_social" [trackParams]="{ red: 'tiktok' }" target="_blank" rel="noopener"
         class="flex flex-col justify-between gap-[34px] max-[640px]:gap-[26px] p-6 max-[640px]:p-[18px] rounded-[14px] bg-accent text-ink min-h-[190px] max-[640px]:min-h-[128px] min-w-0 hover:bg-paper">
         <span class="text-xs tracking-[0.16em] uppercase font-black">TikTok</span>
         <div class="flex flex-col gap-1.5 min-w-0">
@@ -447,7 +447,7 @@
           <span class="text-[12.5px] font-bold tracking-[0.1em] uppercase max-[640px]:font-display max-[640px]:font-black max-[640px]:text-[31px] max-[640px]:tracking-normal">Seguir →</span>
         </div>
       </a>
-      <a [href]="linkValue('instagram') || 'https://www.instagram.com/micasachurchocana/'" target="_blank" rel="noopener"
+      <a [href]="linkValue('instagram') || 'https://www.instagram.com/micasachurchocana/'" appTrackClick="red_social" [trackParams]="{ red: 'instagram' }" target="_blank" rel="noopener"
         class="flex flex-col justify-between gap-[34px] max-[640px]:gap-[26px] p-6 max-[640px]:p-[18px] rounded-[14px] border border-paper/20 text-paper min-h-[190px] max-[640px]:min-h-[128px] min-w-0 hover:border-paper">
         <span class="text-xs tracking-[0.16em] uppercase font-black text-accent">Instagram</span>
         <div class="flex flex-col gap-1.5 min-w-0">
@@ -455,7 +455,7 @@
           <span class="text-[12.5px] font-bold tracking-[0.1em] uppercase max-[640px]:font-display max-[640px]:font-black max-[640px]:text-[31px] max-[640px]:tracking-normal">Seguir →</span>
         </div>
       </a>
-      <a [href]="facebookUrl()" target="_blank" rel="noopener"
+      <a [href]="facebookUrl()" appTrackClick="red_social" [trackParams]="{ red: 'facebook' }" target="_blank" rel="noopener"
         class="flex flex-col justify-between gap-[34px] max-[640px]:gap-[26px] p-6 max-[640px]:p-[18px] rounded-[14px] border border-paper/20 text-paper min-h-[190px] max-[640px]:min-h-[128px] min-w-0 hover:border-paper">
         <span class="text-xs tracking-[0.16em] uppercase font-black text-accent">Facebook</span>
         <div class="flex flex-col gap-1.5 min-w-0">
@@ -463,7 +463,7 @@
           <span class="text-[12.5px] font-bold tracking-[0.1em] uppercase max-[640px]:font-display max-[640px]:font-black max-[640px]:text-[31px] max-[640px]:tracking-normal">Ver ahora →</span>
         </div>
       </a>
-      <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" target="_blank" rel="noopener"
+      <a [href]="linkValue('youtube') || 'https://www.youtube.com/@micasachurchocana'" appTrackClick="red_social" [trackParams]="{ red: 'youtube' }" target="_blank" rel="noopener"
         class="flex flex-col justify-between gap-[34px] max-[640px]:gap-[26px] p-6 max-[640px]:p-[18px] rounded-[14px] border border-paper/20 text-paper min-h-[190px] max-[640px]:min-h-[128px] min-w-0 hover:border-paper">
         <span class="text-xs tracking-[0.16em] uppercase font-black text-accent">YouTube</span>
         <div class="flex flex-col gap-1.5 min-w-0">
@@ -492,7 +492,7 @@
   <div data-testid="mobile-live-bar"
     class="hidden max-[980px]:flex fixed bottom-0 inset-x-0 z-[70] px-3.5 pt-2.5 pb-[calc(12px+env(safe-area-inset-bottom))]
            bg-paper/95 backdrop-blur-[12px] border-t border-ink/[0.12]">
-    <a [href]="current.url" target="_blank" rel="noopener"
+    <a [href]="current.url" appTrackClick="en_vivo" [trackParams]="{ origen: 'barra_movil' }" target="_blank" rel="noopener"
       class="flex-1 flex items-center justify-center gap-2 min-h-[52px] rounded-full bg-accent text-ink font-bold text-[15.5px]">
       <span class="live-dot"></span>En vivo
     </a>

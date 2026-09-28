@@ -103,6 +103,10 @@ Alternativas descartadas: una **deploy key por repo** (son 10 y una llave sirve 
 
 Consecuencia práctica: que `git push` falle en el entorno del agente con `Host key verification failed` es el **comportamiento esperado**, no un problema por resolver ni un bloqueante que reportar. Cada sesión deja las ramas listas y los comandos de push en `RESUMEN-DIARIO.md`, en la raíz del workspace. Aplica a los 10 repos.
 
+## Analítica con Google Analytics 4, sin banner de cookies (2026-09-28)
+
+Daniel eligió GA4 para no instalar nada en el servidor. Se evaluó Umami autoalojado en el VPS (sin cookies y con los datos propios) y se descartó por esa razón. GA4 usa cookies, y **por decisión de Daniel no hay banner de consentimiento**: la medición empieza al cargar la página. Es menos prudente frente a la Ley 1581, así que conviene revisarlo si cambia el público o la normativa (GA4 admite Consent Mode). Mitigación: los eventos nunca llevan datos personales ni el texto de las peticiones. El tráfico del entorno local va marcado como depuración y el filtro "Tráfico de desarrolladores" de GA4 lo excluye de los informes. Las estadísticas se ven en el admin con un informe de Looker Studio incrustado, porque GA4 no permite incrustarse. Detalle en `openspec/changes/archive/*-analitica-de-visitas/design.md`.
+
 ## "En vivo" enlaza a Facebook en vez de incrustarlo (2026-09-27)
 
 El modal con el plugin de página de Facebook (`facebook.com/plugins/page.php`) no mostraba imagen en

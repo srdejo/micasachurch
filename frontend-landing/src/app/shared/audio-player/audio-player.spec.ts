@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { AnalyticsService } from '../../core/analytics.service';
 import { AudioPlayer } from './audio-player';
 
 function setup(variant: 'dark' | 'light' = 'dark') {
@@ -85,5 +86,33 @@ describe('AudioPlayer', () => {
 
     expect(el.querySelector('div')!.className).toContain('text-ink');
     expect(el.querySelector('input[type="range"]')!.className).toContain('audio-range-light');
+  });
+
+  it('cuenta la primera reproducción de cada lectura, no al reanudar tras una pausa', () => {
+    const analytics = { track: vi.fn() };
+    TestBed.configureTestingModule({ providers: [{ provide: AnalyticsService, useValue: analytics }] });
+    const { fixture, el, audio } = setup();
+    fixture.componentRef.setInput('page', 'inicio');
+    const toggle = () => (el.querySelector('button[aria-label$="la lectura"]') as HTMLButtonElement).click();
+
+    toggle();
+    toggle();
+    toggle();
+    expect(analytics.track.mock.calls).toEqual([['devocional_audio', { pagina: 'inicio' }]]);
+
+    fixture.componentRef.setInput('src', 'https://example.com/otra-lectura.mp3');
+    fixture.detectChanges();
+    audio.dispatchEvent(new Event('play'));
+    expect(analytics.track).toHaveBeenCalledTimes(2);
+  });
+
+  it('sin página no envía eventos', () => {
+    const analytics = { track: vi.fn() };
+    TestBed.configureTestingModule({ providers: [{ provide: AnalyticsService, useValue: analytics }] });
+    const { el } = setup();
+
+    (el.querySelector('button[aria-label$="la lectura"]') as HTMLButtonElement).click();
+
+    expect(analytics.track).not.toHaveBeenCalled();
   });
 });

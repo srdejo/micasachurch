@@ -106,6 +106,12 @@ Mismo patrón de subdominios separados que `hotel`/`consulting` (no un solo domi
 
 El lector de "La Biblia en un año" usa una App Key gratuita de [platform.youversion.com](https://platform.youversion.com/). Va en `youversionAppKey` de `frontend-landing/src/environments/environment*.ts` y se compila en el bundle; es pública por diseño de la plataforma (viaja en el navegador), no es un secreto. Con el valor vacío, las referencias se muestran como texto y el lector no aparece. Las versiones en español disponibles dependen de las licencias que la plataforma habilite para esa App Key.
 
+## Google Analytics 4 y estadísticas del admin
+
+- `frontend-landing/src/environments/*.ts` → `analytics: { measurementId, debug }`. `environment.ts` (`ng serve`) va sin ID. `environment.local.ts` usa el ID de producción con `debug: true`: se ve en DebugView y el filtro de datos "Tráfico de desarrolladores" (estado **Activo**) lo deja fuera de los informes. `environment.prod.ts` lleva el ID con `debug: false`. El ID `G-…` es público; no es un secreto.
+- En la propiedad GA4 deben existir las dimensiones personalizadas de evento `origen`, `referencia`, `pagina` y `red`. Sin ellas los eventos se cuentan, pero sin desglose, y GA4 no rellena datos hacia atrás.
+- `frontend-admin/src/environments/*.ts` → `statsReportUrl` (URL de inserción de Looker Studio, `…/embed/reporting/…`, con "Habilitar inserción" y compartido como "Cualquier persona con el enlace puede ver") y `statsAppUrl` (la propiedad en analytics.google.com). Sin `statsReportUrl`, la vista "Estadísticas" muestra un aviso.
+
 ## Puerto
 
 Backend reservado en `127.0.0.1:8088` (loopback, nginx haría proxy). Ver `infra/PORTS.md` del workspace.

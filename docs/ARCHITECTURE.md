@@ -58,6 +58,10 @@ Si en el futuro se necesita, por ejemplo, un archivo histórico propio o traducc
 
 Sigue la misma regla: el lector de pasajes de `/devocional` pide el texto a la YouVersion Platform con su SDK (`@youversion/platform-core`) desde el navegador, y solo cuando el visitante abre una referencia. El backend nunca lo ve ni lo guarda. La App Key (`youversionAppKey` en `environments/`) es pública por diseño. Las versiones en español disponibles dependen de las licencias de esa App Key, y cada pasaje se muestra con la atribución de copyright de su versión. Detalle en `openspec/specs/bible-reader/spec.md`.
 
+### Analítica de visitas
+
+`frontend-landing` carga Google Analytics 4 desde el navegador (`core/analytics.service.ts`), solo si `environment.analytics.measurementId` tiene valor. No se ejecuta en el prerender ni en el SSR, y el panel no se mide. Las vistas de las navegaciones internas las cuenta la medición mejorada de GA4. Los clics importantes se marcan en las plantillas con la directiva `shared/track-click`, y dos eventos van por código: la petición de oración enviada y la primera reproducción del audio del devocional. Ningún evento lleva datos personales. En el admin, la vista "Estadísticas" incrusta un informe de Looker Studio conectado a GA4. Nombres de eventos y reglas: `openspec/specs/site-analytics/spec.md`.
+
 ## Frontend — `frontend-landing`
 
 Una sola página larga (`pages/home`) con secciones ancladas (`#inicio`, `#devocional`, `#predicas`, `#eventos`, `#grupos`, `#ministerios`, `#oracion`, `#visitar`), más una ruta separada `/devocional` para navegar el devocional por fecha (query param `?fecha=YYYY-MM-DD`). SSR vía `@angular/ssr`; la ruta `/devocional` se sirve en modo cliente (`RenderMode.Client`) porque su contenido depende de la fecha y de una API externa — el resto se prerenderiza.

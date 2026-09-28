@@ -21,6 +21,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'panel' },
       { path: 'panel', loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard) },
+      { path: 'estadisticas', loadComponent: () => import('./pages/stats/stats').then((m) => m.Stats) },
       { path: 'eventos', loadComponent: () => import('./pages/events/events').then((m) => m.Events) },
       { path: 'oracion', loadComponent: () => import('./pages/prayer-requests/prayer-requests').then((m) => m.PrayerRequests) },
       { path: 'redes', loadComponent: () => import('./pages/networks/networks').then((m) => m.Networks) },

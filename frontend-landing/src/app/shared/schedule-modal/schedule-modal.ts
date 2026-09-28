@@ -1,11 +1,12 @@
 import { NgClass } from '@angular/common';
 import { Component, DOCUMENT, DestroyRef, ElementRef, afterNextRender, inject, input, output, viewChild } from '@angular/core';
 import { LiveStatus } from '../../core/live-status';
+import { TrackClick } from '../track-click/track-click';
 
 @Component({
   selector: 'app-schedule-modal',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, TrackClick],
   templateUrl: './schedule-modal.html',
   host: {
     '(document:keydown.escape)': 'close.emit()',

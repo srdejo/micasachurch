@@ -21,7 +21,7 @@
         <p class="flex flex-wrap items-center gap-x-2 gap-y-2 font-bold text-paper m-0" style="font-size: 1.05em;">
           @for (reference of bibleReferences(); track reference.label; let last = $last) {
             @if (reference.passages.length) {
-              <button type="button" (click)="openReader(reference.label)" [attr.aria-label]="'Leer ' + reference.label"
+              <button type="button" (click)="openReader(reference.label)" appTrackClick="biblia_en_un_ano" [trackParams]="{ referencia: reference.label }" [attr.aria-label]="'Leer ' + reference.label"
                 class="inline-flex items-center gap-1.5 rounded-full border border-accent/60 px-3 py-1 text-paper hover:bg-accent hover:text-ink cursor-pointer">
                 {{ reference.label }} <span aria-hidden="true" class="text-[0.8em]">→</span>
               </button>
@@ -35,7 +35,7 @@
     <p class="text-xs uppercase tracking-widest text-accent font-semibold">Lectura: {{ entry()!.passage_reference }}</p>
     <h3 class="font-display font-black uppercase text-paper leading-[0.95]" style="font-size: 2.6em;">{{ entry()!.title }}</h3>
     @if (entry()!.audio_url; as audioUrl) {
-      <app-audio-player [src]="audioUrl" variant="dark" />
+      <app-audio-player [src]="audioUrl" variant="dark" page="devocional" />
     }
     <blockquote class="border-l-2 border-accent bg-paper/[0.06] rounded-r-lg px-6 py-4">
       <p class="text-paper/95 leading-[1.6]" style="font-size: 1.15em;">{{ entry()!.verse }}</p>
