@@ -54,6 +54,10 @@ PostgreSQL + Spring Data JPA. Migraciones Flyway en `bootstrap/src/main/resource
 
 Si en el futuro se necesita, por ejemplo, un archivo histórico propio o traducción editorial, esto se puede revisar — no está descartado para siempre, solo fuera de alcance del MVP actual.
 
+### Texto bíblico de "La Biblia en un año"
+
+Sigue la misma regla: el lector de pasajes de `/devocional` pide el texto a la YouVersion Platform con su SDK (`@youversion/platform-core`) desde el navegador, y solo cuando el visitante abre una referencia. El backend nunca lo ve ni lo guarda. La App Key (`youversionAppKey` en `environments/`) es pública por diseño. Las versiones en español disponibles dependen de las licencias de esa App Key, y cada pasaje se muestra con la atribución de copyright de su versión. Detalle en `openspec/specs/bible-reader/spec.md`.
+
 ## Frontend — `frontend-landing`
 
 Una sola página larga (`pages/home`) con secciones ancladas (`#inicio`, `#devocional`, `#predicas`, `#eventos`, `#grupos`, `#ministerios`, `#oracion`, `#visitar`), más una ruta separada `/devocional` para navegar el devocional por fecha (query param `?fecha=YYYY-MM-DD`). SSR vía `@angular/ssr`; la ruta `/devocional` se sirve en modo cliente (`RenderMode.Client`) porque su contenido depende de la fecha y de una API externa — el resto se prerenderiza.

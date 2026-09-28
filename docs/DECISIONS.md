@@ -8,7 +8,7 @@ El sitio es para una sola congregación con un único administrador. Se descart�
 
 ## Devocional consultado en vivo, sin persistir
 
-Ver `docs/ARCHITECTURE.md` § "El devocional NO se persiste". Resumen: `frontend-landing` llama directo a la API pública de Our Daily Bread desde el navegador del visitante; el backend nunca ve ni guarda ese contenido.
+Ver `docs/ARCHITECTURE.md` § "El devocional NO se persiste". Resumen: `frontend-landing` llama directo a la API pública de Our Daily Bread desde el navegador del visitante; el backend nunca ve ni guarda ese contenido. El texto bíblico de "La Biblia en un año" sigue la misma regla con la YouVersion Platform (mismo apartado).
 
 ## Cambios del admin persisten al vuelo, sin "borrador vs. publicado"
 

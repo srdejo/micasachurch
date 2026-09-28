@@ -102,6 +102,10 @@ Quitar `micasachurch.co`/`www.micasachurch.co` de `server_name` en el archivo `n
 
 Mismo patrón de subdominios separados que `hotel`/`consulting` (no un solo dominio con `/api/` como `nolost`/`agent-project`) — por eso el backend necesita CORS habilitado para los orígenes de ambos frontends (`platform/security/SecurityConfig.java`, property `cors.allowed-origin` ← env var `CORS_ALLOWED_ORIGIN`, admite una lista separada por comas).
 
+## App Key de YouVersion (`frontend-landing`)
+
+El lector de "La Biblia en un año" usa una App Key gratuita de [platform.youversion.com](https://platform.youversion.com/). Va en `youversionAppKey` de `frontend-landing/src/environments/environment*.ts` y se compila en el bundle; es pública por diseño de la plataforma (viaja en el navegador), no es un secreto. Con el valor vacío, las referencias se muestran como texto y el lector no aparece. Las versiones en español disponibles dependen de las licencias que la plataforma habilite para esa App Key.
+
 ## Puerto
 
 Backend reservado en `127.0.0.1:8088` (loopback, nginx haría proxy). Ver `infra/PORTS.md` del workspace.

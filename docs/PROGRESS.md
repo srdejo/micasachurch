@@ -192,3 +192,19 @@ Cambio OpenSpec `openspec/changes/ajustes-en-vivo-y-devocional/`. **No está en 
 - `ng test` (43) y `ng build` en verde. Verificado en local: orden de `/devocional`, barra móvil con una transmisión especial
   de prueba (solo "En vivo", con su enlace) y sin ella, Prédicas sin "En vivo".
 - Daniel confirmó en su navegador (2026-09-27) que el audio real suena, se adelanta con la barra, cambia de velocidad y en el inicio se escucha sin salir de la página.
+
+## Leer "La Biblia en un año" en la página (2026-09-28)
+
+Cambio OpenSpec `openspec/changes/leer-biblia-en-un-ano/`. **No está en producción.**
+
+- En `/devocional`, cada referencia de "La Biblia en un año" es un botón que abre un lector modal (`shared/bible-reader`) con el texto
+  de la YouVersion Platform (`@youversion/platform-core` 2.15.0, cargado en diferido), pestañas por lectura, selector de versión
+  recordado en el navegador y la atribución de copyright. App Key en `environments/` (ver `docs/DEPLOYMENT.md`).
+- Versiones en español (tras aceptar los contratos en platform.youversion.com, 2026-09-28): LBLA, NBLA, NVI (Español y Castellano),
+  NVIs, PdDpt y VBL. GlossSP y RVES se ocultan (no se pueden leer). Se prefiere NTV y luego PDT, pero **ninguna está licenciada** hoy, así que sale LBLA.
+- La API no acepta rangos de capítulos: el parser (`core/bible-reference.ts`) pide un capítulo por vez; los rangos de versículos
+  entre capítulos quedan como texto.
+- `angular.json`: `externalDependencies: ["jsdom"]` (el SDK solo lo importa si no hay `DOMParser`, nunca en el navegador).
+- `ng test` (71) y `ng build` en verde. Verificado en local contra la API real: abrir Isaías 5–6 (dos capítulos) y Efesios 1,
+  cambiar pestaña y versión, atribución, versión recordada tras recargar, RVES descartada, Escape devuelve el foco, foco atrapado
+  con Tab, 360 px sin scroll horizontal y con scroll interno, "Reintentar" con la red a YouVersion bloqueada.

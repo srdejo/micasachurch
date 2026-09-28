@@ -18,7 +18,18 @@
     @if (entry()!.bible_in_a_year_references) {
       <div data-testid="bible-in-a-year" class="rounded-[20px] border border-paper/15 p-4 text-sm">
         <p class="text-xs uppercase tracking-wide text-paper/50 font-semibold mb-1">La Biblia en un año</p>
-        <p class="font-bold text-paper" style="font-size: 1.05em;">{{ entry()!.bible_in_a_year_references }}</p>
+        <p class="flex flex-wrap items-center gap-x-2 gap-y-2 font-bold text-paper m-0" style="font-size: 1.05em;">
+          @for (reference of bibleReferences(); track reference.label; let last = $last) {
+            @if (reference.passages.length) {
+              <button type="button" (click)="openReader(reference.label)" [attr.aria-label]="'Leer ' + reference.label"
+                class="inline-flex items-center gap-1.5 rounded-full border border-accent/60 px-3 py-1 text-paper hover:bg-accent hover:text-ink cursor-pointer">
+                {{ reference.label }} <span aria-hidden="true" class="text-[0.8em]">→</span>
+              </button>
+            } @else {
+              <span>{{ reference.label }}{{ last ? '' : ';' }}</span>
+            }
+          }
+        </p>
       </div>
     }
     <p class="text-xs uppercase tracking-widest text-accent font-semibold">Lectura: {{ entry()!.passage_reference }}</p>
@@ -31,6 +42,9 @@
     </blockquote>
     <div class="prose prose-invert max-w-none text-paper/85 leading-relaxed [&_p]:mb-4" [innerHTML]="entry()!.content"></div>
   </article>
+  @if (readerIndex() !== null) {
+    <app-bible-reader [references]="readableReferences()" [initialIndex]="readerIndex()!" (close)="readerIndex.set(null)" />
+  }
 } @else {
   <p class="text-paper/60">No hay devocional disponible para esta fecha.</p>
 }
