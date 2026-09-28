@@ -213,3 +213,19 @@ Cambio OpenSpec `openspec/changes/leer-biblia-en-un-ano/`. **No está en producc
   Isaías 5–6 en LBLA con su atribución y el selector muestra las 7 versiones legibles. `deploy.ps1` debe correrse desde PowerShell:
   lanzado desde Git Bash toma el `scp` de Git, que no expande el `*` de rutas de Windows (falla antes de tocar el servidor).
 - Cambio archivado en `openspec/changes/archive/2026-09-28-leer-biblia-en-un-ano/`; specs `bible-reader` (nuevo) y `public-landing` sincronizados.
+
+## Analítica con Google Analytics 4 (2026-09-28)
+
+Cambio archivado en `openspec/changes/archive/2026-09-28-analitica-de-visitas/` (spec nuevo `site-analytics`). **En producción** (commit `f885764`, `deploy.ps1 -Projects micasachurch -Action Frontend`).
+
+- `frontend-landing` carga GA4 (`G-PVHHGYBS0L`) solo en el navegador; eventos `en_vivo`, `whatsapp`, `como_llegar`, `red_social`,
+  `biblia_en_un_ano`, `peticion_oracion` y `devocional_audio`, sin datos personales. Sin banner de cookies por decisión de Daniel.
+- `frontend-admin`: vista "Estadísticas" con el informe de Looker Studio incrustado y enlace a Google Analytics.
+- En la propiedad GA4 ya existen el filtro "Tráfico de desarrolladores" y las dimensiones `origen`, `referencia`, `pagina` y `red`.
+- `ng test` de `frontend-landing` (86) en verde; en `frontend-admin` fallan 7 pruebas de `auth.service.spec.ts` que ya fallaban
+  antes: Node 25 trae un `localStorage` global que tapa el de jsdom (`localStorage.clear is not a function`).
+- Verificado: el bundle de producción trae el ID, el HTML prerenderizado no trae la etiqueta, el admin trae la URL del informe y el
+  informe se ve incrustado. En local, las vistas y los eventos salen hacia GA4 con sus parámetros y `debug_mode`.
+- **Pendiente de confirmar por Daniel** (tareas 2.4, 5.1 y 5.2 quedaron abiertas al archivar): que las visitas lleguen a GA4
+  ("Tiempo real" y DebugView; el Chrome de automatización bloquea google-analytics.com con 503), que el admin muestre el informe
+  con su sesión, y completar el informe de Looker Studio con páginas, procedencia, dispositivos y eventos (hoy: vistas, países y total).
