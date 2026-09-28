@@ -127,3 +127,27 @@ Gotham y Dharma Gothic (la guía de marca) son comerciales: se usan League Gothi
 Montserrat Bold (subtítulos, etiquetas, botones), las equivalentes libres más cercanas, con Montserrat
 Regular y Poppins para texto. Todas autoalojadas en `public/fonts/` con su licencia OFL. Si la iglesia
 licencia las originales, basta cambiar los archivos y la familia de `font-display`.
+
+## Rediseño de Claude Design: fuentes oficiales, temas y "En vivo" automático (2026-09-27)
+
+Cambio OpenSpec `openspec/changes/rediseno-claude-design/` (diseño del proyecto de Claude Design
+`355f07fc…`: `Mi Casa Church Ocaña.dc.html`, versión móvil y `Admin.dc.html`).
+
+- **Fuentes**: Daniel confirma que la iglesia tiene licencia web de Gotham y Dharma Gothic E, así que se
+  revierte la decisión anterior de usar sustitutos OFL. Se autoalojan los archivos del diseño convertidos
+  a `.woff2` (Dharma 300/800/900 para títulos en mayúsculas; Gotham Book/Book Italic/Bold/Black para
+  texto) en `public/fonts/` de ambos frontends. **Esas carpetas están en `.gitignore`**: el repo es público y la
+  licencia web permite servirlas en el sitio, no redistribuir los archivos. Viven solo en la máquina de Daniel (el
+  deploy compila desde ahí). Para reconstruirlas en otro equipo: bajar `fonts/*.otf|ttf` del proyecto de Claude Design
+  y convertirlas con `wawoff2` (npm) a `DharmaGothicE-Light|ExBold|Heavy.woff2` y `Gotham-Book|BookItalic|Bold|Black.woff2`
+  en `frontend-landing/public/fonts/` y `frontend-admin/public/fonts/`.
+- **Temas en vez de tres colores**: el diseño trabaja con un acento, un tono profundo y uno suave sobre
+  neutros fijos (tinta `#111110`, crema `#FAF8F4`/`#F1EEE8`). Hay tres temas fijos (Naranja por defecto,
+  Coral, Celeste) en la tabla `theme_palettes`; el admin edita sus colores y elige el activo en
+  "Apariencia". V10 elimina las columnas `primary/secondary/tertiary_color` de V9 (en producción seguían
+  con los valores por defecto).
+- **"En vivo" se calcula en el navegador** con la hora de `America/Bogota`, a partir de los horarios
+  transmitidos (con duración) y las transmisiones especiales. Calcularlo en el backend obligaba a hacer
+  polling y dejaba el HTML prerenderizado con un estado viejo; en SSR se muestra un estado neutro.
+- **Banners, transmisiones especiales y temas se guardan al vuelo**, como horarios y enlaces; la cola
+  "Pendientes por publicar" detallada del diseño queda fuera de este cambio.

@@ -28,16 +28,25 @@ public class ServiceScheduleJpaEntity {
     @Column(name = "display_order", nullable = false)
     private int displayOrder;
 
+    @Column(name = "duration_minutes", nullable = false)
+    private int durationMinutes;
+
     protected ServiceScheduleJpaEntity() {
     }
 
-    public ServiceScheduleJpaEntity(UUID id, String day, String time, String note, boolean streamed, int displayOrder) {
+    public ServiceScheduleJpaEntity(UUID id, String day, String time, String note, boolean streamed, int displayOrder,
+                                    int durationMinutes) {
         this.id = id;
         this.day = day;
         this.time = time;
         this.note = note;
         this.streamed = streamed;
         this.displayOrder = displayOrder;
+        this.durationMinutes = durationMinutes;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
     }
 
     public UUID getId() {

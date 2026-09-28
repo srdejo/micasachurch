@@ -10,4 +10,6 @@ public interface SiteImageRepository {
     Optional<SiteImage> findByKey(String key);
 
     SiteImage save(SiteImage siteImage);
+
+    void deleteByKey(String key);
 }

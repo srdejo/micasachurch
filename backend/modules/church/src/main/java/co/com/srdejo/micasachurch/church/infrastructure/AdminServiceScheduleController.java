@@ -45,14 +45,14 @@ public class AdminServiceScheduleController {
     @Transactional
     public PublicController.ServiceScheduleResponse create(@Valid @RequestBody CreateServiceScheduleRequest request) {
         return PublicController.toResponse(serviceScheduleService.create(request.day(), request.time(),
-                request.note(), request.streamed()));
+                request.note(), request.streamed(), request.durationMinutes()));
     }
 
     @PatchMapping("/{id}")
     @Transactional
     public PublicController.ServiceScheduleResponse update(@PathVariable UUID id, @Valid @RequestBody ServiceScheduleRequest request) {
         return PublicController.toResponse(serviceScheduleService.update(id, request.day(), request.time(),
-                request.note(), request.streamed()));
+                request.note(), request.streamed(), request.durationMinutes()));
     }
 
     @DeleteMapping("/{id}")
@@ -61,10 +61,11 @@ public class AdminServiceScheduleController {
         serviceScheduleService.delete(id);
     }
 
-    /** `day` es opcional: si no llega, el servicio conserva el dia que ya tenia. */
-    public record ServiceScheduleRequest(String day, String time, String note, boolean streamed) {
+    /** `day` y `durationMinutes` son opcionales: si no llegan, el servicio conserva los que ya tenia. */
+    public record ServiceScheduleRequest(String day, String time, String note, boolean streamed, Integer durationMinutes) {
     }
 
-    public record CreateServiceScheduleRequest(@NotBlank String day, @NotBlank String time, String note, boolean streamed) {
+    public record CreateServiceScheduleRequest(@NotBlank String day, @NotBlank String time, String note, boolean streamed,
+                                               Integer durationMinutes) {
     }
 }

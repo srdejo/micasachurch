@@ -1,37 +1,35 @@
 /** @type {import('tailwindcss').Config} */
-const mix = (color, percent, base) => `color-mix(in srgb, var(${color}) ${percent}%, var(${base}))`;
-
 module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
-      // Los tonos derivados se calculan sobre las tres variables de marca para que sigan
-      // siendo coherentes cuando el admin cambia los colores.
+      // El acento viene del tema activo (variables CSS que cambia el admin); los neutros son fijos.
       colors: {
-        primary: {
-          DEFAULT: 'var(--brand-primary)',
-          hover: mix('--brand-primary', 82, '--brand-secondary'),
+        accent: {
+          DEFAULT: 'var(--accent)',
+          deep: 'var(--accent-deep)',
+          soft: 'var(--accent-soft)',
         },
-        secondary: {
-          DEFAULT: 'var(--brand-secondary)',
-          soft: mix('--brand-secondary', 80, '--brand-tertiary'),
-          muted: mix('--brand-secondary', 64, '--brand-tertiary'),
-          subtle: mix('--brand-secondary', 54, '--brand-tertiary'),
+        ink: {
+          DEFAULT: '#111110',
+          2: '#1C1B19',
+          3: '#2A2926',
+          4: '#2E2C29',
         },
-        tertiary: 'var(--brand-tertiary)',
+        cream: {
+          DEFAULT: '#FAF8F4',
+          2: '#F1EEE8',
+          3: '#E6E1D8',
+          4: '#FBF8F2',
+        },
+        paper: '#F7F5F0',
+        body: '#4A4744',
+        muted: '#5B5750',
         danger: '#b42318',
-        surface: {
-          alt: mix('--brand-secondary', 5, '--brand-tertiary'),
-          light: mix('--brand-secondary', 2, '--brand-tertiary'),
-        },
       },
       fontFamily: {
-        display: ['"League Gothic"', 'Impact', '"Arial Narrow"', 'sans-serif'],
-        sans: ['Montserrat', 'Poppins', 'system-ui', 'sans-serif'],
-      },
-      borderRadius: {
-        card: '20px',
-        pill: '999px',
+        display: ['Dharma', 'Oswald', 'Impact', '"Arial Narrow"', 'sans-serif'],
+        sans: ['Gotham', 'Montserrat', 'system-ui', 'sans-serif'],
       },
     },
   },

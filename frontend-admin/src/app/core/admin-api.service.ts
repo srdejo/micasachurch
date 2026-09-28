@@ -37,7 +37,10 @@ export interface ServiceScheduleItem {
   note: string;
   streamed: boolean;
   displayOrder: number;
+  durationMinutes: number;
 }
+
+export type ServiceSchedulePayload = { day: string; time: string; note: string; streamed: boolean; durationMinutes: number };
 
 export interface LinkEntryItem {
   id: string;
@@ -48,10 +51,47 @@ export interface LinkEntryItem {
 
 export interface SiteSettings {
   liveBannerVisible: boolean;
-  primaryColor: string;
-  secondaryColor: string;
-  tertiaryColor: string;
+  activeTheme: string;
+  accentColor: string;
+  deepColor: string;
+  softColor: string;
 }
+
+export interface ThemePalette {
+  name: string;
+  accentColor: string;
+  deepColor: string;
+  softColor: string;
+}
+
+export type ThemeColorField = 'accentColor' | 'deepColor' | 'softColor';
+
+export interface HeroBannerItem {
+  id: string;
+  kicker: string | null;
+  title: string;
+  text: string | null;
+  ctaLabel: string | null;
+  ctaHref: string | null;
+  imageKey: string | null;
+  imageUpdatedAt: string | null;
+  active: boolean;
+  displayOrder: number;
+}
+
+export type HeroBannerPayload = Pick<HeroBannerItem, 'kicker' | 'title' | 'text' | 'ctaLabel' | 'ctaHref' | 'active'>;
+
+export interface LiveEventItem {
+  id: string;
+  title: string;
+  date: string;
+  startTime: string;
+  durationMinutes: number;
+  url: string;
+  active: boolean;
+}
+
+export type LiveEventPayload = Omit<LiveEventItem, 'id'>;
 
 export interface AdminUserItem {
   id: string;
@@ -132,11 +172,11 @@ export class AdminApiService {
     return this.http.get<ServiceScheduleItem[]>(`${this.baseUrl}/services`);
   }
 
-  updateService(id: string, payload: { day: string; time: string; note: string; streamed: boolean }) {
+  updateService(id: string, payload: ServiceSchedulePayload) {
     return this.http.patch<ServiceScheduleItem>(`${this.baseUrl}/services/${id}`, payload);
   }
 
-  createService(payload: { day: string; time: string; note: string; streamed: boolean }) {
+  createService(payload: ServiceSchedulePayload) {
     return this.http.post<ServiceScheduleItem>(`${this.baseUrl}/services`, payload);
   }
 
@@ -156,8 +196,62 @@ export class AdminApiService {
     return this.http.get<SiteSettings>(`${this.baseUrl}/site-settings`);
   }
 
-  updateSiteSettings(payload: Partial<SiteSettings>) {
+  updateSiteSettings(payload: Partial<Pick<SiteSettings, 'liveBannerVisible' | 'activeTheme'>>) {
     return this.http.patch<SiteSettings>(`${this.baseUrl}/site-settings`, payload);
+  }
+
+  listThemes() {
+    return this.http.get<ThemePalette[]>(`${this.baseUrl}/themes`);
+  }
+
+  updateTheme(name: string, payload: Partial<Record<ThemeColorField, string>>) {
+    return this.http.patch<ThemePalette>(`${this.baseUrl}/themes/${encodeURIComponent(name)}`, payload);
+  }
+
+  listBanners() {
+    return this.http.get<HeroBannerItem[]>(`${this.baseUrl}/banners`);
+  }
+
+  createBanner(title: string) {
+    return this.http.post<HeroBannerItem>(`${this.baseUrl}/banners`, { title });
+  }
+
+  updateBanner(id: string, payload: HeroBannerPayload) {
+    return this.http.patch<HeroBannerItem>(`${this.baseUrl}/banners/${id}`, payload);
+  }
+
+  uploadBannerImage(id: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<HeroBannerItem>(`${this.baseUrl}/banners/${id}/image`, formData);
+  }
+
+  deleteBanner(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/banners/${id}`);
+  }
+
+  listLiveEvents() {
+    return this.http.get<LiveEventItem[]>(`${this.baseUrl}/live-events`);
+  }
+
+  createLiveEvent(payload: LiveEventPayload) {
+    return this.http.post<LiveEventItem>(`${this.baseUrl}/live-events`, payload);
+  }
+
+  updateLiveEvent(id: string, payload: LiveEventPayload) {
+    return this.http.patch<LiveEventItem>(`${this.baseUrl}/live-events/${id}`, payload);
+  }
+
+  deleteLiveEvent(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/live-events/${id}`);
+  }
+
+  bannerImageUrl(banner: HeroBannerItem): string | null {
+    if (!banner.imageKey) {
+      return null;
+    }
+    const version = banner.imageUpdatedAt ? `?v=${encodeURIComponent(banner.imageUpdatedAt)}` : '';
+    return `${this.imageUrl(banner.imageKey)}${version}`;
   }
 
   changePassword(payload: { currentPassword: string; newPassword: string }) {

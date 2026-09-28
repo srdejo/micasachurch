@@ -16,6 +16,11 @@ import co.com.srdejo.micasachurch.church.application.ServiceScheduleService;
 import co.com.srdejo.micasachurch.church.application.SiteContentService;
 import co.com.srdejo.micasachurch.church.application.SiteImageService;
 import co.com.srdejo.micasachurch.church.application.SiteSettingsService;
+import co.com.srdejo.micasachurch.church.application.ThemePaletteService;
+import co.com.srdejo.micasachurch.church.application.HeroBannerService;
+import co.com.srdejo.micasachurch.church.application.LiveEventService;
+import co.com.srdejo.micasachurch.church.domain.HeroBannerRepository;
+import co.com.srdejo.micasachurch.church.domain.LiveEventRepository;
 import co.com.srdejo.micasachurch.church.domain.AdminUserRepository;
 import co.com.srdejo.micasachurch.church.domain.EventRepository;
 import co.com.srdejo.micasachurch.church.domain.LinkEntryRepository;
@@ -27,11 +32,14 @@ import co.com.srdejo.micasachurch.church.domain.ServiceScheduleRepository;
 import co.com.srdejo.micasachurch.church.domain.SiteContentRepository;
 import co.com.srdejo.micasachurch.church.domain.SiteImageRepository;
 import co.com.srdejo.micasachurch.church.domain.SiteSettingsRepository;
+import co.com.srdejo.micasachurch.church.domain.ThemePaletteRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestClient;
+
+import java.time.Clock;
 
 @Configuration
 public class ChurchConfig {
@@ -62,8 +70,24 @@ public class ChurchConfig {
     }
 
     @Bean
-    public SiteSettingsService siteSettingsService(SiteSettingsRepository siteSettingsRepository) {
-        return new SiteSettingsService(siteSettingsRepository);
+    public SiteSettingsService siteSettingsService(SiteSettingsRepository siteSettingsRepository,
+                                                   ThemePaletteRepository themePaletteRepository) {
+        return new SiteSettingsService(siteSettingsRepository, themePaletteRepository);
+    }
+
+    @Bean
+    public HeroBannerService heroBannerService(HeroBannerRepository heroBannerRepository) {
+        return new HeroBannerService(heroBannerRepository);
+    }
+
+    @Bean
+    public LiveEventService liveEventService(LiveEventRepository liveEventRepository) {
+        return new LiveEventService(liveEventRepository, Clock.systemUTC());
+    }
+
+    @Bean
+    public ThemePaletteService themePaletteService(ThemePaletteRepository themePaletteRepository) {
+        return new ThemePaletteService(themePaletteRepository);
     }
 
     @Bean

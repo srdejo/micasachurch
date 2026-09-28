@@ -1,0 +1,120 @@
+<div class="flex flex-col gap-1 mb-7">
+  <h1 class="text-[56px] leading-[0.95] m-0">Transmisiones especiales</h1>
+  <span class="text-[15px] text-muted">Eventos en vivo fuera del horario habitual</span>
+</div>
+
+<div class="flex flex-col gap-5 max-w-[1000px]">
+  <div class="rounded-2xl bg-ink text-paper p-6 grid grid-cols-[1fr_1.2fr] max-lg:grid-cols-1 gap-7 items-start">
+    <div class="flex flex-col gap-2">
+      <span class="font-display font-black uppercase text-[34px] leading-[0.95]">En vivo automático</span>
+      <span class="text-[14.5px] leading-[1.6] text-paper/70">
+        La página marca EN VIVO sola durante estos horarios (hora de Colombia). Las transmisiones especiales de abajo se
+        suman y tienen prioridad si coinciden. Los horarios se editan en «Horarios y en vivo».
+      </span>
+    </div>
+    <div class="flex flex-col">
+      @for (s of streamedServices(); track s.id) {
+        <div class="grid grid-cols-[130px_90px_1fr] gap-3 py-[9px] border-b border-paper/[0.12] text-sm">
+          <span class="font-bold">{{ s.day }}</span>
+          <span class="text-accent">{{ s.time }}</span>
+          <span class="text-paper/70">{{ s.note }} · {{ s.durationMinutes }} min</span>
+        </div>
+      } @empty {
+        <span class="text-sm text-paper/70">Ningún horario está marcado como transmitido.</span>
+      }
+    </div>
+  </div>
+
+  <div class="panel-card p-5 flex flex-col gap-3.5">
+    <span class="font-bold">Nueva transmisión</span>
+    <span class="text-[15px] text-muted -mt-2">Cultos especiales, conferencias, bautizos o cualquier evento que se transmita.</span>
+    <div class="grid grid-cols-[1.4fr_1fr_0.8fr_0.7fr] max-lg:grid-cols-2 gap-3">
+      <label class="flex flex-col gap-1.5">
+        <span class="field-label">Título</span>
+        <input [ngModel]="draft().title" (ngModelChange)="updateDraft({ title: $event })" placeholder="Noche de alabanza" class="field" />
+      </label>
+      <label class="flex flex-col gap-1.5">
+        <span class="field-label">Fecha</span>
+        <input type="date" [ngModel]="draft().date" (ngModelChange)="updateDraft({ date: $event })" class="field" />
+      </label>
+      <label class="flex flex-col gap-1.5">
+        <span class="field-label">Hora</span>
+        <input type="time" [ngModel]="draft().startTime" (ngModelChange)="updateDraft({ startTime: $event })" class="field" />
+      </label>
+      <label class="flex flex-col gap-1.5">
+        <span class="field-label">Minutos</span>
+        <input type="number" min="15" step="15" [ngModel]="draft().durationMinutes" (ngModelChange)="updateDraft({ durationMinutes: $event })" class="field" />
+      </label>
+      <label class="flex flex-col gap-1.5 col-span-full">
+        <span class="field-label">Enlace de la transmisión</span>
+        <input [ngModel]="draft().url" (ngModelChange)="updateDraft({ url: $event })" class="field" />
+      </label>
+    </div>
+    <div class="flex items-center gap-3">
+      <button type="button" (click)="create()" [disabled]="creating()" class="btn-accent">
+        {{ creating() ? 'Guardando...' : 'Programar transmisión' }}
+      </button>
+      @if (createError()) {
+        <span class="text-sm text-danger">{{ createError() }}</span>
+      }
+    </div>
+  </div>
+
+  @for (e of events(); track e.id) {
+    <div class="panel-card px-[22px] py-5 flex flex-col gap-3.5">
+      <div class="flex items-center justify-between gap-4">
+        <input [(ngModel)]="e.title" aria-label="Título"
+          class="flex-1 min-w-0 border-0 bg-transparent p-0 font-display font-black uppercase text-[34px] text-ink outline-none" />
+        <div class="flex items-center gap-3.5 flex-none">
+          <button type="button" (click)="toggleActive(e)" [disabled]="busyId() === e.id"
+            class="rounded-full text-[13px] font-semibold px-3.5 py-[7px] border"
+            [ngClass]="e.active ? 'bg-accent border-accent text-ink' : 'bg-transparent border-ink/25 text-muted'">
+            {{ e.active ? 'Activa' : 'Apagada' }}
+          </button>
+          <button type="button" (click)="pendingDelete.set(e)" class="link-danger">Eliminar</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-[1fr_0.8fr_0.7fr_2fr] max-lg:grid-cols-2 gap-3">
+        <label class="flex flex-col gap-1.5">
+          <span class="field-label">Fecha</span>
+          <input type="date" [(ngModel)]="e.date" class="field" />
+        </label>
+        <label class="flex flex-col gap-1.5">
+          <span class="field-label">Hora</span>
+          <input type="time" [(ngModel)]="e.startTime" class="field" />
+        </label>
+        <label class="flex flex-col gap-1.5">
+          <span class="field-label">Minutos</span>
+          <input type="number" min="15" step="15" [(ngModel)]="e.durationMinutes" class="field" />
+        </label>
+        <label class="flex flex-col gap-1.5">
+          <span class="field-label">Enlace de la transmisión</span>
+          <input [(ngModel)]="e.url" class="field" />
+        </label>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" (click)="save(e)" [disabled]="busyId() === e.id"
+          class="rounded-full bg-ink text-paper text-sm px-5 py-2.5 border-0 disabled:opacity-60 hover:bg-accent hover:text-ink">
+          {{ busyId() === e.id ? 'Guardando...' : 'Guardar' }}
+        </button>
+        @if (savedId() === e.id) {
+          <span class="text-xs text-accent-deep font-medium">Guardado ✓</span>
+        }
+        @if (errorById().get(e.id); as error) {
+          <span class="text-xs text-danger">{{ error }}</span>
+        }
+      </div>
+    </div>
+  } @empty {
+    <div class="panel-card border-dashed p-9 text-center text-[15px] text-muted">No hay transmisiones especiales programadas.</div>
+  }
+</div>
+
+@if (pendingDelete(); as target) {
+  <app-confirm-dialog
+    title="Eliminar transmisión"
+    [message]="'Se va a eliminar «' + target.title + '». No se puede deshacer.'"
+    [busy]="deleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="pendingDelete.set(null)" />
+}

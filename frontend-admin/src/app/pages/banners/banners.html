@@ -1,0 +1,104 @@
+<div class="flex flex-col gap-1 mb-7">
+  <h1 class="text-[56px] leading-[0.95] m-0">Banner principal</h1>
+  <span class="text-[15px] text-muted">Imágenes y textos del carrusel de portada</span>
+</div>
+
+<div class="flex flex-wrap items-center justify-between gap-5 mb-5">
+  <p class="m-0 text-[15px] text-muted max-w-[70ch]">
+    Rotan cada 6,5 segundos. En el enlace, <code>#horarios</code> abre la
+    ventana de horarios; también sirven anclas como <code>#redes</code>, rutas como <code>/devocional</code> o una dirección
+    <code>https://</code>. Los cambios se ven en la página al guardar; un banner nuevo empieza apagado.
+  </p>
+  <button type="button" (click)="add()" [disabled]="creating()" class="btn-accent flex-none">
+    {{ creating() ? 'Creando...' : 'Nuevo banner' }}
+  </button>
+</div>
+@if (createError()) {
+  <p class="text-sm text-danger mb-4">{{ createError() }}</p>
+}
+
+<div class="panel-card max-w-[1040px] p-4 mb-5 flex flex-wrap items-start gap-x-6 gap-y-2 text-sm">
+  <span class="inline-flex items-center rounded-full bg-accent-soft text-ink font-bold px-3 py-1">
+    Medida recomendada: 1920 × 1080 px (horizontal 16:9)
+  </span>
+  <span class="text-muted flex-1 min-w-[280px]">
+    Mínimo 1600 px de ancho · JPG o WebP · máximo 5 MB. El texto va sobre la parte izquierda e inferior de la foto, con un
+    degradado oscuro. En celulares la portada es casi vertical y la foto se recorta a los lados: deja lo importante en el centro.
+  </span>
+</div>
+
+<div class="flex flex-col gap-4 max-w-[1040px]">
+  @for (b of banners(); track b.id; let i = $index) {
+    <div class="panel-card p-[18px] grid grid-cols-[300px_1fr] max-lg:grid-cols-1 gap-[22px] items-start">
+      <div class="flex flex-col gap-2.5">
+        <div class="relative aspect-video rounded-xl overflow-hidden bg-ink">
+          @if (api.bannerImageUrl(b); as src) {
+            <img [src]="src" alt="" class="absolute inset-0 w-full h-full object-cover" />
+          } @else {
+            <span class="absolute inset-0 flex items-center justify-center text-paper/60 text-[13.5px]">Sin imagen</span>
+          }
+          <span class="absolute left-2.5 top-2.5 bg-accent text-ink text-xs font-black px-2 py-1 rounded-md">{{ i + 1 }}</span>
+        </div>
+        <label class="flex items-center justify-center border border-ink/25 rounded-[10px] p-[11px] text-[13.5px] font-bold cursor-pointer hover:border-ink"
+          [class.opacity-60]="busyId() === b.id">
+          {{ busyId() === b.id ? 'Subiendo...' : b.imageKey ? 'Cambiar imagen' : 'Subir imagen' }}
+          <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onFileSelected(b, $event)" class="hidden" />
+        </label>
+        <span class="text-xs text-faint">1920 × 1080 px · JPG, PNG o WebP · máx. 5 MB</span>
+      </div>
+
+      <div class="flex flex-col gap-2.5 min-w-0">
+        <div class="flex items-center justify-between gap-3">
+          <input [(ngModel)]="b.kicker" placeholder="Antetítulo (ej. Ocaña, Norte de Santander)" aria-label="Antetítulo"
+            class="flex-1 min-w-0 border-0 bg-transparent p-0 text-[12.5px] tracking-[0.16em] uppercase font-bold text-accent-deep outline-none" />
+          <div class="flex items-center gap-3.5 flex-none">
+            <button type="button" (click)="toggleActive(b)" [disabled]="busyId() === b.id"
+              class="rounded-full text-[13px] font-semibold px-3.5 py-[7px] border"
+              [ngClass]="b.active ? 'bg-accent border-accent text-ink' : 'bg-transparent border-ink/25 text-muted'">
+              {{ b.active ? 'Publicado' : 'Apagado' }}
+            </button>
+            <button type="button" (click)="pendingDelete.set(b)" class="link-danger">Eliminar</button>
+          </div>
+        </div>
+        <input [(ngModel)]="b.title" aria-label="Título"
+          class="border-0 bg-transparent p-0 font-display font-black uppercase text-[44px] leading-none text-ink outline-none w-full" />
+        <textarea [(ngModel)]="b.text" rows="2" placeholder="Texto del banner" aria-label="Texto" class="field resize-y"></textarea>
+        <div class="grid grid-cols-2 max-md:grid-cols-1 gap-2.5">
+          <label class="flex flex-col gap-1.5">
+            <span class="field-label">Texto del botón</span>
+            <input [(ngModel)]="b.ctaLabel" placeholder="Ver horarios" class="field" />
+          </label>
+          <label class="flex flex-col gap-1.5">
+            <span class="field-label">Enlace del botón</span>
+            <input [(ngModel)]="b.ctaHref" placeholder="#horarios" class="field" />
+          </label>
+        </div>
+        <div class="flex items-center gap-3 mt-1">
+          <button type="button" (click)="save(b)" [disabled]="busyId() === b.id"
+            class="rounded-full bg-ink text-paper text-sm px-5 py-2.5 border-0 disabled:opacity-60 hover:bg-accent hover:text-ink">
+            {{ busyId() === b.id ? 'Guardando...' : 'Guardar' }}
+          </button>
+          @if (savedId() === b.id) {
+            <span class="text-xs text-accent-deep font-medium">Guardado ✓</span>
+          }
+          @if (errorById().get(b.id); as error) {
+            <span class="text-xs text-danger">{{ error }}</span>
+          }
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <div class="panel-card border-dashed p-10 text-center text-[15px] text-muted">
+      No hay banners. La portada muestra «Mi casa es tu casa» hasta que publiques uno.
+    </div>
+  }
+</div>
+
+@if (pendingDelete(); as target) {
+  <app-confirm-dialog
+    title="Eliminar banner"
+    [message]="'Se va a eliminar «' + target.title + '» y su imagen. Desaparece de la portada de inmediato y no se puede deshacer.'"
+    [busy]="deleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="pendingDelete.set(null)" />
+}

@@ -21,7 +21,7 @@ public class ServiceScheduleRepositoryAdapter implements ServiceScheduleReposito
     public ServiceSchedule save(ServiceSchedule serviceSchedule) {
         ServiceScheduleJpaEntity entity = new ServiceScheduleJpaEntity(serviceSchedule.getId(), serviceSchedule.getDay(),
                 serviceSchedule.getTime(), serviceSchedule.getNote(), serviceSchedule.isStreamed(),
-                serviceSchedule.getDisplayOrder());
+                serviceSchedule.getDisplayOrder(), serviceSchedule.getDurationMinutes());
         return toDomain(springDataRepository.save(entity));
     }
 
@@ -42,6 +42,6 @@ public class ServiceScheduleRepositoryAdapter implements ServiceScheduleReposito
 
     private ServiceSchedule toDomain(ServiceScheduleJpaEntity entity) {
         return new ServiceSchedule(entity.getId(), entity.getDay(), entity.getTime(), entity.getNote(),
-                entity.isStreamed(), entity.getDisplayOrder());
+                entity.isStreamed(), entity.getDisplayOrder(), entity.getDurationMinutes());
     }
 }

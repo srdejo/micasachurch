@@ -10,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /**
  * Domain/application exceptions carry an English message key (e.g. "auth.invalid_credentials"),
@@ -63,6 +64,13 @@ public class GlobalExceptionHandler {
                 .orElse("Validation error");
         log.warn("{} {} -> 400 [{}]", request.getMethod(), request.getRequestURI(), message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(message));
+    }
+
+    /** Spring rejects oversized uploads before any controller runs, so the Spanish message has to be mapped here. */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMaxUploadSize(MaxUploadSizeExceededException ex, HttpServletRequest request) {
+        log.warn("{} {} -> 413 [{}]", request.getMethod(), request.getRequestURI(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(ApiResponse.error(messageResolver.resolve("site_image.too_large")));
     }
 
     @ExceptionHandler(Exception.class)

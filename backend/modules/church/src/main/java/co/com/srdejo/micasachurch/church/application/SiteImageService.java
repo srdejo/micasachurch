@@ -5,6 +5,7 @@ import co.com.srdejo.micasachurch.church.domain.SiteImageRepository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public class SiteImageService {
 
@@ -16,6 +17,14 @@ public class SiteImageService {
 
     public List<SiteImage> listAll() {
         return siteImageRepository.findAll();
+    }
+
+    public Optional<SiteImage> findByKey(String key) {
+        return siteImageRepository.findByKey(key);
+    }
+
+    public void delete(String key) {
+        siteImageRepository.deleteByKey(key);
     }
 
     public SiteImage recordUpload(String key, String filename, String contentType) {

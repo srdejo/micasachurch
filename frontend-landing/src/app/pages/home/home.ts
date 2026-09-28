@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, afterNextRender, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
   ChurchApiService,
   EventItem,
+  HeroBannerItem,
   LinkEntryItem,
+  LiveEventItem,
   MinistryItem,
   NetworkItem,
   ServiceScheduleItem,
@@ -13,10 +15,17 @@ import {
   SiteSettings,
 } from '../../core/church-api.service';
 import { DevotionalApiService, DevotionalEntry } from '../../core/devotional-api.service';
+import { ChurchClock, LiveStatus, churchClock, computeLiveStatus } from '../../core/live-status';
+import { HeroCarousel } from '../../shared/hero-carousel/hero-carousel';
+import { AudioPlayer } from '../../shared/audio-player/audio-player';
+import { ScheduleModal } from '../../shared/schedule-modal/schedule-modal';
 
 const DEFAULT_FACEBOOK_URL = 'https://www.facebook.com/micasachurchocana';
+const DEFAULT_WHATSAPP_URL = 'https://wa.me/573045332589';
 const CHURCH_MAPS_URL =
   'https://www.google.com/maps/place/Cl.+7A+%23+37-8,+Oca%C3%B1a,+Norte+de+Santander/@8.2618302,-73.3598166,21z';
+const LIVE_REFRESH_MS = 30_000;
+const EVERY_DAY = 'todos los días';
 // Las mismas reglas que valida el backend en PrayerRequestService.
 const NAME_PATTERN = /^[\p{L} ]{1,80}$/u;
 const PHONE_PATTERN = /^\+?\d{7,15}$/;
@@ -27,10 +36,15 @@ interface PrayerErrors {
   message?: string;
 }
 
+interface DaySchedule {
+  day: string;
+  times: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, HeroCarousel, ScheduleModal, AudioPlayer],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
@@ -39,37 +53,18 @@ export class Home implements OnInit {
 
   readonly events = signal<EventItem[]>([]);
   readonly services = signal<ServiceScheduleItem[]>([]);
-  /**
-   * Horarios del hero, agrupados por día. El backend los devuelve ordenados por `displayOrder`
-   * (migración V8); aquí sólo se juntan las varias horas de un mismo día, como en el pie de página.
-   * Antes esto era `services().slice(0, 3)` y el "Domingo 8:30 a.m." desaparecía del hero.
-   */
-  readonly heroSchedule = computed(() => {
-    const byDay = new Map<string, { day: string; times: string[] }>();
-    for (const service of this.services()) {
-      const key = service.day.trim().toLowerCase();
-      const entry = byDay.get(key) ?? { day: service.day, times: [] };
-      entry.times.push(service.time);
-      byDay.set(key, entry);
-    }
-    return [...byDay.values()].map((e) => ({
-      day: e.day,
-      time: e.times.length > 1 ? `${e.times.slice(0, -1).join(', ')} y ${e.times.at(-1)}` : e.times[0],
-    }));
-  });
-
   readonly networks = signal<NetworkItem[]>([]);
   readonly links = signal<LinkEntryItem[]>([]);
   readonly siteSettings = signal<SiteSettings>({ liveBannerVisible: true });
+  readonly banners = signal<HeroBannerItem[]>([]);
+  readonly liveEvents = signal<LiveEventItem[]>([]);
+  readonly ministries = signal<MinistryItem[]>([]);
+  readonly siteContent = signal<SiteContentItem[]>([]);
 
   readonly devotional = signal<DevotionalEntry | null>(null);
   readonly devotionalLoading = signal(true);
   readonly devotionalError = signal(false);
 
-  readonly ministries = signal<MinistryItem[]>([]);
-  readonly siteContent = signal<SiteContentItem[]>([]);
-
-  readonly heroImageFailed = signal(false);
   readonly quienesSomosImageFailed = signal(false);
 
   readonly prayerForm = { name: '', phone: '', message: '' };
@@ -79,27 +74,51 @@ export class Home implements OnInit {
   readonly prayerError = signal<string | null>(null);
 
   readonly mobileMenuOpen = signal(false);
+  readonly scheduleOpen = signal(false);
   readonly prettyDate = this.formatPrettyDate(new Date());
   readonly churchMapsUrl = CHURCH_MAPS_URL;
 
-  toggleMobileMenu(): void {
-    this.mobileMenuOpen.update((open) => !open);
-  }
+  /** Null durante el render del servidor: el estado en vivo depende de la hora y solo se calcula en el navegador. */
+  private readonly clock = signal<ChurchClock | null>(null);
 
-  closeMobileMenu(): void {
-    this.mobileMenuOpen.set(false);
-  }
+  readonly liveStatus = computed<LiveStatus | null>(() => {
+    const clock = this.clock();
+    return clock ? computeLiveStatus(this.services(), this.liveEvents(), clock, this.facebookUrl()) : null;
+  });
 
-  facebookUrl(): string {
-    return this.linkValue('facebook') || DEFAULT_FACEBOOK_URL;
-  }
+  /** Oculta toda señal de "en vivo" cuando el admin apaga la franja. */
+  readonly live = computed(() => (this.siteSettings().liveBannerVisible ? (this.liveStatus()?.live ?? null) : null));
+  readonly liveUrl = computed(() => this.live()?.url ?? this.facebookUrl());
 
-  private formatPrettyDate(date: Date): string {
-    const meses = [
-      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
-    ];
-    return `${date.getDate()} de ${meses[date.getMonth()]} de ${date.getFullYear()}`;
+  /** Servicios agrupados por día (el devocional diario va aparte, al final de la franja). */
+  readonly weeklySchedule = computed<DaySchedule[]>(() => {
+    const byDay = new Map<string, { day: string; times: string[] }>();
+    for (const service of this.services()) {
+      const key = service.day.trim().toLowerCase();
+      if (key === EVERY_DAY) {
+        continue;
+      }
+      const entry = byDay.get(key) ?? { day: service.day, times: [] };
+      entry.times.push(service.time);
+      byDay.set(key, entry);
+    }
+    return [...byDay.values()].map((e) => ({
+      day: e.day,
+      times: e.times.length > 1 ? `${e.times.slice(0, -1).join(', ')} y ${e.times.at(-1)}` : e.times[0],
+    }));
+  });
+
+  readonly dailyDevotionalTime = computed(
+    () => this.services().find((s) => s.day.trim().toLowerCase() === EVERY_DAY)?.time ?? '7:00 a.m.',
+  );
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      this.clock.set(churchClock(new Date()));
+      const timer = setInterval(() => this.clock.set(churchClock(new Date())), LIVE_REFRESH_MS);
+      destroyRef.onDestroy(() => clearInterval(timer));
+    });
   }
 
   ngOnInit(): void {
@@ -111,9 +130,40 @@ export class Home implements OnInit {
       next: (data) => this.siteSettings.set(data),
       error: () => this.siteSettings.set({ liveBannerVisible: true }),
     });
+    this.api.getBanners().subscribe({ next: (data) => this.banners.set(data), error: () => this.banners.set([]) });
+    this.api.getLiveEvents().subscribe({ next: (data) => this.liveEvents.set(data), error: () => this.liveEvents.set([]) });
     this.api.getMinistries().subscribe({ next: (data) => this.ministries.set(data), error: () => this.ministries.set([]) });
     this.api.getSiteContent().subscribe({ next: (data) => this.siteContent.set(data), error: () => this.siteContent.set([]) });
     this.loadDevotional();
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
+  openSchedule(): void {
+    this.mobileMenuOpen.set(false);
+    this.scheduleOpen.set(true);
+  }
+
+  facebookUrl(): string {
+    return this.linkValue('facebook') || DEFAULT_FACEBOOK_URL;
+  }
+
+  whatsappUrl(): string {
+    return this.linkValue('whatsapp') || DEFAULT_WHATSAPP_URL;
+  }
+
+  eventInfoUrl(event: EventItem): string {
+    return `${this.whatsappUrl()}?text=${encodeURIComponent(`Quiero información de ${event.title}`)}`;
+  }
+
+  linkValue(key: string): string {
+    return this.links().find((l) => l.key === key)?.value ?? '';
   }
 
   contentValue(key: string, fallback: string): string {
@@ -122,6 +172,14 @@ export class Home implements OnInit {
 
   imageUrl(key: string): string {
     return this.api.imageUrl(key);
+  }
+
+  private formatPrettyDate(date: Date): string {
+    const meses = [
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+    ];
+    return `${date.getDate()} de ${meses[date.getMonth()]} de ${date.getFullYear()}`;
   }
 
   private loadDevotional(): void {
@@ -140,14 +198,6 @@ export class Home implements OnInit {
         this.devotionalLoading.set(false);
       },
     });
-  }
-
-  retryDevotional(): void {
-    this.loadDevotional();
-  }
-
-  linkValue(key: string): string {
-    return this.links().find((l) => l.key === key)?.value ?? '';
   }
 
   clearPrayerError(field: keyof PrayerErrors): void {

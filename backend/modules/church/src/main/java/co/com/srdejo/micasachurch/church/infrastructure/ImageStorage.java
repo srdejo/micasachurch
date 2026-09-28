@@ -56,6 +56,14 @@ public class ImageStorage {
         return filename;
     }
 
+    public void delete(String filename) {
+        try {
+            Files.deleteIfExists(uploadsDir.resolve(filename));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     public Path resolve(String filename) {
         return uploadsDir.resolve(filename);
     }

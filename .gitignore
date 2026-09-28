@@ -27,3 +27,8 @@ Thumbs.db
 .env.local
 
 designdownloaded
+
+# Fuentes comerciales con licencia web (Gotham, Dharma Gothic E): no se redistribuyen en el repo público.
+# De dónde sacarlas: docs/DECISIONS.md (2026-09-27, "Rediseño…").
+frontend-landing/public/fonts/
+frontend-admin/public/fonts/

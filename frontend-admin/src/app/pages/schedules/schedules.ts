@@ -3,7 +3,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminApiService, ServiceScheduleItem, SiteSettings } from '../../core/admin-api.service';
+import { parseTime } from '../../core/time-parse';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
+
+const DEFAULT_DURATION_MINUTES = 120;
 
 @Component({
   selector: 'app-schedules',
@@ -48,7 +51,13 @@ export class Schedules implements OnInit {
       return next;
     });
     this.api
-      .updateService(schedule.id, { day: schedule.day, time: schedule.time, note: schedule.note, streamed: schedule.streamed })
+      .updateService(schedule.id, {
+        day: schedule.day,
+        time: schedule.time,
+        note: schedule.note,
+        streamed: schedule.streamed,
+        durationMinutes: Number(schedule.durationMinutes),
+      })
       .subscribe({
         next: () => {
           this.savingId.set(null);
@@ -85,7 +94,7 @@ export class Schedules implements OnInit {
     }
     this.creating.set(true);
     this.createError.set(null);
-    this.api.createService({ day, time, note: this.newNote().trim(), streamed: false }).subscribe({
+    this.api.createService({ day, time, note: this.newNote().trim(), streamed: false, durationMinutes: DEFAULT_DURATION_MINUTES }).subscribe({
       next: () => {
         this.creating.set(false);
         this.newDay.set('');
@@ -122,6 +131,10 @@ export class Schedules implements OnInit {
         this.errorById.update((m) => new Map(m).set(schedule.id, err.error?.error ?? 'No se pudo eliminar.'));
       },
     });
+  }
+
+  timeNotRecognized(schedule: ServiceScheduleItem): boolean {
+    return schedule.streamed && parseTime(schedule.time) === null;
   }
 
   toggleBanner(): void {

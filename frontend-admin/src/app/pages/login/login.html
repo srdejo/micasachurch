@@ -1,28 +1,28 @@
-<div class="min-h-screen flex items-center justify-center bg-surface px-6">
-  <div class="w-full max-w-sm rounded-card bg-card border border-secondary/[0.14] p-8 shadow-sm">
+<div class="min-h-screen flex items-center justify-center bg-cream-2 px-6">
+  <div class="w-full max-w-sm rounded-2xl bg-cream-4 border border-ink/[0.14] p-8 shadow-sm">
     <div class="text-center mb-8">
       <img src="img/brand/isotipo.png" alt="Mi Casa Church" width="256" height="220" class="inline-block h-14 w-auto mb-4" />
       <h1 class="text-[40px] leading-none font-display">Mi Casa Church</h1>
-      <p class="text-secondary-muted text-sm">Panel administrativo</p>
+      <p class="text-muted text-sm">Panel administrativo</p>
     </div>
     <form (ngSubmit)="submit()" class="space-y-4">
       <input [ngModel]="username()" (ngModelChange)="username.set($event)" name="username" type="text" placeholder="Usuario"
-        class="w-full rounded-card border border-secondary/15 px-4 py-3 outline-none focus:border-primary" />
+        class="w-full rounded-2xl border border-ink/15 px-4 py-3 outline-none focus:border-accent" />
       <input [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" type="password" placeholder="Clave"
-        class="w-full rounded-card border border-secondary/15 px-4 py-3 outline-none focus:border-primary" />
+        class="w-full rounded-2xl border border-ink/15 px-4 py-3 outline-none focus:border-accent" />
       @if (notice()) {
-        <p class="text-secondary-muted text-sm">{{ notice() }}</p>
+        <p class="text-muted text-sm">{{ notice() }}</p>
       }
       @if (error()) {
-        <p class="text-primary-strong text-sm">{{ error() }}</p>
+        <p class="text-accent-deep text-sm">{{ error() }}</p>
       }
       <button type="submit" [disabled]="loading()"
-        class="w-full rounded-pill bg-primary hover:bg-primary-hover disabled:opacity-60 text-secondary font-medium py-3 transition-colors">
+        class="w-full rounded-full bg-accent hover:bg-accent/85 disabled:opacity-60 text-ink font-medium py-3 transition-colors">
         {{ loading() ? 'Ingresando...' : 'Ingresar' }}
       </button>
     </form>
     <div class="text-center mt-5">
-      <a routerLink="/olvide-mi-clave" class="text-sm text-secondary-muted hover:text-primary-strong">¿Olvidaste tu clave?</a>
+      <a routerLink="/olvide-mi-clave" class="text-sm text-muted hover:text-accent-deep">¿Olvidaste tu clave?</a>
     </div>
   </div>
 </div>

@@ -1,25 +1,28 @@
-<h1 class="text-[48px] leading-[0.95] font-display mb-2">Imágenes</h1>
-<p class="text-secondary-muted text-sm mb-6">Fotos y logo que se muestran en el sitio público. Sube un archivo para reemplazar cada una.</p>
+<h1 class="text-[56px] leading-[0.95] mb-2">Imágenes</h1>
+<p class="text-muted text-sm mb-6">Fotos y logo que se muestran en el sitio público. Sube un archivo para reemplazar cada una.</p>
 
 <div class="grid md:grid-cols-2 gap-5">
   @for (slot of slots; track slot.key) {
-    <div class="rounded-card bg-card border border-secondary/10 p-5">
-      <p class="font-semibold mb-1">{{ slot.label }}</p>
-      <p class="text-secondary-muted text-xs mb-3">{{ slot.recommendation }}</p>
+    <div class="rounded-2xl bg-cream-4 border border-ink/10 p-5">
+      <p class="font-semibold mb-2">{{ slot.label }}</p>
+      <p class="inline-flex items-center gap-2 rounded-full bg-accent-soft text-ink text-xs font-bold px-3 py-1 mb-2">
+        Medida recomendada: {{ slot.size }}
+      </p>
+      <p class="text-muted text-xs mb-3">{{ slot.recommendation }} Máximo 5 MB.</p>
 
-      <div class="aspect-video rounded-lg bg-section-light border border-secondary/10 mb-3 overflow-hidden flex items-center justify-center">
+      <div class="aspect-video rounded-lg bg-cream-2 border border-ink/10 mb-3 overflow-hidden flex items-center justify-center">
         @if (hasImage(slot.key)) {
           <img [src]="imageUrl(slot.key)" [alt]="slot.label" class="w-full h-full object-cover" />
         } @else {
-          <span class="text-secondary-muted text-xs">Sin imagen todavía</span>
+          <span class="text-muted text-xs">Sin imagen todavía</span>
         }
       </div>
 
       @if (errors().get(slot.key)) {
-        <p class="text-primary-strong text-xs mb-2">{{ errors().get(slot.key) }}</p>
+        <p class="text-accent-deep text-xs mb-2">{{ errors().get(slot.key) }}</p>
       }
 
-      <label class="inline-block rounded-pill bg-secondary text-tertiary text-sm px-4 py-2 cursor-pointer">
+      <label class="inline-block rounded-full bg-ink text-paper text-sm px-4 py-2 cursor-pointer">
         {{ uploading() === slot.key ? 'Subiendo...' : (hasImage(slot.key) ? 'Reemplazar' : 'Subir imagen') }}
         <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="hidden"
           [disabled]="uploading() === slot.key" (change)="onFileSelected(slot.key, $event)" />

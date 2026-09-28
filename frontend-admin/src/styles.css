@@ -2,44 +2,75 @@
 @config '../tailwind.config.js';
 
 @font-face {
-  font-family: 'League Gothic';
-  src: url('/fonts/LeagueGothic.woff2') format('woff2');
+  font-family: 'Dharma';
+  src: url('/fonts/DharmaGothicE-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dharma';
+  src: url('/fonts/DharmaGothicE-ExBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dharma';
+  src: url('/fonts/DharmaGothicE-Heavy.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('/fonts/Gotham-Book.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-Regular.woff2') format('woff2');
+  font-family: 'Gotham';
+  src: url('/fonts/Gotham-BookItalic.woff2') format('woff2');
   font-weight: 400;
-  font-style: normal;
+  font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-Bold.woff2') format('woff2');
+  font-family: 'Gotham';
+  src: url('/fonts/Gotham-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-Regular.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Gotham';
+  src: url('/fonts/Gotham-Black.woff2') format('woff2');
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
+/* Colores del tema activo (Naranja por defecto); BrandThemeService los reemplaza con los del API. */
+:root {
+  --accent: #fba504;
+  --accent-deep: #9a5b00;
+  --accent-soft: #fff1d2;
+}
+
 body {
-  @apply bg-surface text-secondary font-sans;
+  @apply bg-cream-2 text-ink font-sans;
 }
 
 h1, h2, .font-display {
-  @apply font-display font-normal;
-  letter-spacing: 0.01em;
+  @apply font-display font-black uppercase;
+  letter-spacing: 0.005em;
 }
 
 h3 {
@@ -48,4 +79,35 @@ h3 {
 
 button:not(:disabled), label[for], input[type='checkbox'], input[type='file'] + label {
   cursor: pointer;
+}
+
+/* Isotipo teñido con el acento: el PNG negro solo aporta la forma. */
+.logo-mark {
+  display: block;
+  flex: none;
+  background: var(--accent);
+  -webkit-mask: url('/img/brand/logo-icon.png') center / contain no-repeat;
+  mask: url('/img/brand/logo-icon.png') center / contain no-repeat;
+}
+
+@layer components {
+  .field {
+    @apply border border-ink/[0.18] rounded-[9px] px-3 py-2.5 text-[15px] bg-cream-5 text-ink outline-none focus:border-accent-deep;
+  }
+
+  .field-label {
+    @apply text-xs tracking-[0.12em] uppercase text-muted font-semibold;
+  }
+
+  .panel-card {
+    @apply bg-cream-4 border border-ink/[0.14] rounded-2xl;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-ink border-0 font-bold text-sm px-[22px] py-3 rounded-[10px] hover:bg-ink hover:text-paper disabled:opacity-50;
+  }
+
+  .link-danger {
+    @apply border-0 bg-transparent text-faint text-sm underline hover:text-ink;
+  }
 }

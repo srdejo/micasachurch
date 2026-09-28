@@ -1,0 +1,35 @@
+<audio #audio [src]="src()" preload="metadata" class="hidden"
+  (loadedmetadata)="onLoadedMetadata()" (durationchange)="onLoadedMetadata()" (timeupdate)="onTimeUpdate()"
+  (play)="playing.set(true)" (pause)="playing.set(false)" (ended)="onEnded()" (error)="failed.set(true)"></audio>
+
+@if (!failed()) {
+  @let dark = variant() === 'dark';
+  <div class="flex items-center gap-4 rounded-2xl border px-4 py-3.5 text-[15px] leading-normal"
+    [ngClass]="dark ? 'bg-paper/[0.06] border-paper/15 text-paper' : 'bg-ink/[0.05] border-ink/10 text-ink'">
+    <button type="button" (click)="toggle()" [attr.aria-label]="playing() ? 'Pausar la lectura' : 'Reproducir la lectura'"
+      class="flex-none w-12 h-12 rounded-full bg-accent text-ink border-0 flex items-center justify-center cursor-pointer
+             hover:scale-105 transition-transform focus-visible:outline-2 focus-visible:outline-offset-2"
+      [ngClass]="dark ? 'focus-visible:outline-paper' : 'focus-visible:outline-ink'">
+      @if (playing()) {
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+      } @else {
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" class="ml-0.5"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.9-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14Z"/></svg>
+      }
+    </button>
+
+    <div class="flex-1 min-w-0 flex flex-col gap-2">
+      <div class="flex items-baseline justify-between gap-3">
+        <span class="text-[11.5px] tracking-[0.16em] uppercase font-bold" [ngClass]="dark ? 'text-accent' : 'text-accent-deep'">Escucha la lectura</span>
+        <span class="text-[12.5px] tabular-nums" [ngClass]="dark ? 'text-paper/70' : 'text-muted'">{{ timeLabel() }}</span>
+      </div>
+      <input type="range" min="0" [max]="duration() || 0" step="1" [value]="current()" (input)="seek($any($event.target).value)"
+        aria-label="Posición del audio" [attr.aria-valuetext]="timeLabel()"
+        class="audio-range w-full h-1.5 rounded-full appearance-none cursor-pointer"
+        [style.--fill]="progress() + '%'" [ngClass]="dark ? 'audio-range-dark' : 'audio-range-light'" />
+    </div>
+
+    <button type="button" (click)="cycleRate()" aria-label="Velocidad de reproducción"
+      class="flex-none min-w-[52px] h-9 px-2.5 rounded-full border bg-transparent text-[13px] font-bold tabular-nums cursor-pointer"
+      [ngClass]="dark ? 'border-paper/25 text-paper hover:border-paper' : 'border-ink/20 text-ink hover:border-ink'">{{ rateLabel() }}</button>
+  </div>
+}

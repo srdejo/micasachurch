@@ -5,6 +5,8 @@ import { AdminApiService, SiteImageItem } from '../../core/admin-api.service';
 interface ImageSlot {
   key: string;
   label: string;
+  /** Medida recomendada, destacada en la tarjeta para que el admin la vea antes de subir. */
+  size: string;
   recommendation: string;
 }
 
@@ -18,17 +20,24 @@ export class ImagesPage implements OnInit {
   readonly api = inject(AdminApiService);
 
   readonly slots: ImageSlot[] = [
-    { key: 'logo', label: 'Logo (header)', recommendation: 'PNG con fondo transparente, cuadrado, mínimo 200×200px.' },
-    { key: 'hero', label: 'Foto de portada (hero)', recommendation: 'JPG o PNG horizontal, mínimo 1600×900px.' },
+    {
+      key: 'logo',
+      label: 'Logo (header)',
+      size: '512 × 512 px',
+      recommendation: 'PNG con fondo transparente, cuadrado. Mínimo 200 × 200 px.',
+    },
     {
       key: 'quienes_somos',
       label: 'Foto "Quiénes somos"',
-      recommendation: 'JPG o PNG vertical (proporción 4:5), mínimo 800×1000px.',
+      size: '1600 × 2000 px (vertical 4:5)',
+      recommendation:
+        'JPG o WebP, mínimo 800 × 1000 px. En celulares se muestra más apaisada (4:3) y se recorta arriba y abajo: deja a las personas en el centro.',
     },
     {
       key: 'og_image',
       label: 'Imagen para compartir (Open Graph)',
-      recommendation: 'JPG o PNG de exactamente 1200×630px — es lo que se ve al compartir el link en WhatsApp/Facebook.',
+      size: '1200 × 630 px exactos',
+      recommendation: 'JPG o PNG. Es lo que se ve al compartir el enlace en WhatsApp o Facebook.',
     },
   ];
 

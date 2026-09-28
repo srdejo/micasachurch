@@ -20,6 +20,7 @@ export interface ServiceScheduleItem {
   note: string;
   streamed: boolean;
   displayOrder: number;
+  durationMinutes: number;
 }
 
 export interface NetworkItem {
@@ -39,9 +40,36 @@ export interface LinkEntryItem {
 
 export interface SiteSettings {
   liveBannerVisible: boolean;
-  primaryColor?: string;
-  secondaryColor?: string;
-  tertiaryColor?: string;
+  activeTheme?: string;
+  accentColor?: string;
+  deepColor?: string;
+  softColor?: string;
+}
+
+export interface HeroBannerItem {
+  id: string;
+  kicker: string | null;
+  title: string;
+  text: string | null;
+  ctaLabel: string | null;
+  ctaHref: string | null;
+  /** Solo viene cuando la imagen existe de verdad en el servidor. */
+  imageKey: string | null;
+  imageUpdatedAt: string | null;
+  active: boolean;
+  displayOrder: number;
+}
+
+export interface LiveEventItem {
+  id: string;
+  title: string;
+  /** YYYY-MM-DD, fecha en Colombia. */
+  date: string;
+  /** HH:mm, hora de Colombia. */
+  startTime: string;
+  durationMinutes: number;
+  url: string;
+  active: boolean;
 }
 
 export interface PrayerRequestSubmission {
@@ -90,6 +118,14 @@ export class ChurchApiService {
     return this.http.get<SiteSettings>(`${this.baseUrl}/site-settings`);
   }
 
+  getBanners(): Observable<HeroBannerItem[]> {
+    return this.http.get<HeroBannerItem[]>(`${this.baseUrl}/banners`);
+  }
+
+  getLiveEvents(): Observable<LiveEventItem[]> {
+    return this.http.get<LiveEventItem[]>(`${this.baseUrl}/live-events`);
+  }
+
   submitPrayerRequest(payload: PrayerRequestSubmission): Observable<{ id: string }> {
     return this.http.post<{ id: string }>(`${this.baseUrl}/prayer-requests`, payload);
   }
@@ -104,5 +140,14 @@ export class ChurchApiService {
 
   imageUrl(key: string): string {
     return `${this.baseUrl}/images/${key}`;
+  }
+
+  /** La versión en la URL evita que el navegador muestre la foto anterior tras reemplazarla (se cachea 1 h). */
+  bannerImageUrl(banner: HeroBannerItem): string | null {
+    if (!banner.imageKey) {
+      return null;
+    }
+    const version = banner.imageUpdatedAt ? `?v=${encodeURIComponent(banner.imageUpdatedAt)}` : '';
+    return `${this.imageUrl(banner.imageKey)}${version}`;
   }
 }

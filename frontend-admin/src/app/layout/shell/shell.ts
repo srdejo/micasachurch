@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { BrandThemeService } from '../../core/brand-theme.service';
 import { PublishStateService } from '../../core/publish-state.service';
 
 @Component({
@@ -13,14 +14,7 @@ import { PublishStateService } from '../../core/publish-state.service';
 export class Shell implements OnInit {
   readonly auth = inject(AuthService);
   readonly publishState = inject(PublishStateService);
-
-  ngOnInit(): void {
-    this.publishState.refresh();
-  }
-
-  publishChanges(): void {
-    this.publishState.publish();
-  }
+  private readonly brandTheme = inject(BrandThemeService);
 
   readonly navItems = [
     { path: 'panel', label: 'Panel' },
@@ -28,11 +22,23 @@ export class Shell implements OnInit {
     { path: 'oracion', label: 'Peticiones de oración' },
     { path: 'redes', label: 'Redes' },
     { path: 'horarios', label: 'Horarios y en vivo' },
+    { path: 'transmisiones', label: 'Transmisiones especiales' },
+    { path: 'banner', label: 'Banner principal' },
+    { path: 'imagenes', label: 'Imágenes' },
     { path: 'enlaces', label: 'Enlaces' },
     { path: 'contenido', label: 'Contenido' },
-    { path: 'imagenes', label: 'Imágenes' },
+    { path: 'apariencia', label: 'Apariencia' },
     { path: 'cuenta', label: 'Cuenta' },
   ];
+
+  ngOnInit(): void {
+    this.publishState.refresh();
+    this.brandTheme.load();
+  }
+
+  publishChanges(): void {
+    this.publishState.publish();
+  }
 
   logout(): void {
     this.auth.logout();

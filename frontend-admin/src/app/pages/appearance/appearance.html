@@ -1,0 +1,49 @@
+<div class="flex flex-col gap-1 mb-7">
+  <h1 class="text-[56px] leading-[0.95] m-0">Apariencia</h1>
+  <span class="text-[15px] text-muted">Color principal del sitio</span>
+</div>
+
+<p class="m-0 mb-[18px] text-[15px] text-muted max-w-[70ch]">
+  El color se aplica a botones, franjas, el ícono del logo y la barra En vivo. Cada cambio se guarda al momento y se ve en
+  la página en la siguiente carga.
+</p>
+
+<div class="grid grid-cols-3 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 max-w-[980px]">
+  @for (t of themes(); track t.name) {
+    @let active = t.name === activeTheme();
+    <div class="flex flex-col rounded-2xl overflow-hidden bg-cream-4 text-ink"
+      [ngClass]="active ? 'border-2 border-ink' : 'border border-ink/[0.14]'">
+      <div class="grid grid-cols-[2fr_1fr_1fr] h-24">
+        <span [style.background]="swatch(t, 'accentColor')"></span>
+        <span [style.background]="swatch(t, 'deepColor')"></span>
+        <span [style.background]="swatch(t, 'softColor')"></span>
+      </div>
+      <div class="flex flex-col gap-1 px-[18px] pt-4 pb-1.5">
+        <span class="font-display font-black uppercase text-[34px] leading-[0.95]">{{ t.name }}</span>
+        <span class="text-[13.5px] text-muted">{{ note(t) }}</span>
+      </div>
+      <div class="flex flex-col gap-2.5 px-[18px] py-3">
+        @for (f of fields; track f.key) {
+          <label class="grid grid-cols-[40px_minmax(0,1fr)] gap-2.5 items-center">
+            <input type="color" [value]="swatch(t, f.key)" (change)="edit(t, f.key, $any($event.target).value)"
+              [attr.aria-label]="f.label + ' de ' + t.name"
+              class="w-10 h-10 p-0 border border-ink/[0.18] rounded-[9px] bg-transparent cursor-pointer" />
+            <span class="flex flex-col gap-1 min-w-0">
+              <span class="text-[11px] tracking-[0.12em] uppercase text-muted font-bold">{{ f.label }} · {{ f.hint }}</span>
+              <input [value]="draft(t, f.key)" (change)="edit(t, f.key, $any($event.target).value)" maxlength="7" spellcheck="false"
+                placeholder="#FBA504" class="rounded-lg px-2.5 py-2 font-mono text-sm bg-cream-5 text-ink w-full outline-none"
+                [ngClass]="isValid(draft(t, f.key)) ? 'border border-ink/[0.18]' : 'border-2 border-danger'" />
+            </span>
+          </label>
+        }
+      </div>
+      @if (status()?.theme === t.name) {
+        <span class="px-[18px] text-xs" [ngClass]="status()!.kind === 'error' ? 'text-danger' : 'text-accent-deep font-bold'">{{ status()!.message }}</span>
+      }
+      <button type="button" (click)="use(t)" [disabled]="active"
+        class="mx-[18px] mt-1.5 mb-[18px] border-0 rounded-[10px] p-3 bg-ink text-paper text-xs font-bold tracking-[0.1em] uppercase disabled:bg-accent disabled:text-ink disabled:cursor-default">
+        {{ active ? 'Tema activo' : 'Usar este tema' }}
+      </button>
+    </div>
+  }
+</div>

@@ -3,32 +3,35 @@ module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
-      // El panel usa la paleta de marca fija; los colores editables solo se aplican al landing.
+      // Mismos tokens que el landing: el acento sigue al tema activo (BrandThemeService), los neutros son fijos.
       colors: {
-        surface: '#f4f4f4',
-        card: '#ffffff',
-        sidebar: '#000000',
-        primary: {
-          DEFAULT: '#f89e1b',
-          hover: '#e08a0c',
-          // Naranja oscurecido para texto sobre fondo claro: el de marca no alcanza contraste legible.
-          strong: '#9c5800',
+        accent: {
+          DEFAULT: 'var(--accent)',
+          deep: 'var(--accent-deep)',
+          soft: 'var(--accent-soft)',
         },
-        secondary: {
-          DEFAULT: '#000000',
-          soft: '#333333',
-          muted: '#5c5c5c',
-          subtle: '#6b6b6b',
+        ink: {
+          DEFAULT: '#111110',
+          2: '#1C1B19',
+          3: '#2A2926',
         },
-        tertiary: '#ffffff',
+        cream: {
+          DEFAULT: '#FAF8F4',
+          2: '#F1EDE5',
+          3: '#E9E1D3',
+          4: '#FBF8F2',
+          5: '#FFFDF9',
+        },
+        paper: '#F7F5F0',
+        body: '#4A4744',
+        muted: '#5B5750',
+        faint: '#8A7A63',
+        success: '#6FCF97',
+        danger: '#b42318',
       },
       fontFamily: {
-        display: ['"League Gothic"', 'Impact', '"Arial Narrow"', 'sans-serif'],
-        sans: ['Montserrat', 'Poppins', 'system-ui', 'sans-serif'],
-      },
-      borderRadius: {
-        card: '16px',
-        pill: '999px',
+        display: ['Dharma', 'Oswald', 'Impact', '"Arial Narrow"', 'sans-serif'],
+        sans: ['Gotham', 'Montserrat', 'system-ui', 'sans-serif'],
       },
     },
   },

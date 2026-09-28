@@ -1,21 +1,21 @@
 <div class="flex flex-wrap items-end justify-between gap-4 mb-7">
   <div class="flex flex-col gap-1">
-    <h1 class="font-display text-[48px] leading-[0.95]">Eventos</h1>
-    <span class="text-[15px] text-secondary-muted">Lo que se anuncia en la sección Próximos eventos</span>
+    <h1 class="text-[56px] leading-[0.95] m-0">Eventos</h1>
+    <span class="text-[15px] text-muted">Lo que se anuncia en la sección Próximos eventos</span>
   </div>
-  <button (click)="addNew()" class="rounded-pill bg-primary hover:bg-primary-hover text-secondary text-sm font-semibold px-5 py-2.5">
+  <button (click)="addNew()" class="rounded-full bg-accent hover:bg-accent/85 text-ink text-sm font-semibold px-5 py-2.5">
     Nuevo evento
   </button>
 </div>
 
 <div class="space-y-4">
   @for (event of events(); track event.id) {
-    <div class="rounded-card bg-card border p-5 grid md:grid-cols-[80px_100px_1fr_1fr_auto_auto] gap-3 items-start"
-         [ngClass]="event.hasDraft ? 'border-primary-strong/40' : 'border-secondary/[0.14]'">
-      <input [(ngModel)]="event.day" placeholder="Día" class="rounded-card border border-secondary/15 px-3 py-2 text-sm" />
-      <input [(ngModel)]="event.month" placeholder="Mes" class="rounded-card border border-secondary/15 px-3 py-2 text-sm" />
-      <input [(ngModel)]="event.title" placeholder="Título" class="rounded-card border border-secondary/15 px-3 py-2 text-sm" />
-      <input [(ngModel)]="event.detail" placeholder="Detalle" class="rounded-card border border-secondary/15 px-3 py-2 text-sm" />
+    <div class="rounded-2xl bg-cream-4 border p-5 grid md:grid-cols-[80px_100px_1fr_1fr_auto_auto] gap-3 items-start"
+         [ngClass]="event.hasDraft ? 'border-accent-deep/40' : 'border-ink/[0.14]'">
+      <input [(ngModel)]="event.day" placeholder="Día" class="rounded-2xl border border-ink/15 px-3 py-2 text-sm" />
+      <input [(ngModel)]="event.month" placeholder="Mes" class="rounded-2xl border border-ink/15 px-3 py-2 text-sm" />
+      <input [(ngModel)]="event.title" placeholder="Título" class="rounded-2xl border border-ink/15 px-3 py-2 text-sm" />
+      <input [(ngModel)]="event.detail" placeholder="Detalle" class="rounded-2xl border border-ink/15 px-3 py-2 text-sm" />
       <label class="flex items-center gap-2 text-sm px-2 py-2">
         <input type="checkbox" [(ngModel)]="event.published" />
         Publicado
@@ -23,24 +23,24 @@
       <div class="flex flex-col gap-1.5">
         <div class="flex gap-2">
           <button (click)="save(event)" [disabled]="status()[event.id] === 'saving'"
-            class="rounded-pill bg-secondary text-tertiary text-sm px-4 py-2 disabled:opacity-60">
+            class="rounded-full bg-ink text-paper text-sm px-4 py-2 disabled:opacity-60">
             {{ status()[event.id] === 'saving' ? 'Guardando...' : 'Guardar' }}
           </button>
-          <button (click)="askDelete(event)" class="rounded-pill border border-primary-strong text-primary-strong text-sm px-4 py-2">Eliminar</button>
+          <button (click)="askDelete(event)" class="rounded-full border border-accent-deep text-accent-deep text-sm px-4 py-2">Eliminar</button>
         </div>
         @if (status()[event.id] === 'saved') {
-          <span class="text-xs text-primary-strong font-medium">En cola ✓</span>
+          <span class="text-xs text-accent-deep font-medium">En cola ✓</span>
         }
         @if (status()[event.id] === 'error') {
-          <span class="text-xs text-primary-strong">{{ errorMessage()[event.id] }}</span>
+          <span class="text-xs text-accent-deep">{{ errorMessage()[event.id] }}</span>
         }
         @if (event.hasDraft && status()[event.id] !== 'saved') {
-          <span class="text-xs text-primary-strong font-medium">Cambios sin publicar</span>
+          <span class="text-xs text-accent-deep font-medium">Cambios sin publicar</span>
         }
       </div>
     </div>
   } @empty {
-    <p class="text-secondary-muted text-sm">No hay eventos todavía.</p>
+    <p class="text-muted text-sm">No hay eventos todavía.</p>
   }
 </div>
 

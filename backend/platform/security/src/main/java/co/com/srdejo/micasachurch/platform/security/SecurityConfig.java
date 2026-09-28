@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 "/api/admin/auth/reset-password", "/api/admin/auth/reset-token").permitAll()
                         .requestMatchers("/api/events", "/api/services", "/api/networks", "/api/links",
                                 "/api/site-settings", "/api/prayer-requests", "/api/ministries", "/api/site-content",
-                                "/api/images/**").permitAll()
+                                "/api/images/**", "/api/banners", "/api/live-events").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface SiteImageSpringDataRepository extends JpaRepository<SiteImageJpaEntity, UUID> {
 
     Optional<SiteImageJpaEntity> findByKey(String key);
+
+    void deleteByKey(String key);
 }

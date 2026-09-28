@@ -5,8 +5,8 @@ import { ChurchApiService, SiteSettings } from './church-api.service';
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
 /**
- * Aplica los colores que el admin guarda en los ajustes del sitio. Solo corre en el navegador:
- * el HTML prerenderizado lleva los colores por defecto de styles.css.
+ * Aplica los colores del tema activo que elige el admin. Solo corre en el navegador:
+ * el HTML prerenderizado lleva los de Naranja, definidos en styles.css.
  */
 @Injectable({ providedIn: 'root' })
 export class BrandThemeService {
@@ -24,9 +24,9 @@ export class BrandThemeService {
   apply(settings: SiteSettings): void {
     const root = this.document.documentElement;
     const colors: [string, string | undefined][] = [
-      ['--brand-primary', settings.primaryColor],
-      ['--brand-secondary', settings.secondaryColor],
-      ['--brand-tertiary', settings.tertiaryColor],
+      ['--accent', settings.accentColor],
+      ['--accent-deep', settings.deepColor],
+      ['--accent-soft', settings.softColor],
     ];
     for (const [variable, value] of colors) {
       if (value && HEX_COLOR.test(value)) {

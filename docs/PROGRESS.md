@@ -144,3 +144,51 @@ y móvil simulado a 360/375 px):
 | 11, 12 | Petición obligatoria, nombre solo letras, WhatsApp solo números; mensajes por campo, también validado en el backend. |
 | 13 | "Volver al inicio" visible sin scroll en `/devocional`. |
 | 14, 15 | Ningún elemento fuera del viewport ni de su tarjeta a 360/375 px; `overflow-x: clip` como red de seguridad. |
+
+## Rediseño de Claude Design (2026-09-27, en curso)
+
+Cambio OpenSpec `openspec/changes/rediseno-claude-design/`. Decisiones en `DECISIONS.md` (2026-09-27, "Rediseño…").
+**Nada de esto está en producción.**
+
+- **Recursos descargados del diseño** (`DesignSync get_file`): las 7 fuentes Gotham/Dharma (convertidas a
+  `.woff2`), `logo-icon-black.png` (isotipo, usado como máscara teñida con el acento), `logo-text-white.png`
+  e `icon-180.png` (reemplaza `apple-icon-180x180.png`).
+- **No se pudieron bajar** (superan el límite de 256 KiB de `get_file`, llegan truncadas): `fotos/icon-512.png`,
+  `fotos/og-image.png`, `fotos/congregacion.png` y `fotos/pastores.png`. Siguen el ícono y la imagen OG actuales;
+  las fotos de los banners 1 y 2 hay que exportarlas a mano desde Claude Design y subirlas en el admin
+  ("Banner principal"). El banner 1 arranca con la imagen `hero` que ya estaba subida.
+- **Backend** (verificado): migración `V10__redesign_banners_live_themes.sql` aplicada contra el Postgres de Docker
+  (`:5433`); temas (`/api/admin/themes`, `activeTheme` en ajustes), banners (`/api/banners`, `/api/admin/banners` con
+  subida de imagen `banner-{id}`), transmisiones especiales (`/api/live-events`, `/api/admin/live-events`) y
+  `durationMinutes` en horarios (+ fila "Todos los días · 7:00 a.m." de 45 min). `./gradlew build` en verde (13 tests
+  nuevos) y recorrido con un script contra `bootRun` en `:8098` (validaciones en español, imagen de 8 MB → 413 con mensaje
+  en español vía `GlobalExceptionHandler`, que antes respondía en inglés también en la vista Imágenes).
+- **frontend-landing**: Gotham/Dharma, tokens `accent/ink/cream/paper`, carrusel (`shared/hero-carousel`), ventana de
+  horarios (`shared/schedule-modal`), estado en vivo (`core/live-status.ts`, hora de Bogotá), home reescrito según el
+  diseño, `/devocional` con los nuevos tokens, metadatos del diseño en `index.html`. `ng build` y `ng test` (29) en verde.
+- **frontend-admin**: mismos tokens y fuentes, shell con isotipo teñido, Panel sin el editor de tres colores, vistas
+  nuevas Banner principal, Transmisiones especiales y Apariencia, duración y aviso de hora no reconocida en Horarios,
+  sin el slot `hero` en Imágenes. `ng build` en verde; `ng test` (13) en verde con Node 24.
+- **Verificado en local (2026-09-27)** con `infra/local-deploy.ps1 -Project micasachurch` (backend y landing) y
+  publicación manual del admin (en PowerShell 5.1 el script se corta con cualquier aviso que npm/Angular escriban en
+  stderr; con Node 24 y `npm_config_loglevel=error` llega hasta el admin, cuyo `angular.json` avisa "The prerender
+  option is not considered when outputMode is specified"):
+  landing a 1440 px y en iframe de 375/360 px (sin desborde horizontal, Síguenos al final, barra inferior sin tapar el footer),
+  ventana de horarios (Escape, ✕), "En vivo ahora" con una transmisión especial creada desde el admin (enlace propio
+  en todos los accesos en vivo), admin: Panel, Banner principal (crear, enlace inválido rechazado, subir imagen,
+  publicar, eliminar con confirmación), Transmisiones especiales (duración inválida rechazada), Apariencia (hex inválido
+  marcado, Coral activo se ve en landing y panel; se dejó Naranja). `./gradlew build`, `ng build` y `ng test`
+  (29 landing, 13 admin con Node 24) en verde. **Falta desplegar a producción** (`infra/deploy.ps1`, lo corre Daniel).
+
+## Ajustes en vivo y devocional (2026-09-27)
+
+Cambio OpenSpec `openspec/changes/ajustes-en-vivo-y-devocional/`. **No está en producción.**
+
+- Prédicas sin el botón "En vivo 7:00 a.m."; la barra fija de móvil solo aparece durante una transmisión y solo con "En vivo"
+  (sin WhatsApp); el footer ya no reserva espacio cuando no hay barra.
+- Reproductor propio del audio del devocional (`shared/audio-player`, variantes oscura y clara): en `/devocional` va
+  debajo del título, con "La Biblia en un año" arriba de todo; en el home, dentro de la tarjeta del devocional
+  (que dejó de ser un enlace completo: el título y "Leer completo →" llevan a `/devocional`).
+- `ng test` (43) y `ng build` en verde. Verificado en local: orden de `/devocional`, barra móvil con una transmisión especial
+  de prueba (solo "En vivo", con su enlace) y sin ella, Prédicas sin "En vivo".
+- Daniel confirmó en su navegador (2026-09-27) que el audio real suena, se adelanta con la barra, cambia de velocidad y en el inicio se escucha sin salir de la página.

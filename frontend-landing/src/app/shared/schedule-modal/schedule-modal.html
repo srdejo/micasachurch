@@ -1,0 +1,66 @@
+<div (click)="close.emit()" class="fixed inset-0 z-[100] bg-[rgb(10_10_9/0.66)] backdrop-blur-[4px] flex items-center justify-center p-[18px]">
+  <div role="dialog" aria-modal="true" aria-labelledby="schedule-modal-title" (click)="$event.stopPropagation()"
+    class="w-full max-w-[660px] max-h-[calc(100vh-36px)] overflow-auto bg-cream rounded-[18px] shadow-[0_30px_80px_rgb(0_0_0/0.35)]">
+    <div class="sticky top-0 z-[2] flex items-center justify-between gap-4 px-[26px] py-[22px] bg-ink text-paper">
+      <div class="flex items-center gap-3.5">
+        <span class="logo-mark w-10 h-[34px]" aria-hidden="true"></span>
+        <h2 id="schedule-modal-title" class="font-black text-[54px] leading-[0.9] m-0">Horarios</h2>
+      </div>
+      <button #closeButton type="button" (click)="close.emit()" aria-label="Cerrar"
+        class="w-11 h-11 rounded-[10px] border border-paper/30 bg-transparent text-paper text-xl cursor-pointer hover:bg-paper hover:text-ink">✕</button>
+    </div>
+
+    @if (status()?.live; as live) {
+      <a [href]="live.url" target="_blank" rel="noopener"
+        class="flex items-center justify-between gap-3.5 px-[26px] py-4 bg-accent text-ink no-underline">
+        <span class="flex items-center gap-2.5 font-bold text-[15px]"><span class="live-dot"></span>En vivo ahora · {{ live.title }}</span>
+        <span class="text-xs font-black tracking-[0.12em] uppercase">Ver →</span>
+      </a>
+    }
+
+    <div class="flex flex-col px-[26px] pt-2 pb-1">
+      @for (row of status()?.rows ?? []; track row.id) {
+        <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3.5 items-center px-3 py-4 -mx-3 border-b border-ink/10 rounded-[10px]"
+          [ngClass]="row.liveNow ? 'bg-accent' : ''">
+          <div class="flex flex-col gap-1 min-w-0">
+            <span class="font-display font-black uppercase text-[34px] leading-[0.95]">{{ row.day }}</span>
+            @if (row.note) {
+              <span class="text-sm text-body">{{ row.note }}</span>
+            }
+          </div>
+          <div class="flex flex-col items-end gap-1.5">
+            <span class="text-[17px] font-bold whitespace-nowrap">{{ row.time }}</span>
+            <span class="text-[10.5px] font-bold tracking-[0.14em] uppercase" [ngClass]="row.liveNow ? 'text-ink' : 'text-muted'">
+              {{ row.liveNow ? '● En vivo ahora' : row.streamed ? 'En vivo por Facebook' : 'Presencial' }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (status()?.specialRows?.length) {
+      <div class="flex flex-col gap-1 px-[26px] pt-[18px] pb-1">
+        <span class="text-[11.5px] tracking-[0.16em] uppercase text-accent-deep font-bold">Transmisiones especiales</span>
+        @for (special of status()!.specialRows; track special.id) {
+          <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3.5 items-center py-3.5 border-b border-ink/10">
+            <span class="text-[15.5px] font-bold">{{ special.title }}{{ special.liveNow ? ' · en vivo ahora' : '' }}</span>
+            <span class="text-sm text-body whitespace-nowrap">{{ special.when }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="flex flex-wrap items-center justify-between gap-3.5 px-[26px] pt-[22px] pb-[26px]">
+      <div class="flex flex-col gap-[3px]">
+        <span class="text-[14.5px] font-bold">Cl. 7A # 37-8, Ocaña</span>
+        <span class="text-[13px] text-muted">Transmisiones en vivo por Facebook</span>
+      </div>
+      <div class="flex flex-wrap gap-2.5">
+        <a [href]="mapsUrl()" target="_blank" rel="noopener"
+          class="border border-ink/25 text-ink px-[18px] py-[13px] rounded-[10px] font-bold text-xs tracking-[0.1em] uppercase hover:border-ink">Cómo llegar</a>
+        <a [href]="whatsappUrl()" target="_blank" rel="noopener"
+          class="bg-ink text-paper px-[18px] py-[13px] rounded-[10px] font-bold text-xs tracking-[0.1em] uppercase hover:bg-accent hover:text-ink">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</div>

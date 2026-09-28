@@ -33,6 +33,11 @@ public class SiteImageRepositoryAdapter implements SiteImageRepository {
         return toDomain(springDataRepository.save(entity));
     }
 
+    @Override
+    public void deleteByKey(String key) {
+        springDataRepository.deleteByKey(key);
+    }
+
     private SiteImage toDomain(SiteImageJpaEntity entity) {
         return new SiteImage(entity.getId(), entity.getKey(), entity.getFilename(), entity.getContentType(), entity.getUpdatedAt());
     }

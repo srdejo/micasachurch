@@ -31,6 +31,8 @@ describe('ChurchApiService', () => {
       [() => service.getSiteSettings().subscribe(), '/site-settings'],
       [() => service.getMinistries().subscribe(), '/ministries'],
       [() => service.getSiteContent().subscribe(), '/site-content'],
+      [() => service.getBanners().subscribe(), '/banners'],
+      [() => service.getLiveEvents().subscribe(), '/live-events'],
     ];
 
     for (const [llamar, ruta] of rutas) {
@@ -58,5 +60,15 @@ describe('ChurchApiService', () => {
   it('imageUrl arma la URL del slot sin pegarle al API', () => {
     expect(service.imageUrl('hero')).toBe(`${environment.apiUrl}/images/hero`);
     http.verify();
+  });
+
+  it('bannerImageUrl versiona la URL y devuelve null si el banner no tiene imagen', () => {
+    const banner = {
+      id: '1', kicker: null, title: 'Mi casa es tu casa', text: null, ctaLabel: null, ctaHref: null,
+      imageKey: 'banner-1', imageUpdatedAt: '2026-09-27T14:17:01Z', active: true, displayOrder: 1,
+    };
+
+    expect(service.bannerImageUrl(banner)).toBe(`${environment.apiUrl}/images/banner-1?v=2026-09-27T14%3A17%3A01Z`);
+    expect(service.bannerImageUrl({ ...banner, imageKey: null })).toBeNull();
   });
 });

@@ -25,36 +25,37 @@ function setup(platform: 'browser' | 'server') {
 describe('BrandThemeService', () => {
   afterEach(() => {
     const root = document.documentElement;
-    for (const variable of ['--brand-primary', '--brand-secondary', '--brand-tertiary']) {
+    for (const variable of ['--accent', '--accent-deep', '--accent-soft']) {
       root.style.removeProperty(variable);
     }
     TestBed.resetTestingModule();
   });
 
-  it('en el navegador aplica los colores guardados como variables CSS', () => {
+  it('en el navegador aplica los colores del tema activo como variables CSS', () => {
     const { service, http, root } = setup('browser');
 
     service.load();
     http.expectOne(`${environment.apiUrl}/site-settings`).flush({
       liveBannerVisible: true,
-      primaryColor: '#1b6ff8',
-      secondaryColor: '#111111',
-      tertiaryColor: '#fafafa',
+      activeTheme: 'Coral',
+      accentColor: '#ff6b35',
+      deepColor: '#b23a0f',
+      softColor: '#ffe6da',
     });
 
-    expect(root.style.getPropertyValue('--brand-primary')).toBe('#1b6ff8');
-    expect(root.style.getPropertyValue('--brand-secondary')).toBe('#111111');
-    expect(root.style.getPropertyValue('--brand-tertiary')).toBe('#fafafa');
+    expect(root.style.getPropertyValue('--accent')).toBe('#ff6b35');
+    expect(root.style.getPropertyValue('--accent-deep')).toBe('#b23a0f');
+    expect(root.style.getPropertyValue('--accent-soft')).toBe('#ffe6da');
     http.verify();
   });
 
   it('ignora valores que no son #RRGGBB y deja los de styles.css', () => {
     const { service, root } = setup('browser');
 
-    service.apply({ liveBannerVisible: true, primaryColor: 'naranja', secondaryColor: '#fff' });
+    service.apply({ liveBannerVisible: true, accentColor: 'naranja', deepColor: '#fff' });
 
-    expect(root.style.getPropertyValue('--brand-primary')).toBe('');
-    expect(root.style.getPropertyValue('--brand-secondary')).toBe('');
+    expect(root.style.getPropertyValue('--accent')).toBe('');
+    expect(root.style.getPropertyValue('--accent-deep')).toBe('');
   });
 
   it('en el servidor no consulta el API', () => {

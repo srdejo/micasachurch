@@ -1,99 +1,53 @@
 <div class="flex flex-col gap-1 mb-7">
-  <h1 class="font-display text-[48px] leading-[0.95]">Panel</h1>
-  <span class="text-[15px] text-secondary-muted">Resumen de lo que cambia en el sitio</span>
+  <h1 class="text-[56px] leading-[0.95] m-0">Panel</h1>
+  <span class="text-[15px] text-muted">Resumen de lo que cambia en el sitio</span>
 </div>
 
-<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
-  <div class="rounded-card bg-card border border-secondary/[0.14] p-[22px] flex flex-col gap-1.5">
-    <span class="text-xs tracking-[0.14em] uppercase text-secondary-muted font-semibold">Devocional de hoy</span>
-    <span class="font-display text-[40px] leading-none">Al día</span>
-    <span class="text-[13.5px] text-secondary-subtle">Se trae automático de Nuestro Pan Diario</span>
+<div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-[26px]">
+  <div class="panel-card p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-muted font-semibold">Devocional de hoy</span>
+    <span class="font-display font-black uppercase text-[42px] leading-[0.95]">
+      {{ devotionalStatus() === 'loading' ? '…' : devotionalStatus() === 'ready' ? 'Listo' : 'Sin conexión' }}
+    </span>
+    <span class="text-[13.5px] text-faint">Se trae automático de Nuestro Pan Diario</span>
   </div>
-  <div class="rounded-card bg-card border border-secondary/[0.14] p-[22px] flex flex-col gap-1.5">
-    <span class="text-xs tracking-[0.14em] uppercase text-secondary-muted font-semibold">Eventos activos</span>
-    <span class="font-display text-[40px] leading-none">{{ activeEvents() }}</span>
-    <span class="text-[13.5px] text-secondary-subtle">Visibles en la página</span>
+  <div class="panel-card p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-muted font-semibold">Eventos activos</span>
+    <span class="font-display font-black uppercase text-[42px] leading-[0.95]">{{ activeEvents() }}</span>
+    <span class="text-[13.5px] text-faint">Visibles en la página</span>
   </div>
-  <div class="rounded-card bg-card border border-secondary/[0.14] p-[22px] flex flex-col gap-1.5">
-    <span class="text-xs tracking-[0.14em] uppercase text-secondary-muted font-semibold">Peticiones sin leer</span>
-    <span class="font-display text-[40px] leading-none">{{ unreadPrayerRequests() }}</span>
-    <span class="text-[13.5px] text-secondary-subtle">Equipo de oración</span>
+  <div class="panel-card p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-muted font-semibold">Peticiones sin leer</span>
+    <span class="font-display font-black uppercase text-[42px] leading-[0.95]">{{ unreadPrayerRequests() }}</span>
+    <span class="text-[13.5px] text-faint">Equipo de oración</span>
   </div>
-  <div class="rounded-card bg-card border border-secondary/[0.14] p-[22px] flex flex-col gap-1.5">
-    <span class="text-xs tracking-[0.14em] uppercase text-secondary-muted font-semibold">Franja en vivo</span>
-    <span class="font-display text-[40px] leading-none">{{ liveBannerVisible() ? 'Visible' : 'Oculta' }}</span>
-    <span class="text-[13.5px] text-secondary-subtle">Facebook, 7:00 a.m.</span>
-  </div>
-</div>
-
-<div class="rounded-[18px] bg-card border border-secondary/[0.14] p-[26px] flex flex-col gap-5 mb-7">
-  <div class="flex flex-col gap-1">
-    <span class="font-display text-[30px] leading-none">Colores del sitio</span>
-    <span class="text-sm text-secondary-muted">Se aplican a la página pública al recargarla. El panel mantiene los colores de marca.</span>
-  </div>
-  <div class="grid md:grid-cols-3 gap-4">
-    @for (field of colorFields; track field.key) {
-      <label class="flex flex-col gap-2">
-        <span class="text-sm font-bold">{{ field.label }}</span>
-        <span class="text-xs text-secondary-muted -mt-1">{{ field.hint }}</span>
-        <div class="flex items-center gap-2">
-          <input type="color" [value]="isValid(colors()[field.key]) ? colors()[field.key] : '#000000'"
-            (input)="setColor(field.key, $any($event.target).value)"
-            class="h-11 w-14 shrink-0 rounded-[10px] border border-secondary/15 bg-card p-1" [attr.aria-label]="'Elegir color ' + field.label" />
-          <input type="text" [ngModel]="colors()[field.key]" (ngModelChange)="setColor(field.key, $event)" [name]="field.key"
-            maxlength="7" spellcheck="false"
-            class="w-full min-w-0 rounded-card border px-3 py-2.5 text-sm font-mono uppercase"
-            [ngClass]="isValid(colors()[field.key]) ? 'border-secondary/15' : 'border-primary-strong'" />
-        </div>
-      </label>
-    }
-  </div>
-  <div class="flex flex-wrap items-center gap-4 rounded-[14px] border border-secondary/10 p-4"
-    [style.background-color]="colors().tertiaryColor" [style.color]="colors().secondaryColor">
-    <span class="text-sm font-bold">Vista previa</span>
-    <span class="rounded-pill px-5 py-2 text-sm font-bold"
-      [style.background-color]="colors().primaryColor" [style.color]="colors().secondaryColor">Botón principal</span>
-    <span class="rounded-pill px-5 py-2 text-sm font-bold"
-      [style.background-color]="colors().secondaryColor" [style.color]="colors().tertiaryColor">Botón secundario</span>
-  </div>
-  <div class="flex flex-wrap items-center gap-3">
-    <button type="button" (click)="saveColors()" [disabled]="colorsStatus() === 'saving'"
-      class="rounded-pill bg-secondary text-tertiary text-sm font-bold px-5 py-2.5 disabled:opacity-60">
-      {{ colorsStatus() === 'saving' ? 'Guardando...' : 'Guardar colores' }}
-    </button>
-    <button type="button" (click)="resetColors()" [disabled]="colorsStatus() === 'saving'"
-      class="rounded-pill border border-secondary/25 text-sm font-bold px-5 py-2.5 hover:border-secondary disabled:opacity-60">
-      Restablecer colores de marca
-    </button>
-    @if (colorsStatus() === 'saved') {
-      <span class="text-sm text-primary-strong font-bold">Guardado ✓</span>
-    }
-    @if (colorsStatus() === 'error') {
-      <span class="text-sm text-primary-strong">{{ colorsError() }}</span>
-    }
+  <div class="panel-card p-[22px] flex flex-col gap-1.5">
+    <span class="text-xs tracking-[0.14em] uppercase text-muted font-semibold">Franja en vivo</span>
+    <span class="font-display font-black uppercase text-[42px] leading-[0.95]">{{ liveBannerVisible() ? 'Visible' : 'Oculta' }}</span>
+    <span class="text-[13.5px] text-faint">Se enciende sola en los horarios transmitidos</span>
   </div>
 </div>
 
 <div class="grid lg:grid-cols-[1.2fr_1fr] gap-5 items-start">
-  <div class="rounded-[18px] bg-card border border-secondary/[0.14] p-[26px] flex flex-col gap-4">
-    <span class="font-display text-[30px] leading-none">Qué cambia y cada cuánto</span>
+  <div class="panel-card rounded-[18px] p-[26px] flex flex-col gap-[18px]">
+    <span class="font-display font-black uppercase text-[36px] leading-none">Qué cambia y cada cuánto</span>
     <div class="flex flex-col">
-      @for (row of autoContent; track row.name; let last = $last) {
-        <div class="flex items-center justify-between gap-5 py-3" [class.border-b]="!last" [ngClass]="!last ? 'border-secondary/10' : ''">
+      @for (row of cadence; track row.name) {
+        <div class="flex items-center justify-between gap-5 py-[13px] border-b border-ink/10">
           <span class="text-base font-medium">{{ row.name }}</span>
-          <span class="text-sm text-secondary-muted">{{ row.frequency }}</span>
+          <span class="text-sm text-muted">{{ row.frequency }}</span>
         </div>
       }
     </div>
   </div>
-  <div class="rounded-[18px] bg-sidebar text-tertiary p-[26px] flex flex-col gap-3.5">
-    <span class="font-display text-[30px] leading-none">Contenido automático</span>
-    <p class="m-0 text-[15.5px] leading-[1.65] text-tertiary/75">
+  <div class="rounded-[18px] bg-ink text-paper p-[26px] flex flex-col gap-3.5">
+    <span class="font-display font-black uppercase text-[36px] leading-none">Contenido automático</span>
+    <p class="m-0 text-[15.5px] leading-[1.65] text-paper/75">
       El devocional diario y las prédicas de YouTube se actualizan solos. No hay que tocarlos desde aquí.
     </p>
-    <div class="flex flex-col gap-2 mt-1">
-      <div class="flex items-center gap-2.5 text-[14.5px]"><span class="w-2 h-2 rounded-full bg-[#6FCF97]"></span>Nuestro Pan Diario · API</div>
-      <div class="flex items-center gap-2.5 text-[14.5px]"><span class="w-2 h-2 rounded-full bg-[#6FCF97]"></span>YouTube · últimas subidas</div>
+    <div class="flex flex-col gap-[9px] mt-1">
+      <div class="flex items-center gap-2.5 text-[14.5px]"><span class="w-2 h-2 rounded-full bg-success"></span>Nuestro Pan Diario · API</div>
+      <div class="flex items-center gap-2.5 text-[14.5px]"><span class="w-2 h-2 rounded-full bg-success"></span>YouTube · últimas subidas</div>
     </div>
   </div>
 </div>

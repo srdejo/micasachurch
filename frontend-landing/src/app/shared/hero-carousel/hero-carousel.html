@@ -1,0 +1,72 @@
+<section id="inicio" aria-roledescription="carrusel" aria-label="Banner principal"
+  (mouseenter)="hovering.set(true)" (mouseleave)="hovering.set(false)"
+  (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)"
+  class="relative overflow-hidden bg-ink text-paper h-[min(86vh,820px)] min-h-[580px] max-[980px]:h-[520px] max-[980px]:min-h-0">
+  @for (banner of slides(); track banner.id; let i = $index) {
+    <div class="absolute inset-0 transition-opacity duration-[900ms] ease-in-out"
+      [ngClass]="i === active() ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+      [attr.aria-hidden]="i === active() ? null : 'true'" [attr.inert]="i === active() ? null : ''">
+      @if (imageFor(banner); as src) {
+        <img [src]="src" (error)="markImageFailed(src)" alt="" [attr.fetchpriority]="i === 0 ? 'high' : null"
+          [attr.loading]="i === 0 ? null : 'lazy'" class="absolute inset-0 w-full h-full object-cover" />
+      }
+      <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-[rgb(10_10_9/0.86)] via-[rgb(10_10_9/0.45)] to-[rgb(10_10_9/0.15)]"></div>
+      <div class="absolute inset-x-0 bottom-0 flex flex-col gap-[18px] max-w-[1100px] px-16 pb-[88px]
+                  max-[980px]:px-[18px] max-[980px]:pb-[58px] max-[980px]:gap-3">
+        @if (banner.kicker) {
+          <span class="text-[13px] max-[980px]:text-[11.5px] tracking-[0.2em] uppercase text-accent font-bold">{{ banner.kicker }}</span>
+        }
+        @if (i === 0) {
+          <h1 class="font-black text-[clamp(88px,11vw,176px)] leading-[0.84] m-0 tracking-[0.005em] text-balance
+                     max-[980px]:text-[78px] max-[980px]:leading-[0.86]">{{ banner.title }}</h1>
+        } @else {
+          <p class="font-display font-black uppercase text-[clamp(88px,11vw,176px)] leading-[0.84] m-0 tracking-[0.005em] text-balance
+                    max-[980px]:text-[78px] max-[980px]:leading-[0.86]">{{ banner.title }}</p>
+        }
+        @if (banner.text) {
+          <p class="text-lg leading-[1.6] text-paper/85 m-0 max-w-[46ch] text-pretty max-[980px]:text-[15.5px] max-[980px]:leading-[1.55]">{{ banner.text }}</p>
+        }
+        <div class="flex flex-wrap gap-3 mt-2 max-[980px]:mt-1.5 max-[980px]:flex-col max-[980px]:items-stretch">
+          @if (banner.ctaLabel && banner.ctaHref) {
+            <ng-container *ngTemplateOutlet="cta; context: { $implicit: banner }" />
+          }
+          <a href="#visitar"
+            class="max-[980px]:hidden flex border border-paper/45 text-paper px-7 py-[18px] rounded-[10px] font-bold text-[13.5px] tracking-[0.1em] uppercase
+                   hover:border-paper hover:bg-paper/[0.08]">Planea tu visita</a>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (slides().length > 1) {
+    <div class="absolute right-16 bottom-[92px] z-[3] flex items-center gap-3.5
+                max-[980px]:left-[18px] max-[980px]:right-[18px] max-[980px]:bottom-[22px] max-[980px]:justify-between max-[980px]:flex-row-reverse">
+      <span class="text-[13px] max-[980px]:text-xs font-bold tracking-[0.12em] text-paper/80">{{ counter() }}</span>
+      <div class="flex gap-1.5">
+        @for (banner of slides(); track banner.id; let i = $index) {
+          <button type="button" (click)="select(i)" [attr.aria-label]="'Ir al banner ' + (i + 1)"
+            [attr.aria-current]="i === active() ? 'true' : null"
+            class="h-1 border-0 p-0 rounded-sm cursor-pointer transition-[width,background-color] duration-300"
+            [ngClass]="i === active() ? 'w-[34px] bg-accent' : 'w-[14px] bg-paper/45'"></button>
+        }
+      </div>
+      <button type="button" (click)="go(-1)" aria-label="Banner anterior"
+        class="max-[980px]:hidden w-11 h-11 rounded-[10px] border border-paper/35 bg-[rgb(10_10_9/0.35)] text-paper text-lg cursor-pointer hover:bg-paper hover:text-ink">←</button>
+      <button type="button" (click)="go(1)" aria-label="Banner siguiente"
+        class="max-[980px]:hidden w-11 h-11 rounded-[10px] border border-paper/35 bg-[rgb(10_10_9/0.35)] text-paper text-lg cursor-pointer hover:bg-paper hover:text-ink">→</button>
+    </div>
+  }
+</section>
+
+<ng-template #cta let-banner>
+  @let classes = 'flex items-center justify-center bg-accent text-ink px-7 py-[18px] rounded-[10px] font-bold text-[13.5px] tracking-[0.1em] uppercase hover:bg-paper max-[980px]:min-h-[52px] max-[980px]:py-0 max-[980px]:rounded-xl';
+  @if (isSchedule(banner)) {
+    <button type="button" (click)="openSchedule.emit()" [class]="classes + ' border-0 cursor-pointer font-sans'">{{ banner.ctaLabel }}</button>
+  } @else if (isRoute(banner)) {
+    <a [routerLink]="banner.ctaHref" [class]="classes">{{ banner.ctaLabel }}</a>
+  } @else if (isExternal(banner)) {
+    <a [href]="banner.ctaHref" target="_blank" rel="noopener" [class]="classes">{{ banner.ctaLabel }}</a>
+  } @else {
+    <a [href]="banner.ctaHref" [class]="classes">{{ banner.ctaLabel }}</a>
+  }
+</ng-template>
